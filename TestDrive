@@ -97,9 +97,9 @@ namespace TestDrive
             int minutesInHour = 60;
             Console.WriteLine("Сколько бабулек в очереди вы видите?");
             grannyInQueue = int.Parse(Console.ReadLine());
-            int hours = appointmentTime * grannyInQueue / minutesInHour;
-            int minutes = appointmentTime * grannyInQueue % minutesInHour;
-            Console.WriteLine($"Время в очереди займет {hours} часа и {minutes} минут" );
+            int hoursToWait = appointmentTime * grannyInQueue / minutesInHour;
+            int minutesToWait = appointmentTime * grannyInQueue % minutesInHour;
+            Console.WriteLine($"Время в очереди займет {hoursToWait} часа и {minutesToWait} минут" );
             Console.ReadLine();
 
         }
