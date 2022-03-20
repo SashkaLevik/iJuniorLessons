@@ -10,6 +10,19 @@ namespace TestDrive
     {
         static void Main(string[] args)
         {
+        
+            //задача №2
+            int damage = 20;
+            double currentHealth = 77.5;
+            float speed = 40f;
+            char symbol = '%';
+            bool isDead = false;
+            sbyte temp = -10;
+            string characterName = "Bublik";
+            ulong bankAccount = 1000000;
+            object pi = 3.14;
+            short framesPerSecond = 25;
+            
             //задача № 3 
             int a = 10;
             int b = 38;
