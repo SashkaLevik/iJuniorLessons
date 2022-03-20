@@ -68,7 +68,7 @@ namespace TestDrive
 
             
             //задача №7
-            int goldCount;
+         int goldCount;
             int crystalsCount;
             int crystalPrice = 10;
             int crystalSum;
@@ -77,11 +77,12 @@ namespace TestDrive
             Console.WriteLine($"Один кристалл стоит {crystalPrice} gold. Сколько вы купите?");
             crystalsCount = int.Parse(Console.ReadLine());
             crystalSum = crystalsCount * crystalPrice;
-            int remainingGold = goldCount - crystalSum;
-            if (goldCount > crystalSum)
+            goldCount -= crystalSum;
+            if (goldCount > crystalPrice)
             {
-                Console.WriteLine("Crystal=" + crystalSum);
-                Console.WriteLine("Gold=" + remainingGold);
+                Console.WriteLine("Crystal=" + crystalsCount);
+                Console.WriteLine("Gold=" + goldCount);
+                
             }
             else
             {
