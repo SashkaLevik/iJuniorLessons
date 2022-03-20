@@ -38,7 +38,8 @@ namespace TestDrive
             string name = Console.ReadLine();
             Console.WriteLine("Введите свой возраст");
             int age = int.Parse(Console.ReadLine());
-            if (age < 25)
+            int middleAge = 25;
+            if (age < middleAge)
             {
                 Console.WriteLine("Привет, " + name + ", вы молоды и полны сил");
             }
@@ -68,17 +69,19 @@ namespace TestDrive
             
             //задача №7
             int goldCount;
-            int crystalCount;
+            int crystalsCount;
+            int crystalPrice = 10;
             int crystalSum;
             Console.WriteLine("Сколько у вас золота?");
             goldCount = int.Parse(Console.ReadLine());
             Console.WriteLine("Один кристалл стоит 10 gold. Сколько вы купите?");
-            crystalCount = int.Parse(Console.ReadLine());
-            crystalSum = crystalCount * 10;
+            crystalsCount = int.Parse(Console.ReadLine());
+            crystalSum = crystalsCount * crystalPrice;
+            int remainingGold = goldCount - crystalSum;
             if (goldCount > crystalSum)
             {
-                Console.WriteLine("Crystal=" +  crystalSum);
-                Console.WriteLine("Gold=" + (goldCount - crystalSum));
+                Console.WriteLine("Crystal=" + crystalSum);
+                Console.WriteLine("Gold=" + remainingGold);
             }
             else
             {
@@ -88,12 +91,13 @@ namespace TestDrive
 
             //задача №8
               
-            int babuskaInQueue;
+            int grannyInQueue;
             int appointmentTime = 10;
+            int minutesInHour = 60;
             Console.WriteLine("Сколько бабулек в очереди вы видите?");
-            babuskaInQueue = int.Parse(Console.ReadLine());
-            int hours = appointmentTime * babuskaInQueue / 60;
-            int minutes = appointmentTime * babuskaInQueue % 60;
+            grannyInQueue = int.Parse(Console.ReadLine());
+            int hours = appointmentTime * grannyInQueue / minutesInHour;
+            int minutes = appointmentTime * grannyInQueue % minutesInHour;
             Console.WriteLine($"Время в очереди займет {hours} часа и {minutes} минут" );
             Console.ReadLine();
 
