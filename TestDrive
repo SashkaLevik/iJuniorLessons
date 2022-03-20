@@ -1,0 +1,79 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TestDrive
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //задача № 3 
+            int a = 10;
+            int b = 38;
+            int c = (31 - 5 * a) / b;
+            Console.WriteLine(c);
+            Console.ReadLine();
+            // в консоль выведится 0 потому что результатом операции будет дробное число -0,5 для 
+            // его вывода необходимо изменить тип переменной на double
+
+            // задача № 4
+
+            Console.WriteLine("Введите свое имя");
+            string name = Console.ReadLine();
+            Console.WriteLine("Введите свой возраст");
+            int age = int.Parse(Console.ReadLine());
+            if (age < 25)
+            {
+                Console.WriteLine("Привет, " + name + ", вы молоды и полны сил");
+            }
+            else
+            {
+                Console.WriteLine("Привет, " + name + ", ваша мудрость строится на опыте");
+            }
+
+            Console.ReadLine();
+
+            //задача №5
+            string firstName = "Pupkin";
+            string secondName = "Alex";
+            Console.WriteLine($"{firstName} {secondName}");
+            Console.WriteLine("Вы перепутали поля для ввода!!!");
+            (firstName, secondName) = (secondName, firstName);
+            Console.WriteLine($"{firstName} {secondName}");
+            Console.ReadLine();
+
+            //задача №6
+            //задача №7
+            int goldCount;
+            int crystalCount;
+            int crystalSum;
+            Console.WriteLine("Сколько у вас золота?");
+            goldCount = int.Parse(Console.ReadLine());
+            Console.WriteLine("Один кристалл стоит 10 gold. Сколько вы купите?");
+            crystalCount = int.Parse(Console.ReadLine());
+            crystalSum = crystalCount * 10;
+            if (goldCount > crystalSum)
+            {
+                Console.WriteLine("Crystal=" +  crystalSum);
+                Console.WriteLine("Gold=" + (goldCount - crystalSum));
+            }
+            else
+            {
+                Console.WriteLine("У вас не хватает золота");
+            }
+            Console.ReadLine();
+
+            //задача №8
+              
+            int babuskaInQueue;
+            int appointmentTime = 10;
+            int waitTurn;
+            Console.WriteLine("Сколько бабулек в очереди вы видите?");
+            babuskaInQueue = int.Parse(Console.ReadLine());
+
+        }
+    }
+}
