@@ -46,6 +46,13 @@ namespace TestDrive
             Console.ReadLine();
 
             //задача №6
+            int images = 52;
+            int imagesInRow = 3;
+            int filledRow = images / imagesInRow;
+            int remaindedImages = images % imagesInRow;
+            Console.WriteLine($"Рядов заполненых картинками: {filledRow} \n Оставшиеся картинки {remaindedImages}");
+
+            
             //задача №7
             int goldCount;
             int crystalCount;
@@ -70,9 +77,12 @@ namespace TestDrive
               
             int babuskaInQueue;
             int appointmentTime = 10;
-            int waitTurn;
             Console.WriteLine("Сколько бабулек в очереди вы видите?");
             babuskaInQueue = int.Parse(Console.ReadLine());
+            int hours = appointmentTime * babuskaInQueue / 60;
+            int minutes = appointmentTime * babuskaInQueue % 60;
+            Console.WriteLine($"Время в очереди займет {hours} часа и {minutes} минут" );
+            Console.ReadLine();
 
         }
     }
