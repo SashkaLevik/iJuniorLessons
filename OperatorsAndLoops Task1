@@ -14,6 +14,7 @@ namespace Operators_and_Loops
             string mesage = Console.ReadLine();
             Console.WriteLine("Сколько сообщений вывести на экран?");
             int mesageCount = int.Parse(Console.ReadLine());
+            
             for (int i = 0; i < mesageCount; i++)
             {
                 Console.WriteLine(mesage);
