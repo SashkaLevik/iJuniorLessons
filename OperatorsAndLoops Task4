@@ -10,18 +10,20 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-            Random random = new Random();
+            Random rand = new Random();
             int minValue = 0;
             int maxValue = 101;
-            int number = random.Next(minValue, maxValue);
+            int divisible3 = 3;
+            int divisible5 = 5;
+            int number = rand.Next(minValue, maxValue);
             int numberCount = 0;
             Console.WriteLine(number);
 
-            for (int positiveNumber = 0; positiveNumber <= number; positiveNumber++)
+            for (int i = 0; i <= number; i++)
             {
-                if (positiveNumber % 3 == 0 || positiveNumber % 5 == 0)
+                if (i % divisible3 == 0 || i % divisible5 == 0)
                 {
-                    numberCount += positiveNumber;
+                    numberCount += i;
                 }               
             }
 
