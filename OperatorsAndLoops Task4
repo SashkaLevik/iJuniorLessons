@@ -13,15 +13,15 @@ namespace Task4
             Random random = new Random();
             int minValue = 0;
             int maxValue = 101;
-            int divisibleOnThree = 3;
-            int divisibleOnFive = 5;
+            int divisibleFirst = 3;
+            int divisibleSecond = 5;
             int number = random.Next(minValue, maxValue);
             int numberCount = 0;
             Console.WriteLine(number);
 
             for (int i = 0; i <= number; i++)
             {
-                if (i % divisibleOnThree == 0 || i % divisibleOnFive == 0)
+                if (i % divisibleFirst == 0 || i % divisibleSecond == 0)
                 {
                     numberCount += i;
                 }               
