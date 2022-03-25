@@ -11,11 +11,13 @@ namespace Task3
         static void Main(string[] args)
         {
             //Применяем цикл for так как нам известны чёткие границы последовательности
+            int minValue = 5;
             int maxValue = 96;
+            int summationVar = 7;
 
-            for (int i = 5; i <= maxValue; i+=7)
+            for (minValue = 5; minValue <= maxValue; minValue+=summationVar)
             {
-                Console.WriteLine(i);
+                Console.WriteLine(minValue);
             }
 
             Console.ReadLine();
