@@ -21,9 +21,9 @@ namespace Task2
                 string word = Console.ReadLine();
                 int count = 0;
                 
-                foreach (var element in word)
+                foreach (var letter in word)
                 {
-                    if (char.IsLetter(element))
+                    if (char.IsLetter(letter))
                     {
                         count++;
                     }
