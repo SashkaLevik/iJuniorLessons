@@ -10,10 +10,10 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-            Random rand = new Random();
+            Random random = new Random();
             int minValue = 0;
             int maxValue = 101;
-            int number = rand.Next(minValue, maxValue);
+            int number = random.Next(minValue, maxValue);
             int numberCount = 0;
             Console.WriteLine(number);
 
