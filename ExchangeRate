@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Operators_and_Loops
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.SetCursorPosition(20, 0);
+            Console.WriteLine("Добро пожаловать в банк!");
+            Console.WriteLine("\nДля выхода введите exit");
+            Console.WriteLine("\nКурс валют на сегодня: \nrub = 65.5 usd. \nrub = 70 eur.\nusd = 0.9 eur.");
+            double rub = 100, usd = 100, eur = 100;
+            double convToRub, convToUsd, convToEur;
+            string firstValue, secondValue;
+            Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+
+            while (true)
+            {
+                Console.WriteLine("Какую валюту хотите продать?");
+                firstValue = Console.ReadLine();
+                if (firstValue == "exit")
+                {
+                    break;
+                }
+
+                Console.WriteLine("Какую валюту хотите купить?");
+                secondValue = Console.ReadLine();
+                if (secondValue == "exit")
+                {
+                    break;
+                }
+
+                if (firstValue == "rub" && secondValue == "usd")
+                {
+                    Console.WriteLine("Сколько долларов вы хотите купить?");
+                    convToUsd = Convert.ToDouble(Console.ReadLine());
+                    rub -= convToUsd * 65.5;
+                    usd += convToUsd;
+                    Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+                }
+
+                else if (firstValue == "rub" && secondValue == "eur")
+                {
+                    Console.WriteLine("Сколько евро вы хотите купить?");
+                    convToEur = Convert.ToDouble(Console.ReadLine());
+                    rub -= convToEur * 70;
+                    eur += convToEur;
+                    Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+                }
+
+                else if (firstValue == "usd" && secondValue == "rub")
+                {
+                    Console.WriteLine("Сколько рублей вы хотите купить?");
+                    convToRub = Convert.ToDouble(Console.ReadLine());
+                    usd -= convToRub * 0.015;
+                    rub += convToRub * 65.5;
+                    Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+                }
+
+                else if (firstValue == "eur" && secondValue == "rub")
+                {
+                    Console.WriteLine("Сколько рублей вы хотите купить?");
+                    convToRub = Convert.ToDouble(Console.ReadLine());
+                    eur -= convToRub * 0.014;
+                    rub += convToRub * 70;
+                    Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+                }
+
+                else if (firstValue == "usd" && secondValue == "eur")
+                {
+                    Console.WriteLine("Сколько евро вы хотите купить?");
+                    convToEur = Convert.ToDouble(Console.ReadLine());
+                    usd -= convToEur * 1.1;
+                    eur += convToEur * 0.9;
+                    Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+                }
+
+                else if (firstValue == "eur" && secondValue == "usd")
+                {
+                    Console.WriteLine("Сколько долларов вы хотите купить?");
+                    convToUsd = Convert.ToDouble(Console.ReadLine());
+                    eur -= convToUsd * 0.9;
+                    usd += convToUsd * 1.1;
+                    Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
+                }
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
