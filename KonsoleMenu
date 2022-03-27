@@ -1,1 +1,81 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isActive = true;
+            string menu;
+            string inputChar = "@, #, $, %, &";
+            string foregroundColor = "red, blue, green";           
+            string name;            
+            Console.WriteLine("Введите свое имя");
+            name = Console.ReadLine();
+            Console.SetCursorPosition(34, 2);
+            Console.WriteLine("Меню");
+            Console.SetCursorPosition(22, 3);
+            Console.WriteLine("Выберите цифру и нажмите ввод");
+            Console.WriteLine("1.Выбрать символ\n2.Выбрать цвет\n" +
+                "3.Напечатать имя\n4.Введите exit для выхода");
+
+            while (isActive)
+            {
+                menu = Console.ReadLine();
+                if (menu == "1")
+                {
+                    Console.WriteLine("@, #, $, %, &");
+                    inputChar = Console.ReadLine();
+                    Console.WriteLine($"Вы выбрали {inputChar}");
+                }
+                if (menu == "2")
+                {
+                    Console.WriteLine("red, blue, green");
+                    foregroundColor = Console.ReadLine();
+                    Console.WriteLine($"Вы выбрали {foregroundColor}");               
+                }
+             
+                else if (menu == "3")
+                {
+                    switch (foregroundColor)
+                    {
+                        case "red":
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"{inputChar}{name}{inputChar}");
+                            break;
+                        case "blue":
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine($"{inputChar}{name}{inputChar}");
+                            break;
+                        case "green":
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"{inputChar}{name}{inputChar}");
+                            break;
+                    }
+                }
+                else if (menu == "4")
+                {
+                    string exit;
+                    exit = Console.ReadLine();
+
+                    if (exit == "exit")
+                    {
+                        isActive = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Вы ввели неправильную команду");
+                    }
+                }
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
 
