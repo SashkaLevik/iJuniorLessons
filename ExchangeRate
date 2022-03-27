@@ -14,7 +14,7 @@ namespace Operators_and_Loops
             Console.WriteLine("Добро пожаловать в банк!");
             Console.WriteLine("\nДля выхода введите exit");
             Console.WriteLine("\nКурс валют на сегодня: \nrub = 65.5 usd. \nrub = 70 eur.\nusd = 0.9 eur.");
-            double rub = 100, usd = 100, eur = 100;
+            double rub = 1000, usd = 100, eur = 100;
             double convToRub, convToUsd, convToEur;
             string firstValue, secondValue;
             Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
