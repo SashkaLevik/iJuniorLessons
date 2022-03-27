@@ -15,31 +15,33 @@ namespace Operators_and_Loops
             Console.WriteLine("\nДля выхода введите exit");
             Console.WriteLine("\nКурс валют на сегодня: \nrub = 65.5 usd. \nrub = 70 eur.\nusd = 0.9 eur.");
             double rub = 1000, usd = 100, eur = 100;
+            double usdToRubRate = 65.5, eurToRubRate = 70, rubToUsdRate = 0.015, rubToEurRate = 0.014, eurToUsdRate = 1.1, usdToEurRate = 0.9;
             double convToRub, convToUsd, convToEur;
             string firstValue, secondValue;
+            bool isWorking = true;
             Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
 
-            while (true)
+            while (isWorking)
             {
                 Console.WriteLine("Какую валюту хотите продать?");
                 firstValue = Console.ReadLine();
                 if (firstValue == "exit")
                 {
-                    break;
+                    isWorking = false;
                 }
 
                 Console.WriteLine("Какую валюту хотите купить?");
                 secondValue = Console.ReadLine();
                 if (secondValue == "exit")
                 {
-                    break;
+                    isWorking = false;
                 }
 
                 if (firstValue == "rub" && secondValue == "usd")
                 {
                     Console.WriteLine("Сколько долларов вы хотите купить?");
                     convToUsd = Convert.ToDouble(Console.ReadLine());
-                    rub -= convToUsd * 65.5;
+                    rub -= convToUsd * usdToRubRate;
                     usd += convToUsd;
                     Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
                 }
@@ -48,7 +50,7 @@ namespace Operators_and_Loops
                 {
                     Console.WriteLine("Сколько евро вы хотите купить?");
                     convToEur = Convert.ToDouble(Console.ReadLine());
-                    rub -= convToEur * 70;
+                    rub -= convToEur * eurToRubRate;
                     eur += convToEur;
                     Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
                 }
@@ -57,8 +59,8 @@ namespace Operators_and_Loops
                 {
                     Console.WriteLine("Сколько рублей вы хотите купить?");
                     convToRub = Convert.ToDouble(Console.ReadLine());
-                    usd -= convToRub * 0.015;
-                    rub += convToRub * 65.5;
+                    usd -= convToRub * rubToUsdRate;
+                    rub += convToRub * usdToRubRate;
                     Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
                 }
 
@@ -66,8 +68,8 @@ namespace Operators_and_Loops
                 {
                     Console.WriteLine("Сколько рублей вы хотите купить?");
                     convToRub = Convert.ToDouble(Console.ReadLine());
-                    eur -= convToRub * 0.014;
-                    rub += convToRub * 70;
+                    eur -= convToRub * rubToEurRate;
+                    rub += convToRub * eurToRubRate;
                     Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
                 }
 
@@ -75,8 +77,8 @@ namespace Operators_and_Loops
                 {
                     Console.WriteLine("Сколько евро вы хотите купить?");
                     convToEur = Convert.ToDouble(Console.ReadLine());
-                    usd -= convToEur * 1.1;
-                    eur += convToEur * 0.9;
+                    usd -= convToEur * eurToUsdRate;
+                    eur += convToEur * usdToEurRate;
                     Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
                 }
 
@@ -84,8 +86,8 @@ namespace Operators_and_Loops
                 {
                     Console.WriteLine("Сколько долларов вы хотите купить?");
                     convToUsd = Convert.ToDouble(Console.ReadLine());
-                    eur -= convToUsd * 0.9;
-                    usd += convToUsd * 1.1;
+                    eur -= convToUsd * usdToEurRate;
+                    usd += convToUsd * eurToUsdRate;
                     Console.WriteLine($"\nВаш баланс:\n rub = {rub}\n usd = {usd}\n eur = {eur}");
                 }
             }
