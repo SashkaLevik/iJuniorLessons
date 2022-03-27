@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string correctPasword = "pasword";
+            int tryCount = 3;
+            Console.WriteLine("Для доступа в игру нужен пароль");
+            
+            while (tryCount--> 0)
+            {
+                Console.WriteLine("Введите пароль");
+                string inputPasword = Console.ReadLine();
+                if (inputPasword == correctPasword)
+                {
+                    Console.WriteLine("Пароль подтвержден, добро пожаловать в игру");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine($"Пароль не верный у вас осталось {tryCount} попытка");
+                }
+            }
+            if (tryCount < 0)
+            {
+                Console.WriteLine("Игра заблокирована");
+            }
+            Console.ReadLine();
+        }
+    }
+}
