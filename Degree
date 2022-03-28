@@ -13,8 +13,10 @@ namespace Task4
             Random random = new Random();
             int basicNumber = 2;
             int greateNumber = 2;
-            int degree = 0;
-            int number = random.Next(2, 50);
+            int degree = 0;            
+            int firstValue = 2;
+            int lastValue = 50;
+            int number = random.Next(firstValue, lastValue);
             Console.WriteLine($"Какое то рандомное число - { number}");
 
             while (greateNumber <= number)
