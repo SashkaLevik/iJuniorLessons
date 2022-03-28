@@ -1,0 +1,37 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+           
+            int greateNumber = 2;
+            int degree = 0;
+            int number = random.Next(3, 20);
+            Console.WriteLine(number);
+
+            while (greateNumber <= number)
+            {
+                greateNumber *= 2;             
+            }
+            Console.WriteLine(greateNumber);
+            while (greateNumber >= 2)
+            {
+                greateNumber /= 2;
+                degree++;
+            }
+        
+            
+            Console.WriteLine(degree);
+
+            Console.ReadLine();
+        }
+    }
+}
