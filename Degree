@@ -11,28 +11,32 @@ namespace Task4
         static void Main(string[] args)
         {
             Random random = new Random();
-            int basicNumber = 2;
+            
             int greateNumber = 2;
-            int degree = 0;            
+            int degree = 0;
             int firstValue = 2;
-            int lastValue = 50;
-            int number = random.Next(firstValue, lastValue);
+            int lastValue = 20;
+            int number = random.Next(firstValue, lastValue);// искомое число
+            
             Console.WriteLine($"Какое то рандомное число - { number}");
-
-            while (greateNumber <= number)
+            //если я вас правильно понял то должно быть вот так
+            for (greateNumber = 2; greateNumber < number; greateNumber *= 2)
             {
-                greateNumber *= basicNumber;             
-            }
-            Console.WriteLine($"Число превосходящее заданное - {greateNumber}");
-            while (greateNumber >= basicNumber)
-            {
-                greateNumber /= basicNumber;
                 degree++;
             }
-                    
-            Console.WriteLine($"Минимальная степень двойки - {degree}");
 
-            Console.ReadLine();
-        }
-    }
-}
+            //но в этом случае степень получается меньше на одну, допустим number = 9 тогда degree будет  3, 
+            //а должно быть 4 т.к. наименьшая степень двойки после 9 это 16 == 2^4
+            //я делаю вот так:
+            for (int i = 2; i < number * 2; i *= 2)
+            {
+                greateNumber = i;
+            }
+            //в этом цикле получаю число превосходящее number на минимальную степень
+            Console.WriteLine($"Число превосходящее заданное - {greateNumber}");
+            for (int i = 2; i < greateNumber*2; i*=2)
+            {
+                degree++;
+            }
+            Console.WriteLine($"Минимальная степень двойки - {degree}");
+            //а в этом нахожу степень
