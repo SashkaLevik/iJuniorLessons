@@ -14,7 +14,7 @@ namespace Task4
            
             int greateNumber = 2;
             int degree = 0;
-            int number = random.Next(3, 20);
+            int number = random.Next(2, 50);
             Console.WriteLine(number);
 
             while (greateNumber <= number)
