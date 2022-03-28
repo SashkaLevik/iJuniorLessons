@@ -11,7 +11,7 @@ namespace Task4
         static void Main(string[] args)
         {
             Random random = new Random();
-           
+            int basicNumber = 2;
             int greateNumber = 2;
             int degree = 0;
             int number = random.Next(2, 50);
@@ -19,16 +19,15 @@ namespace Task4
 
             while (greateNumber <= number)
             {
-                greateNumber *= 2;             
+                greateNumber *= basicNumber;             
             }
             Console.WriteLine($"Число превосходящее заданное - {greateNumber}");
-            while (greateNumber >= 2)
+            while (greateNumber >= basicNumber)
             {
-                greateNumber /= 2;
+                greateNumber /= basicNumber;
                 degree++;
             }
-        
-            
+                    
             Console.WriteLine($"Минимальная степень двойки - {degree}");
 
             Console.ReadLine();
