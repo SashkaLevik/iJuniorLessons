@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task3
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Введите скобочное выражение");
+            string text = Console.ReadLine();
+            int lenght = text.Length;
+            int bracketCount = 0;
+            int deepLevel = (lenght - 2) / 2;
+
+            foreach (var symbol in text)
+            {
+                if (symbol == '(')
+                {
+                    bracketCount++;                   
+                }
+                else if (symbol == ')')
+                {
+                    bracketCount--;
+
+                    if (bracketCount < 0)
+                    {
+                        break;
+                    }
+                  
+                }
+            }
+
+            if (bracketCount == 0)
+            {
+                Console.WriteLine("Это корректная строка");
+                Console.WriteLine($"Глубина вложения {deepLevel}");
+            }
+            else
+            {
+                Console.WriteLine("Строка содержит некорректное скобочное выражение");
+            }
+     
+            Console.ReadLine();
+        }
+    }
+}
