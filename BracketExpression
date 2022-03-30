@@ -12,15 +12,18 @@ namespace Task3
         {
             Console.WriteLine("Введите скобочное выражение");
             string text = Console.ReadLine();
-            int lenght = text.Length;
             int bracketCount = 0;
-            int deepLevel = (lenght - 2) / 2;
+            int deepLevel = 0;
 
             foreach (var symbol in text)
             {
                 if (symbol == '(')
                 {
-                    bracketCount++;                   
+                    if (symbol + 1 == '(')
+                    {
+                        deepLevel++;
+                    }
+                    bracketCount++;               
                 }
                 else if (symbol == ')')
                 {
@@ -30,7 +33,6 @@ namespace Task3
                     {
                         break;
                     }
-                  
                 }
             }
 
@@ -43,8 +45,9 @@ namespace Task3
             {
                 Console.WriteLine("Строка содержит некорректное скобочное выражение");
             }
-     
+
             Console.ReadLine();
         }
     }
 }
+
