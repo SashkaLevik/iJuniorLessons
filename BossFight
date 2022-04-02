@@ -1,0 +1,180 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BossFight
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+            bool isAlive = true;
+            bool isConcentrated = false;
+            string playerInput;
+            string enemyName = "Архидемон";
+            string hornAttack = "Удар рогами";
+            int _hornAttack = 20;
+            string agonyOfSinners = "Муки грешников";
+            int _agonyOfSinners = 20;//+20hp
+            string lashOfChaos = "Плеть хаоса";
+            int _lashOfChaos = random.Next(30, 40);
+            string sacredForest = "Священный лес";
+            int _sacredForest = random.Next(10, 20);
+            string rootsSong = "Песня корней";
+            int _rootsSong = random.Next(20, 30);
+            string wolfSpirit = "Дух волка";
+            int _wolfSpirit = random.Next(40, 45);
+            int playerHealth = random.Next(80, 100);
+            int enemyHealth = random.Next(100, 110);
+            Console.WriteLine("Введите свое имя");
+            string playerName = "Друид " + Console.ReadLine();
+            Console.Clear();
+            Console.SetCursorPosition(10, 0);
+            Console.WriteLine($"{playerName} архидемон выследил вас! Предстоит сражение!\n\nВведите цифру чтобы примеить заклинание\n");
+            Console.WriteLine($"{playerName} Здоровье {playerHealth}\t\t\t\t{enemyName} Здоровье {enemyHealth}\n");
+            Console.WriteLine($"Заклинания:\n1.{sacredForest}\nЛечит 10-20 hp, даёт концентрацию\n\n2.{rootsSong}\nурон 20-30(нужна концентрация)\n\n" +
+                $"3.{wolfSpirit}\nурон 40-45(активно если hp < 50%))");
+
+            while (isAlive)
+            {
+                if (enemyHealth <= 0)
+                {
+                    isAlive = false;
+                    Console.WriteLine($"{enemyName} повержен! {playerName} вы победили");
+                    Console.ReadLine();
+                }
+                else if (playerHealth <= 0)
+                {
+                    isAlive = false;
+                    Console.WriteLine($"{playerName} вы повержены! {enemyName} победил");
+                    Console.ReadLine();
+                }
+
+                playerInput = Console.ReadLine();
+
+                switch (playerInput)
+                {
+                    case "1":
+                        playerHealth += _sacredForest;
+                        isConcentrated = true;
+                        Console.WriteLine($"Заклинание {sacredForest} hp + {_sacredForest}\n{playerName} Здоровье {playerHealth}\nКонцентрация");
+                        Console.WriteLine($"\t\t\t\t{enemyName} атакует\n");
+
+                        switch (random.Next(1, 4))
+                        {
+                            case 1:
+                                if (enemyHealth > 0)
+                                {
+                                    Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {_hornAttack}");
+                                    playerHealth -= _hornAttack;
+                                    Console.WriteLine($"{playerName} здоровье {playerHealth}");                                  
+                                }
+                                break;
+                            case 2:
+                                if (enemyHealth > 0)
+                                {
+                                    Console.WriteLine($"{enemyName} применят {agonyOfSinners}");
+                                    enemyHealth += _agonyOfSinners;
+                                    Console.WriteLine($"{enemyName} здоровье {enemyHealth}");
+                                }                       
+                                break;
+                            case 3:
+                                if (enemyHealth > 0)
+                                {
+                                    Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {_lashOfChaos}");
+                                    playerHealth -= _lashOfChaos;
+                                    Console.WriteLine($"{playerName} здоровье {playerHealth}");
+                                }                     
+                                break;
+                        }
+                        break;
+
+                    case "2":
+                        if (isConcentrated)
+                        {
+                            enemyHealth -= _rootsSong;
+                            Console.WriteLine($"Заклинание {rootsSong}\t\t\t{enemyName} теряет {_rootsSong} hp Здоровье {enemyHealth}\n");
+                            isConcentrated = false;
+                            Console.WriteLine($"\t\t\t\t{enemyName} атакует\n");
+
+                            switch (random.Next(1, 4))
+                            {
+                                case 1:
+                                    if (enemyHealth > 0)
+                                    {
+                                        Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {_hornAttack}");
+                                        playerHealth -= _hornAttack;
+                                        Console.WriteLine($"{playerName} здоровье {playerHealth}");
+                                    }
+                                    break;
+                                case 2:
+                                    if (enemyHealth > 0)
+                                    {
+                                        Console.WriteLine($"{enemyName} применят {agonyOfSinners}");
+                                        enemyHealth += _agonyOfSinners;
+                                        Console.WriteLine($"{enemyName} здоровье {enemyHealth}");
+                                    }
+                                    break;
+                                case 3:
+                                    if (enemyHealth > 0)
+                                    {
+                                        Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {_lashOfChaos}");
+                                        playerHealth -= _lashOfChaos;
+                                        Console.WriteLine($"{playerName} здоровье {playerHealth}");
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Нужна концентрация");
+                        }
+                        break;
+
+                    case "3":
+                        if (playerHealth < 50)
+                        {
+                            enemyHealth -= _wolfSpirit;
+                            Console.WriteLine($"Заклинание {wolfSpirit}\t\t\t{enemyName} теряет {_wolfSpirit} hp Здоровье{enemyHealth}\n");
+                            Console.WriteLine($"\t\t\t\t{enemyName} атакует\n");
+                            switch (random.Next(1, 4))
+                            {
+                                case 1:
+                                    if (enemyHealth > 0)
+                                    {
+                                        Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {_hornAttack}");
+                                        playerHealth -= _hornAttack;
+                                        Console.WriteLine($"{playerName} здоровье {playerHealth}");
+                                    }
+                                    break;
+                                case 2:
+                                    if (enemyHealth > 0)
+                                    {
+                                        Console.WriteLine($"{enemyName} применят {agonyOfSinners}");
+                                        enemyHealth += _agonyOfSinners;
+                                        Console.WriteLine($"{enemyName} здоровье {enemyHealth}");
+                                    }
+                                    break;
+                                case 3:
+                                    if (enemyHealth > 0)
+                                    {
+                                        Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {_lashOfChaos}");
+                                        playerHealth -= _lashOfChaos;
+                                        Console.WriteLine($"{playerName} здоровье {playerHealth}");
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Нельзя использовать");
+                        }
+                        break;
+                }         
+            }
+        }
+    }
+}
