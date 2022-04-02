@@ -16,18 +16,19 @@ namespace BossFight
             string playerInput;
             string enemyName = "Архидемон";
             string hornAttack = "Удар рогами";
-            int _hornAttack = 20;
+            int theHornAttack = 20;
             string agonyOfSinners = "Муки грешников";
-            int _agonyOfSinners = 20;//+20hp
+            int theAgonyOfSinners = 20;
             string lashOfChaos = "Плеть хаоса";
-            int _lashOfChaos = random.Next(30, 40);
+            int theLashOfChaos = random.Next(30, 40);
             string sacredForest = "Священный лес";
-            int _sacredForest = random.Next(10, 20);
+            int theSacredForest = random.Next(10, 20);
             string rootsSong = "Песня корней";
-            int _rootsSong = random.Next(20, 30);
+            int theRootsSong = random.Next(20, 30);
             string wolfSpirit = "Дух волка";
-            int _wolfSpirit = random.Next(40, 45);
+            int theWolfSpirit = random.Next(40, 45);
             int playerHealth = random.Next(80, 100);
+            int halfHealth = 50;
             int enemyHealth = random.Next(100, 110);
             Console.WriteLine("Введите свое имя");
             string playerName = "Друид " + Console.ReadLine();
@@ -58,9 +59,9 @@ namespace BossFight
                 switch (playerInput)
                 {
                     case "1":
-                        playerHealth += _sacredForest;
+                        playerHealth += theSacredForest;
                         isConcentrated = true;
-                        Console.WriteLine($"Заклинание {sacredForest} hp + {_sacredForest}\n{playerName} Здоровье {playerHealth}\nКонцентрация");
+                        Console.WriteLine($"Заклинание {sacredForest} hp + {theSacredForest}\n{playerName} Здоровье {playerHealth}\nКонцентрация");
                         Console.WriteLine($"\t\t\t\t{enemyName} атакует\n");
 
                         switch (random.Next(1, 4))
@@ -68,8 +69,8 @@ namespace BossFight
                             case 1:
                                 if (enemyHealth > 0)
                                 {
-                                    Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {_hornAttack}");
-                                    playerHealth -= _hornAttack;
+                                    Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {theHornAttack}");
+                                    playerHealth -= theHornAttack;
                                     Console.WriteLine($"{playerName} здоровье {playerHealth}");                                  
                                 }
                                 break;
@@ -77,15 +78,15 @@ namespace BossFight
                                 if (enemyHealth > 0)
                                 {
                                     Console.WriteLine($"{enemyName} применят {agonyOfSinners}");
-                                    enemyHealth += _agonyOfSinners;
+                                    enemyHealth += theAgonyOfSinners;
                                     Console.WriteLine($"{enemyName} здоровье {enemyHealth}");
                                 }                       
                                 break;
                             case 3:
                                 if (enemyHealth > 0)
                                 {
-                                    Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {_lashOfChaos}");
-                                    playerHealth -= _lashOfChaos;
+                                    Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {theLashOfChaos}");
+                                    playerHealth -= theLashOfChaos;
                                     Console.WriteLine($"{playerName} здоровье {playerHealth}");
                                 }                     
                                 break;
@@ -95,8 +96,8 @@ namespace BossFight
                     case "2":
                         if (isConcentrated)
                         {
-                            enemyHealth -= _rootsSong;
-                            Console.WriteLine($"Заклинание {rootsSong}\t\t\t{enemyName} теряет {_rootsSong} hp Здоровье {enemyHealth}\n");
+                            enemyHealth -= theRootsSong;
+                            Console.WriteLine($"Заклинание {rootsSong}\t\t\t{enemyName} теряет {theRootsSong} hp Здоровье {enemyHealth}\n");
                             isConcentrated = false;
                             Console.WriteLine($"\t\t\t\t{enemyName} атакует\n");
 
@@ -105,8 +106,8 @@ namespace BossFight
                                 case 1:
                                     if (enemyHealth > 0)
                                     {
-                                        Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {_hornAttack}");
-                                        playerHealth -= _hornAttack;
+                                        Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {theHornAttack}");
+                                        playerHealth -= theHornAttack;
                                         Console.WriteLine($"{playerName} здоровье {playerHealth}");
                                     }
                                     break;
@@ -114,15 +115,15 @@ namespace BossFight
                                     if (enemyHealth > 0)
                                     {
                                         Console.WriteLine($"{enemyName} применят {agonyOfSinners}");
-                                        enemyHealth += _agonyOfSinners;
+                                        enemyHealth += theAgonyOfSinners;
                                         Console.WriteLine($"{enemyName} здоровье {enemyHealth}");
                                     }
                                     break;
                                 case 3:
                                     if (enemyHealth > 0)
                                     {
-                                        Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {_lashOfChaos}");
-                                        playerHealth -= _lashOfChaos;
+                                        Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {theLashOfChaos}");
+                                        playerHealth -= theLashOfChaos;
                                         Console.WriteLine($"{playerName} здоровье {playerHealth}");
                                     }
                                     break;
@@ -135,18 +136,18 @@ namespace BossFight
                         break;
 
                     case "3":
-                        if (playerHealth < 50)
+                        if (playerHealth < halfHealth)
                         {
-                            enemyHealth -= _wolfSpirit;
-                            Console.WriteLine($"Заклинание {wolfSpirit}\t\t\t{enemyName} теряет {_wolfSpirit} hp Здоровье{enemyHealth}\n");
+                            enemyHealth -= theWolfSpirit;
+                            Console.WriteLine($"Заклинание {wolfSpirit}\t\t\t{enemyName} теряет {theWolfSpirit} hp Здоровье{enemyHealth}\n");
                             Console.WriteLine($"\t\t\t\t{enemyName} атакует\n");
                             switch (random.Next(1, 4))
                             {
                                 case 1:
                                     if (enemyHealth > 0)
                                     {
-                                        Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {_hornAttack}");
-                                        playerHealth -= _hornAttack;
+                                        Console.WriteLine($"{enemyName} применяет {hornAttack}\nУрон {theHornAttack}");
+                                        playerHealth -= theHornAttack;
                                         Console.WriteLine($"{playerName} здоровье {playerHealth}");
                                     }
                                     break;
@@ -154,15 +155,15 @@ namespace BossFight
                                     if (enemyHealth > 0)
                                     {
                                         Console.WriteLine($"{enemyName} применят {agonyOfSinners}");
-                                        enemyHealth += _agonyOfSinners;
+                                        enemyHealth += theAgonyOfSinners;
                                         Console.WriteLine($"{enemyName} здоровье {enemyHealth}");
                                     }
                                     break;
                                 case 3:
                                     if (enemyHealth > 0)
                                     {
-                                        Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {_lashOfChaos}");
-                                        playerHealth -= _lashOfChaos;
+                                        Console.WriteLine($"{enemyName} применяет {lashOfChaos}\nУрон {theLashOfChaos}");
+                                        playerHealth -= theLashOfChaos;
                                         Console.WriteLine($"{playerName} здоровье {playerHealth}");
                                     }
                                     break;
