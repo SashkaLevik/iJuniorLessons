@@ -1,0 +1,43 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LocalMaximum
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+            int arraySize = 30;
+            int firstValue = 0;
+            int secondValue = 50;
+            int[] array = new int[arraySize];
+            
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = random.Next(firstValue, secondValue);
+                Console.Write(array[i] + " ");
+            }
+            if (array[0] > array[1])
+            {
+                Console.WriteLine("\nЛокальный максимум массива\t" + array[0]);
+            }
+            if (array[array.Length - 1] > array[array.Length - 2])
+            {
+                Console.WriteLine("\nЛокальный максимум массива\t" + array[array.Length - 1]);
+            }
+            for (int i = 1; i < array.Length - 1; i++)
+            {
+                if (array[i] > array[i + 1] && array[i] > array[i - 1])
+                {
+                    Console.WriteLine("\nЛокальный максимум массива\t" + array[i]);                  
+                }
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
