@@ -12,7 +12,7 @@ namespace Task2
         {
             Random random = new Random();
             int firstValue = 1;
-            int lastValue = 27;
+            int lastValue = 28;
             int rangeStart = 100;
             int rangeEnd = 1000;
             int number = random.Next(firstValue, lastValue);
