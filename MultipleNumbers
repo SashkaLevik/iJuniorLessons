@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Random random = new Random();
+            int firstValue = 1;
+            int lastValue = 27;
+            int number = random.Next(firstValue, lastValue);
+            int count = 0;
+            Console.WriteLine($"Число из диапазона {number}\n");
+       
+            for (int i = number; i < 1000; i+=number)
+            {
+                if (i > 100)
+                {
+                    Console.WriteLine(i);
+                    count++;
+                }               
+            }
+
+            Console.WriteLine($"Количество чисел кратных {number} = {count}");
+            Console.ReadLine();
+        }
+    }
+}
