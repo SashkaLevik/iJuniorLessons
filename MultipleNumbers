@@ -13,13 +13,15 @@ namespace Task2
             Random random = new Random();
             int firstValue = 1;
             int lastValue = 27;
+            int rangeStart = 100;
+            int rangeEnd = 1000;
             int number = random.Next(firstValue, lastValue);
             int count = 0;
             Console.WriteLine($"Число из диапазона {number}\n");
        
-            for (int i = number; i < 1000; i+=number)
+            for (int i = number; i < rangeEnd; i+=number)
             {
-                if (i > 100)
+                if (i > rangeStart)
                 {
                     Console.WriteLine(i);
                     count++;
