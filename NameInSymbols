@@ -22,9 +22,9 @@ namespace Task4
                 symbolString += symbol;
             }
 
-            Console.WriteLine(str);
+            Console.WriteLine(symbolString);
             Console.WriteLine(symbol + name + symbol);
-            Console.WriteLine(str);
+            Console.WriteLine(symbolString);
             Console.ReadLine();
         }
     }
