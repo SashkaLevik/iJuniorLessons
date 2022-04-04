@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int arrayLenght = 0;
+            int[] array = new int[arrayLenght];
+            int arraySum = 0;
+            string userInput;
+            bool inLoop = true;
+
+            Console.WriteLine("Введите число.\nДля вывода суммы чисел введите sum.\nДля выхода введите exit");
+
+            while (inLoop)
+            {
+                userInput = Console.ReadLine();
+
+                if (userInput != "sum" && userInput != "exit")
+                {
+                    int number = Convert.ToInt32(userInput);
+                    int[] tempArray = new int[array.Length + 1];
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        tempArray[i] = array[i];
+                    }
+                    tempArray[tempArray.Length - 1] = number;
+                    array = tempArray;
+                }
+                else if (userInput == "sum")
+                {
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        arraySum += array[i];
+                    }
+                    Console.WriteLine("Сумма чисел массива = " + arraySum);
+                    arraySum = 0;
+                }
+                else if (userInput == "exit")
+                {
+                    inLoop = false;
+                }
+            }
+        }
+    }
+}
