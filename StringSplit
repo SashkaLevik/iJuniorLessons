@@ -13,9 +13,9 @@ namespace Task2
             string text = "Дана строка с текстом";
             string[] divide = text.Split(' ');
 
-            foreach (var item in divide)
+            foreach (var word in divide)
             {
-                Console.WriteLine(item);
+                Console.WriteLine(word);
             }
             Console.ReadLine();
         }
