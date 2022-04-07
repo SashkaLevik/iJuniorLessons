@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[] array = { 1, 2, 3, 4, 5, 6};
+            int arrayLenght = array.Length;
+            
+            Console.WriteLine("Введите сдвиг");
+            int shift = int.Parse(Console.ReadLine());
+
+            for (int i = 0; i < shift; i++)
+            {
+                int temp = array[arrayLenght - 1];
+                array[arrayLenght - 1] = array[arrayLenght - 2];
+                for (int j = arrayLenght - 1; j > 0; j--)
+                {
+                    array[j] = array[j - 1];
+                }
+                    array[0] = temp;
+            }
+
+            for (int i = 0; i < arrayLenght; i++)
+            {
+                Console.Write(array[i] + " ");
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
