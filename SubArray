@@ -38,7 +38,7 @@ namespace Task4
                 }
             }
 
-            Console.WriteLine($"\nЭлемент{array[number]} повторяется большее число раз подряд");            
+            Console.WriteLine($"\nЭлемент {array[number]} повторяется {maxLenght + 1} раз подряд");             
             Console.ReadLine();
         }   
     }
