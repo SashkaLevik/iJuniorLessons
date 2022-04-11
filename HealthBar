@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int health = 0, maxHealth = 10;           
+            bool isAlive = true;
+
+            while (isAlive)
+            {
+                Console.Write("Введите процент ваших жизней от 10% до 100%\n");
+                health = Convert.ToInt32(Console.ReadLine());
+                int percentHealth = health / 10;
+                DrawBar(percentHealth, maxHealth, 2, '@');
+                Console.Clear();
+                Console.ReadLine();
+            }
+        }
+        static void DrawBar(int value, int maxValue, int position, char symbol = ' ')
+        {            
+            string healthBar = "";
+
+            for (int i = 0; i < value; i++)
+            {
+                healthBar += symbol;
+            }
+
+            Console.SetCursorPosition(0, position);
+            Console.Write('|');
+            Console.Write(healthBar);
+
+            healthBar = "";
+
+            for (int i = value; i < maxValue; i++)
+            {
+                healthBar += '_';
+            }
+
+            Console.Write(healthBar + '|');
+            Console.ReadLine();
+        }
+    }
+}
