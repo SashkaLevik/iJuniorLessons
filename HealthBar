@@ -10,13 +10,13 @@ namespace Task2
     {
         static void Main(string[] args)
         {
-            int health = 0, maxHealth = 10;           
+            int maxHealth = 10;           
             bool isAlive = true;
 
             while (isAlive)
             {
                 Console.Write("Введите процент ваших жизней от 10% до 100%\n");
-                health = Convert.ToInt32(Console.ReadLine());
+                int health = Convert.ToInt32(Console.ReadLine());
                 int percentHealth = health / 10;
                 DrawBar(percentHealth, maxHealth, 2, '@');
                 Console.Clear();
