@@ -22,7 +22,7 @@ namespace Task4
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        PrintFile(ref file, ref post);
+                        PrintFile(file, post);
                         break;
                     case "2":
                         AddFile(ref file, ref post);
@@ -31,7 +31,7 @@ namespace Task4
                         DeleteFile(ref file, ref post);
                         break;
                     case "4":
-                        SurNameSearch(ref file, ref post);
+                        SurNameSearch(file, post);
                         break;
                     case "5":
                         isOnLine = false;
@@ -41,7 +41,7 @@ namespace Task4
             Console.ReadLine();
         } 
         
-        public static void PrintFile(ref string[] file , ref string[] post)
+        public static void PrintFile(string[] file, string[] post)
         {
             Console.WriteLine("Все досье компании");
 
@@ -79,7 +79,7 @@ namespace Task4
             int index = Convert.ToInt32(Console.ReadLine()) - 1;
             if (index < 0 || index > tempFile.Length && index > tempPost.Length)
             {
-                Console.WriteLine("Такого досье не существует");      
+                Console.WriteLine("Такого досье не существует");
             }
             else 
             {
@@ -101,7 +101,7 @@ namespace Task4
        
         }
 
-        public static void SurNameSearch(ref string[] file, ref string[] post)
+        public static void SurNameSearch(string[] file, string[] post)
         {
             string surName;
             bool fileIsFind = false;
