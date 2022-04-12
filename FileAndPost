@@ -41,18 +41,7 @@ namespace Task4
             Console.ReadLine();
         } 
         
-        public static void PrintFile(string[] file, string[] post)
-        {
-            Console.WriteLine("Все досье компании");
-
-            for (int i = 0; i < file.Length; i++)
-            {
-                Console.Write((i + 1) + file[i] + " - " + post[i] + ".");
-            }
-            Console.WriteLine();
-        }
-
-        public static void AddFile(ref string[] file, ref string[] post)
+        public static void IncreaseArray(ref string[] file, ref string[] post)
         {
             string[] tempFile = new string[file.Length + 1];
             string[] tempPost = new string[post.Length + 1];
@@ -71,7 +60,7 @@ namespace Task4
             tempPost[tempPost.Length - 1] = Console.ReadLine();
         }
 
-        public static void DeleteFile(ref string[] file, ref string[] post)
+        public static void DecreaseArray(ref string[] file, ref string[] post)
         {
             string[] tempFile = new string[file.Length - 1];
             string[] tempPost = new string[post.Length - 1];
@@ -81,7 +70,7 @@ namespace Task4
             {
                 Console.WriteLine("Такого досье не существует");
             }
-            else 
+            else
             {
                 for (int i = 0; i < index; i++)
                 {
@@ -98,7 +87,26 @@ namespace Task4
                 file = tempFile;
                 post = tempPost;
             }
-       
+        }
+        public static void PrintFile(string[] file, string[] post)
+        {
+            Console.WriteLine("Все досье компании");
+
+            for (int i = 0; i < file.Length; i++)
+            {
+                Console.Write((i + 1) + file[i] + " - " + post[i] + ".");
+            }
+            Console.WriteLine();
+        }
+
+        public static void AddFile(ref string[] file, ref string[] post)
+        {
+            IncreaseArray(ref file, ref post);
+        }
+
+        public static void DeleteFile(ref string[] file, ref string[] post)
+        {
+            DecreaseArray(ref file, ref post);      
         }
 
         public static void SurNameSearch(string[] file, string[] post)
