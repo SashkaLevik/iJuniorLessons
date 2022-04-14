@@ -25,10 +25,11 @@ namespace Task4
                         PrintFile(file, post);
                         break;
                     case "2":
-                        AddFile(ref file, ref post);
+                        AddFile(ref file, "Введите ФИО сотрудника");
+                        AddFile(ref post, "Введите должность сотрудника");
                         break;
                     case "3":
-                        DeleteFile(ref file, ref post);
+                        DeleteFile(ref file, "Введите номер файла");
                         break;
                     case "4":
                         SurNameSearch(file, post);
@@ -39,55 +40,8 @@ namespace Task4
                 }
             }
             Console.ReadLine();
-        } 
-        
-        public static void IncreaseArray(ref string[] file, ref string[] post)
-        {
-            string[] tempFile = new string[file.Length + 1];
-            string[] tempPost = new string[post.Length + 1];
-
-            for (int i = 0; i < file.Length; i++)
-            {
-                tempFile[i] = file[i];
-                tempPost[i] = post[i];
-            }
-            file = tempFile;
-            post = tempPost;
-
-            Console.WriteLine("Введите ФИО сотрудника");
-            tempFile[tempFile.Length - 1] = Console.ReadLine();
-            Console.WriteLine("Введите должность сотрудника");
-            tempPost[tempPost.Length - 1] = Console.ReadLine();
         }
 
-        public static void DecreaseArray(ref string[] file, ref string[] post)
-        {
-            string[] tempFile = new string[file.Length - 1];
-            string[] tempPost = new string[post.Length - 1];
-            Console.WriteLine("Введите номер досье для удаления");
-            int index = Convert.ToInt32(Console.ReadLine()) - 1;
-            if (index < 0 || index > tempFile.Length && index > tempPost.Length)
-            {
-                Console.WriteLine("Такого досье не существует");
-            }
-            else
-            {
-                for (int i = 0; i < index; i++)
-                {
-                    tempFile[i] = file[i];
-                    tempPost[i] = post[i];
-                }
-
-                for (int i = index + 1; i < file.Length; i++)
-                {
-                    tempFile[i - 1] = file[i];
-                    tempPost[i - 1] = post[i];
-                }
-
-                file = tempFile;
-                post = tempPost;
-            }
-        }
         public static void PrintFile(string[] file, string[] post)
         {
             Console.WriteLine("Все досье компании");
@@ -99,14 +53,43 @@ namespace Task4
             Console.WriteLine();
         }
 
-        public static void AddFile(ref string[] file, ref string[] post)
+        public static void AddFile(ref string[] array, string namePost)
         {
-            IncreaseArray(ref file, ref post);
+            Console.WriteLine(namePost);
+            string[] tempArray = new string[array.Length + 1];
+   
+            for (int i = 0; i < array.Length; i++)
+            {
+                tempArray[i] = array[i];               
+            }
+            array = tempArray;
+
+            tempArray[tempArray.Length - 1] = Console.ReadLine();        
         }
 
-        public static void DeleteFile(ref string[] file, ref string[] post)
+        public static void DeleteFile(ref string[] array, string enterID)
         {
-            DecreaseArray(ref file, ref post);      
+            string[] tempArray = new string[array.Length - 1];
+            Console.WriteLine(enterID);
+            int index = Convert.ToInt32(Console.ReadLine()) - 1;
+            if (index < 0 || index > tempArray.Length)
+            {
+                Console.WriteLine("Такого досье не существует");
+            }
+            else
+            {
+                for (int i = 0; i < index; i++)
+                {
+                    tempArray[i] = array[i];
+                }
+
+                for (int i = index + 1; i < array.Length; i++)
+                {
+                    tempArray[i - 1] = array[i];
+                }
+
+                array = tempArray;
+            }
         }
 
         public static void SurNameSearch(string[] file, string[] post)
