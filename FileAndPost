@@ -11,6 +11,7 @@ namespace Task4
         static void Main(string[] args)
         {
             bool isOnLine = true;
+            int index = 0;
             string[] file = {"Сергей Сергеевич Пупкин","Денис Денисович Ежиков", "Борис Борисович Котейкин"};
             string[] post = { "Директор", "Инженер", "Менеджер"};
             Console.SetCursorPosition(10, 0);
@@ -25,11 +26,10 @@ namespace Task4
                         PrintFile(file, post);
                         break;
                     case "2":
-                        AddFile(ref file, "Введите ФИО сотрудника");
-                        AddFile(ref post, "Введите должность сотрудника");
+                        AddFile(ref file, ref post);
                         break;
                     case "3":
-                        DeleteFile(ref file, "Введите номер файла");
+                        DeleteFile(ref file, ref post, ref index);
                         break;
                     case "4":
                         SurNameSearch(file, post);
@@ -53,7 +53,13 @@ namespace Task4
             Console.WriteLine();
         }
 
-        public static void AddFile(ref string[] array, string namePost)
+        public static void AddFile(ref string[] file, ref string[] post)
+        {
+            AddArray(ref file, "Введите ФИО сотрудника");
+            AddArray(ref post, "Введите должность сотрудника");
+        }
+
+        public static void AddArray(ref string[] array, string namePost)
         {
             Console.WriteLine(namePost);
             string[] tempArray = new string[array.Length + 1];
@@ -62,15 +68,20 @@ namespace Task4
             {
                 tempArray[i] = array[i];               
             }
-            array = tempArray;
 
+            array = tempArray;
             tempArray[tempArray.Length - 1] = Console.ReadLine();        
         }
 
-        public static void DeleteFile(ref string[] array, string enterID)
+        public static void DeleteFile(ref string[] file, ref string[] post, ref int index)
+        {        
+            DeleteArray(ref file, ref index);
+            DeleteArray(ref post, ref index);
+        }
+        public static void DeleteArray(ref string[] array, ref int userInput)
         {
             string[] tempArray = new string[array.Length - 1];
-            Console.WriteLine(enterID);
+            Console.WriteLine("Введите номер файла для удаления");
             int index = Convert.ToInt32(Console.ReadLine()) - 1;
             if (index < 0 || index > tempArray.Length)
             {
