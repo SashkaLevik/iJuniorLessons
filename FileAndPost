@@ -81,29 +81,37 @@ namespace Task4
         }
         public static void DecreseArray(ref string[] array, int index)
         {
-            string[] tempArray = new string[array.Length - 1];
-
-            for (int i = 0; i < index; i++)
+            if (array.Length != 0)
             {
-                tempArray[i] = array[i];
+                string[] tempArray = new string[array.Length - 1];
+
+                for (int i = 0; i < index; i++)
+                {
+                    tempArray[i] = array[i];
+                }
+
+                for (int i = index + 1; i < array.Length; i++)
+                {
+                    tempArray[i - 1] = array[i];
+                }
+
+                array = tempArray;
+
+                if (index > tempArray.Length)
+                {
+                    Console.WriteLine("Такого досье не существует");
+                }
+
+                else if (index <= 0)
+                {
+                    Console.WriteLine("В системе нет ни одного досье");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Нельзя удалить то чего нет");
             }
 
-            for (int i = index + 1; i < array.Length; i++)
-            {
-                tempArray[i - 1] = array[i];
-            }
-
-            array = tempArray;
-
-            if (index > tempArray.Length)
-            {
-                Console.WriteLine("Такого досье не существует");
-            }
-
-            else if(index <= 0)
-            {
-                Console.WriteLine("В системе нет ни одного досье");
-            }
         }
 
         public static void SearchBySurname(string[] files, string[] posts)
