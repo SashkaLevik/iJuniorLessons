@@ -11,8 +11,8 @@ namespace Task4
         static void Main(string[] args)
         {
             bool isOnLine = true;            
-            string[] file = {"Сергей Сергеевич Пупкин","Денис Денисович Ежиков", "Борис Борисович Котейкин"};
-            string[] post = { "Директор", "Инженер", "Менеджер"};
+            string[] files = { "Пупкин Сергей Сергеевич ", "Ежиков Денис Денисович ", "Котейкин Борис Борисович " };
+            string[] posts = { "Директор", "Инженер", "Менеджер"};
             Console.SetCursorPosition(10, 0);
             Console.WriteLine("Для выбора пункта меню введите его порядковый номер\n");
             Console.WriteLine("1.Вывести все досье\n2.Добавить досье\n3.Удалить досье\n4.Поиск по фамилии\n5.Выход");
@@ -22,16 +22,16 @@ namespace Task4
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        PrintFile(file, post);
+                        PrintFile(files, posts);
                         break;
                     case "2":
-                        AddFile(ref file, ref post);
+                        AddFile(ref files, ref posts);
                         break;
                     case "3":
-                        DeleteFile(ref file, ref post);
+                        DeleteFile(ref files, ref posts);
                         break;
                     case "4":
-                        SurnameSearch(file, post);
+                        SearchBySurname(files, posts);
                         break;
                     case "5":
                         isOnLine = false;
@@ -41,21 +41,21 @@ namespace Task4
             Console.ReadLine();
         }
 
-        public static void PrintFile(string[] file, string[] post)
+        public static void PrintFile(string[] files, string[] posts)
         {
             Console.WriteLine("Все досье компании");
 
-            for (int i = 0; i < file.Length; i++)
+            for (int i = 0; i < files.Length; i++)
             {
-                Console.Write((i + 1) + file[i] + " - " + post[i] + ".");
+                Console.Write((i + 1) + files[i] + " - " + posts[i] + ".");
             }
             Console.WriteLine();
         }
 
-        public static void AddFile(ref string[] file, ref string[] post)
+        public static void AddFile(ref string[] files, ref string[] posts)
         {
-            IncreseArray(ref file, "Введите ФИО сотрудника");
-            IncreseArray(ref post, "Введите должность сотрудника");
+            IncreseArray(ref files, "Введите ФИО сотрудника");
+            IncreseArray(ref posts, "Введите должность сотрудника");
         }
 
         public static void IncreseArray(ref string[] array, string namePost)
@@ -72,20 +72,24 @@ namespace Task4
             tempArray[tempArray.Length - 1] = Console.ReadLine();        
         }
 
-        public static void DeleteFile(ref string[] file, ref string[] post)
+        public static void DeleteFile(ref string[] files, ref string[] posts)
         {            
             Console.WriteLine("Введите номер файла для удаления");
             int index = Convert.ToInt32(Console.ReadLine()) - 1;
-            DecreseArray(ref file, ref index);
-            DecreseArray(ref post, ref index);
+            DecreseArray(ref files, index);
+            DecreseArray(ref posts, index);
         }
-        public static void DecreseArray(ref string[] array, ref int index)
+        public static void DecreseArray(ref string[] array, int index)
         {
             string[] tempArray = new string[array.Length - 1];            
 
             if (index < 0 || index > tempArray.Length)
             {
                 Console.WriteLine("Такого досье не существует");
+            }
+            else if (tempArray.Length == 0)
+            {
+                Console.WriteLine("В системе нет ни одного досье");
             }
             else
             {
@@ -103,16 +107,16 @@ namespace Task4
             }
         }
 
-        public static void SurnameSearch(string[] file, string[] post)
+        public static void SearchBySurname(string[] files, string[] posts)
         {
             string surName;
             bool fileIsFind = false;
             Console.WriteLine("Введите фамилию сотрудника");
             surName = Console.ReadLine();
 
-            for (int i = 0; i < file.Length; i++)
+            for (int i = 0; i < files.Length; i++)
             {                
-                if (file[i].ToLower().EndsWith(surName.ToLower()))
+                if (files[i].ToLower().StartsWith(surName.ToLower()))
                 {
                     Console.WriteLine("Досье сотрудника " + surName + " находится под номером " + (i + 1));
                     fileIsFind = true;
