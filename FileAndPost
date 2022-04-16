@@ -79,11 +79,21 @@ namespace Task4
             DecreseArray(ref files, index);
             DecreseArray(ref posts, index);
         }
+
         public static void DecreseArray(ref string[] array, int index)
         {
             if (array.Length != 0)
             {
                 string[] tempArray = new string[array.Length - 1];
+
+                if (index > tempArray.Length)
+                {
+                    Console.WriteLine("Такого досье не существует");
+                }
+                else if (index <= 0)
+                {
+                    Console.WriteLine("В системе нет ни одного досье");
+                }
 
                 for (int i = 0; i < index; i++)
                 {
@@ -96,16 +106,6 @@ namespace Task4
                 }
 
                 array = tempArray;
-
-                if (index > tempArray.Length)
-                {
-                    Console.WriteLine("Такого досье не существует");
-                }
-
-                else if (index <= 0)
-                {
-                    Console.WriteLine("В системе нет ни одного досье");
-                }
             }
             else
             {
