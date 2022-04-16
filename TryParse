@@ -9,29 +9,31 @@ namespace Task2
     class Program
     {
         static void Main(string[] args)
-        {            
+        {
+            GetNumber();
+        }
+
+        public static int GetNumber()
+        {
+            int number = 0;
+            string userInput;            
             bool isInputing = true;
 
             while (isInputing)
             {
-                ConvertToInteger();
-            }
-        }
+                Console.WriteLine("Введите число");
+                userInput = Console.ReadLine();
 
-        public static int ConvertToInteger()
-        {
-            int number;
-            string userInput;
-            Console.WriteLine("Введите число");
-            userInput = Console.ReadLine();
-
-            if (int.TryParse(userInput, out number))
-            {
-                Console.WriteLine($"Вы ввели число {number}");
-            }
-            else
-            {
-                Console.WriteLine("Нужно ввести число!");
+                if (!int.TryParse(userInput, out number))
+                {
+                    Console.WriteLine("Нужно ввести число!");                  
+                }
+                else
+                {
+                    Console.WriteLine($"Вы ввели число {number}");
+                    isInputing = false;
+                    Console.ReadLine();
+                }
             }
             return number;
         }
