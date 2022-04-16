@@ -10,8 +10,7 @@ namespace Task4
     {
         static void Main(string[] args)
         {
-            bool isOnLine = true;
-            int index = 0;
+            bool isOnLine = true;            
             string[] file = {"Сергей Сергеевич Пупкин","Денис Денисович Ежиков", "Борис Борисович Котейкин"};
             string[] post = { "Директор", "Инженер", "Менеджер"};
             Console.SetCursorPosition(10, 0);
@@ -29,10 +28,10 @@ namespace Task4
                         AddFile(ref file, ref post);
                         break;
                     case "3":
-                        DeleteFile(ref file, ref post, ref index);
+                        DeleteFile(ref file, ref post);
                         break;
                     case "4":
-                        SurNameSearch(file, post);
+                        SurnameSearch(file, post);
                         break;
                     case "5":
                         isOnLine = false;
@@ -55,11 +54,11 @@ namespace Task4
 
         public static void AddFile(ref string[] file, ref string[] post)
         {
-            AddArray(ref file, "Введите ФИО сотрудника");
-            AddArray(ref post, "Введите должность сотрудника");
+            IncreseArray(ref file, "Введите ФИО сотрудника");
+            IncreseArray(ref post, "Введите должность сотрудника");
         }
 
-        public static void AddArray(ref string[] array, string namePost)
+        public static void IncreseArray(ref string[] array, string namePost)
         {
             Console.WriteLine(namePost);
             string[] tempArray = new string[array.Length + 1];
@@ -73,16 +72,17 @@ namespace Task4
             tempArray[tempArray.Length - 1] = Console.ReadLine();        
         }
 
-        public static void DeleteFile(ref string[] file, ref string[] post, ref int index)
-        {        
-            DeleteArray(ref file, ref index);
-            DeleteArray(ref post, ref index);
-        }
-        public static void DeleteArray(ref string[] array, ref int userInput)
-        {
-            string[] tempArray = new string[array.Length - 1];
+        public static void DeleteFile(ref string[] file, ref string[] post)
+        {            
             Console.WriteLine("Введите номер файла для удаления");
             int index = Convert.ToInt32(Console.ReadLine()) - 1;
+            DecreseArray(ref file, ref index);
+            DecreseArray(ref post, ref index);
+        }
+        public static void DecreseArray(ref string[] array, ref int index)
+        {
+            string[] tempArray = new string[array.Length - 1];            
+
             if (index < 0 || index > tempArray.Length)
             {
                 Console.WriteLine("Такого досье не существует");
@@ -103,7 +103,7 @@ namespace Task4
             }
         }
 
-        public static void SurNameSearch(string[] file, string[] post)
+        public static void SurnameSearch(string[] file, string[] post)
         {
             string surName;
             bool fileIsFind = false;
