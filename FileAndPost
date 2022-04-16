@@ -76,25 +76,35 @@ namespace Task4
         {            
             Console.WriteLine("Введите номер файла для удаления");
             int index = Convert.ToInt32(Console.ReadLine()) - 1;
-            DecreseArray(ref files, index);
-            DecreseArray(ref posts, index);
+
+            if (files.Length != 0 && posts.Length != 0)
+            {
+                if (index < 0)
+                {
+                    Console.WriteLine("Введите существующий номер файла");
+                }
+                else
+                {
+                    DecreseArray(ref files, index);
+                    DecreseArray(ref posts, index);
+                } 
+            }
+            else
+            {
+                Console.WriteLine("Нельзя удалить то чего нет");
+            }
         }
 
         public static void DecreseArray(ref string[] array, int index)
-        {
-            if (array.Length != 0)
+        {         
+            string[] tempArray = new string[array.Length - 1];
+
+            if (index > tempArray.Length)
             {
-                string[] tempArray = new string[array.Length - 1];
-
-                if (index > tempArray.Length)
-                {
-                    Console.WriteLine("Такого досье не существует");
-                }
-                else if (index <= 0)
-                {
-                    Console.WriteLine("В системе нет ни одного досье");
-                }
-
+                Console.WriteLine("Такого досье не существует");
+            }
+            else
+            {
                 for (int i = 0; i < index; i++)
                 {
                     tempArray[i] = array[i];
@@ -107,11 +117,6 @@ namespace Task4
 
                 array = tempArray;
             }
-            else
-            {
-                Console.WriteLine("Нельзя удалить то чего нет");
-            }
-
         }
 
         public static void SearchBySurname(string[] files, string[] posts)
