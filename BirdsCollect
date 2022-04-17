@@ -15,8 +15,10 @@ namespace Task4
             int birdsCount = 0;
             int allBirds = 0;
             int speed = 300;
-            int playerX = 1, playerY = 1;
-            int playerMoveX = 0, playerMoveY = 0;
+            int playerX = 1;
+            int playerY = 1;
+            int playerMoveX = 0;
+            int playerMoveY = 0;
             char[,] map =
             {
                 {'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*'},
@@ -44,11 +46,13 @@ namespace Task4
             {
                 Console.SetCursorPosition(0, 20);
                 Console.WriteLine($"Собрано {birdsCount}/{allBirds}");
+
                 if (Console.KeyAvailable)
                 {
                     ConsoleKeyInfo key = Console.ReadKey(true);
                     ChangeDirection(key, ref playerMoveX, ref playerMoveY);
                 }
+
                 if (map[playerX + playerMoveX, playerY + playerMoveY] != '*')
                 {
                     MovePlayer(ref playerX, ref playerY, playerMoveX, playerMoveY);
@@ -73,43 +77,43 @@ namespace Task4
             } 
         }
 
-        static void MovePlayer(ref int posX, ref int posY, int dirX, int dirY)
+        static void MovePlayer(ref int positionX, ref int positionY, int directionX, int directionY)
         {      
-            Console.SetCursorPosition(posY, posX);
+            Console.SetCursorPosition(positionY, positionX);
             Console.Write(' ');
 
-            posX += dirX;
-            posY += dirY;
+            positionX += directionX;
+            positionY += directionY;
 
-            Console.SetCursorPosition(posY, posX);
+            Console.SetCursorPosition(positionY, positionX);
             Console.Write('@');
         }
 
-        static void ChangeDirection(ConsoleKeyInfo key, ref int dirX, ref int dirY)
+        static void ChangeDirection(ConsoleKeyInfo key, ref int directionX, ref int directionY)
         {
             switch (key.Key)
             {
                 case ConsoleKey.UpArrow:
-                    dirX = -1; dirY = 0;
+                    directionX = -1; directionY = 0;
                     break;
                 case ConsoleKey.DownArrow:
-                    dirX = 1; dirY = 0;
+                    directionX = 1; directionY = 0;
                     break;
                 case ConsoleKey.LeftArrow:
-                    dirX = 0; dirY = -1;
+                    directionX = 0; directionY = -1;
                     break;
                 case ConsoleKey.RightArrow:
-                    dirX = 0; dirY = 1;
+                    directionX = 0; directionY = 1;
                     break;
             }
         }
 
-        static void CollectBirds(char[,] map, int posX, int posY, ref int birdsCount)
+        static void CollectBirds(char[,] map, int positionX, int positionY, ref int birdsCount)
         {
-            if (map[posX, posY] == '^')
+            if (map[positionX, positionY] == '^')
             {
                 birdsCount++;
-                map[posX, posY] = ' ';
+                map[positionX, positionY] = ' ';
             }
         }
 
