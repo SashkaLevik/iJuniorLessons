@@ -13,8 +13,9 @@ namespace Task1
             int[] array = { 2, 78, 34, 5, 23, 98 };
             Console.WriteLine("Исходный массив");
             OutputArray(array);
-            Console.WriteLine("\nПеремешанный массив");
             ShuffleArray(array);
+            Console.WriteLine("\nПеремешанный массив");
+            OutputArray(array);
             Console.ReadLine();
         }
 
@@ -34,8 +35,7 @@ namespace Task1
                 int index = random.Next(i + 1);
                 int shuffledIndex = array[index];
                 array[index] = array[i];
-                array[i] = shuffledIndex;
-                Console.Write(array[i] + " ");
+                array[i] = shuffledIndex;                
             }
         }
     }
