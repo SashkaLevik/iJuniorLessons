@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.CursorVisible = false;
+            bool isPlaying = true;
+            int birdsCount = 0;
+            int allBirds = 0;
+            int speed = 300;
+            int playerX = 1, playerY = 1;
+            int playerMoveX = 0, playerMoveY = 0;
+            char[,] map =
+            {
+                {'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*'},
+                {'*',' ','^',' ',' ','%',' ',' ',' ','%',' ',' ',' ',' ',' ',' ','^','^',' ','*'},
+                {'*',' ','^',' ',' ',' ',' ',' ',' ','%',' ',' ',' ',' ',' ',' ',' ','^',' ','*'},
+                {'*',' ','^','^',' ',' ','%',' ',' ',' ',' ','^',' ',' ',' ',' ',' ',' ',' ','*'},
+                {'*','%',' ','^','^','^','^','%',' ',' ',' ','^',' ',' ','%',' ',' ','%',' ','*'},
+                {'*','^','^',' ',' ','^','^','%',' ','^',' ',' ',' ',' ','%',' ',' ',' ',' ','*'},
+                {'*',' ',' ',' ','%',' ',' ','^',' ','^',' ','%',' ',' ',' ',' ',' ',' ',' ','*'},
+                {'*',' ',' ',' ',' ',' ',' ','^',' ',' ',' ',' ',' ',' ','^','^','^',' ','%','*'},
+                {'*','^','%','%',' ',' ','%',' ',' ',' ',' ','^',' ',' ',' ',' ',' ',' ',' ','*'},
+                {'*',' ','^','^',' ',' ','%',' ',' ',' ',' ','^',' ',' ',' ',' ','%','%',' ','*'},
+                {'*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*','*'},
+            };
+
+            DrawMap(map, ref allBirds);
+
+            Console.SetCursorPosition(25, 0);
+            Console.WriteLine("Соберите всех птичек.");
+            Console.SetCursorPosition(25, 1);
+            Console.WriteLine("Если вы наступите на % - вы умрёте!");
+            Console.SetCursorPosition(playerY, playerX);
+            Console.Write('@');
+            while (isPlaying)
+            {
+                Console.SetCursorPosition(0, 20);
+                Console.WriteLine($"Собрано {birdsCount}/{allBirds}");
+                if (Console.KeyAvailable)
+                {
+                    ConsoleKeyInfo key = Console.ReadKey(true);
+                    ChangeDirection(key, ref playerMoveX, ref playerMoveY);
+                }
+                if (map[playerX + playerMoveX, playerY + playerMoveY] != '*')
+                {
+                    MovePlayer(ref playerX, ref playerY, playerMoveX, playerMoveY);
+                    CollectBirds(map, playerX, playerY, ref birdsCount);
+                    System.Threading.Thread.Sleep(speed);
+                }
+
+                if (birdsCount == allBirds)
+                {
+                    Console.SetCursorPosition(15, 20);
+                    Console.WriteLine("Вы победили!");
+                    isPlaying = false;
+                    Console.ReadLine();
+                }
+                else if (map[playerX, playerY] == '%')
+                {
+                    Console.SetCursorPosition(15, 20);
+                    Console.WriteLine("Вы проиграли!");
+                    isPlaying = false;
+                    Console.ReadLine();
+                }
+            } 
+        }
+
+        static void MovePlayer(ref int posX, ref int posY, int dirX, int dirY)
+        {      
+            Console.SetCursorPosition(posY, posX);
+            Console.Write(' ');
+
+            posX += dirX;
+            posY += dirY;
+
+            Console.SetCursorPosition(posY, posX);
+            Console.Write('@');
+        }
+
+        static void ChangeDirection(ConsoleKeyInfo key, ref int dirX, ref int dirY)
+        {
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    dirX = -1; dirY = 0;
+                    break;
+                case ConsoleKey.DownArrow:
+                    dirX = 1; dirY = 0;
+                    break;
+                case ConsoleKey.LeftArrow:
+                    dirX = 0; dirY = -1;
+                    break;
+                case ConsoleKey.RightArrow:
+                    dirX = 0; dirY = 1;
+                    break;
+            }
+        }
+
+        static void CollectBirds(char[,] map, int posX, int posY, ref int birdsCount)
+        {
+            if (map[posX, posY] == '^')
+            {
+                birdsCount++;
+                map[posX, posY] = ' ';
+            }
+        }
+
+        static void DrawMap(char[,] map, ref int allBirds)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    Console.Write(map[i, j]);
+                    if (map[i,j] == '^')
+                    {
+                        allBirds++;
+                    }
+                }
+                Console.WriteLine();
+            }
+        }                
+    }
+}
