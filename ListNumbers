@@ -10,7 +10,7 @@ namespace Task1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите числа.\nВведите команду sum для вывода суммы всех введенных чисел.\n" +
+            Console.WriteLine("Введите числа.\nВведите команду sum для вывода суммы всех чисел.\n" +
                "Введите команду exit для выхода");
 
             int number = 0;
