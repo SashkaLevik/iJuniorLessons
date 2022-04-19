@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Введите числа.\nВведите команду sum для вывода суммы всех введенных чисел.\n" +
+               "Введите команду exit для выхода");
+
+            int number = 0;
+            int sum = 0;
+            bool isInputing = true;
+            List<int> numbers = new List<int>();           
+
+            while (isInputing)
+            {
+                string userInput = Console.ReadLine();
+                if (!int.TryParse(userInput, out number))
+                {
+                    if (userInput != "sum" && userInput != "exit")
+                    {
+                        Console.WriteLine("Введите число!!!");
+                    }                   
+                }
+                else
+                {
+                    numbers.Add(int.Parse(userInput));
+                }
+
+                if (userInput == "sum")
+                {
+                    foreach (var element in numbers)
+                    {
+                        sum += element;
+                    }
+                    Console.WriteLine(sum);
+                }
+                else if (userInput == "exit")
+                {
+                    isInputing = false;
+                }
+            }     
+        }               
+    }
+}
