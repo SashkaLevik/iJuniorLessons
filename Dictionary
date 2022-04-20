@@ -1,0 +1,39 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isWork = true;
+            Console.WriteLine("Словарь средневековых доспехов");
+            Dictionary<string, string> armors = new Dictionary<string, string>();
+            armors.Add("Бригантина", "Западно - европейский вариант пластинчатого доспеха");
+            armors.Add("Ламелляр", "Византийский, а затем восточно-европейский вариант пластинчатого доспеха.");
+            armors.Add("Кольчуга", "Доспех, состоящий из сплетенных колец.");
+            armors.Add("Бахтерец", "Гибрид пластинчатого и кольчужного доспеха.");
+            armors.Add("Латный доспех", "Доспех состоит из объемных деталей, скрепленных между собой ремешками для подвижности");
+           
+            while (isWork)
+            {
+                string userInput;
+                Console.WriteLine("Введите название брони");
+                userInput = Console.ReadLine();
+
+                if (armors.ContainsKey(userInput))
+                {
+                    Console.WriteLine(armors[userInput]);
+                }
+                else
+                {
+                    Console.WriteLine("Нет такой брони");
+                }
+            }
+        }
+    }
+}
