@@ -12,40 +12,47 @@ namespace Task1
         {
             Console.WriteLine("Введите числа.\nВведите команду sum для вывода суммы всех чисел.\n" +
                "Введите команду exit для выхода");
-
-            int number = 0;
-            int sum = 0;
+                    
             bool isInputing = true;
             List<int> numbers = new List<int>();           
 
             while (isInputing)
             {
                 string userInput = Console.ReadLine();
+                int number = 0;
                 if (!int.TryParse(userInput, out number))
                 {
                     if (userInput != "sum" && userInput != "exit")
                     {
                         Console.WriteLine("Введите число!!!");
                     }                   
-                }
+                }             
                 else
                 {
-                    numbers.Add(int.Parse(userInput));
+                    numbers.Add(number);
                 }
 
-                if (userInput == "sum")
-                {
-                    foreach (var element in numbers)
-                    {
-                        sum += element;
-                    }
-                    Console.WriteLine(sum);
-                }
-                else if (userInput == "exit")
+                Sum(userInput, numbers);
+
+                if (userInput == "exit")
                 {
                     isInputing = false;
-                }
+                }               
             }     
-        }               
+        }
+        
+        static void Sum(string userInput, List<int> numbers)
+        {
+            int sum = 0;
+
+            if (userInput == "sum")
+            {
+                foreach (var element in numbers)
+                {
+                    sum += element;
+                }
+                Console.WriteLine(sum);
+            }
+        }
     }
 }
