@@ -20,24 +20,23 @@ namespace Task1
             {
                 string userInput = Console.ReadLine();
                 int number = 0;
-                if (!int.TryParse(userInput, out number))
-                {
-                    if (userInput != "sum" && userInput != "exit")
-                    {
-                        Console.WriteLine("Введите число!!!");
-                    }                   
-                }             
-                else
-                {
-                    numbers.Add(number);
-                }
-
-                Sum(userInput, numbers);
 
                 if (userInput == "exit")
                 {
                     isInputing = false;
-                }               
+                }
+                else if (userInput == "sum")
+                {
+                    Sum(userInput, numbers);
+                }
+                else if (!int.TryParse(userInput, out number))
+                {
+                    Console.WriteLine("Введите число!!!");
+                }
+                else 
+                {
+                    numbers.Add(number);
+                }                                                                     
             }     
         }
         
