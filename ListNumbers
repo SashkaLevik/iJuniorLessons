@@ -29,7 +29,7 @@ namespace Task1
                 {
                     Sum(userInput, numbers);
                 }
-                else if (!int.TryParse(userInput, out number))
+                else if (int.TryParse(userInput, out number) == false)
                 {
                     Console.WriteLine("Введите число!!!");
                 }
@@ -44,14 +44,11 @@ namespace Task1
         {
             int sum = 0;
 
-            if (userInput == "sum")
+            foreach (var element in numbers)
             {
-                foreach (var element in numbers)
-                {
-                    sum += element;
-                }
-                Console.WriteLine(sum);
+                sum += element;
             }
+            Console.WriteLine(sum);
         }
     }
 }
