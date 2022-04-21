@@ -13,6 +13,8 @@ namespace Task4
             int account = 0;
             int price;
             bool isWorking = true;
+            int minPrice = 100;
+            int maxPrice = 1000;
 
             Queue<string> customers = new Queue<string>();
             customers.Enqueue("Bob");
@@ -22,7 +24,7 @@ namespace Task4
             while (isWorking)
             {
                 Random random = new Random();
-                price = random.Next(100, 1000);
+                price = random.Next(minPrice, maxPrice);
 
                 for (int i = 0; i == 0; i++)
                 {
