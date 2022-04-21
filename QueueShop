@@ -16,10 +16,10 @@ namespace Task4
             int minPrice = 100;
             int maxPrice = 1000;
 
-            Queue<string> customers = new Queue<string>();
-            customers.Enqueue("Bob");
-            customers.Enqueue("John");
-            customers.Enqueue("Jack");
+            Queue<int> customers = new Queue<int>();
+            customers.Enqueue(1);
+            customers.Enqueue(2);
+            customers.Enqueue(3);
 
             while (isWorking)
             {
@@ -43,7 +43,7 @@ namespace Task4
             }
         }
 
-        static void SaleGoods(Queue<string> customers, int price)
+        static void SaleGoods(Queue<int> customers, int price)
         {
             Console.WriteLine("Покупатель " + customers.Dequeue() + " приобрёл товаров на сумму " + price);                                
             Console.ReadLine();
