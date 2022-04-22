@@ -51,12 +51,15 @@ namespace Task1
         static void AddDossier(Dictionary<int, string> dossier)
         {
             Console.WriteLine("Введите ID файла, затем должность и ФИО работника");
-            int idInput;
-            idInput = Convert.ToInt32(Console.ReadLine());
+            int idInput;            
             string nameInput;
             nameInput = Console.ReadLine();
             
-            if (dossier.ContainsKey(idInput))
+            if (int.TryParse(Console.ReadLine(), out idInput) == false)
+            {
+                Console.WriteLine("Вы ввели не номер ID");
+            }
+            else if (dossier.ContainsKey(idInput))
             {
                 Console.WriteLine("Досье под таким номером уже существует");
             }
@@ -69,8 +72,12 @@ namespace Task1
         static void DeleteDossier(Dictionary<int, string> dossier)
         {
             Console.WriteLine("Введите ID удаляемого файла");
-            int userInput;
-            userInput = Convert.ToInt32(Console.ReadLine());
+            int userInput;          
+
+            if (int.TryParse(Console.ReadLine(), out userInput) == false)
+            {
+                Console.WriteLine("Вы ввели не номер ID");
+            }
             if (userInput > dossier.Count)
             {
                 Console.WriteLine("Такого досье не существует");
