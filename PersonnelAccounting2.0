@@ -1,0 +1,84 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isOnline = true;
+            Dictionary<int, string> dossier = new Dictionary<int, string>();
+            dossier.Add(1, "Директор - Ёжиков Олег Олегович");
+            dossier.Add(2, "Инженер - Котейкин Иван Иванович");
+            dossier.Add(3, "Бухгалтер - Белкин Игорь Игоревич");
+            Console.WriteLine("Для выбора пункта меню введите его порядковый номер\n");
+            Console.WriteLine("1.Вывести все досье\n2.Добавить досье\n3.Удалить досье\n4.Выход");
+
+            while (isOnline)
+            {
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        PrintDossier(dossier);
+                        break;
+                    case "2":
+                        AddDossier(dossier);
+                        break;
+                    case "3":
+                        DeleteDossier(dossier);
+                        break;                 
+                    case "4":
+                        isOnline = false;
+                        break;
+                }
+            }                      
+        }
+
+        static void PrintDossier(Dictionary<int, string> dossier)
+        {
+            Console.WriteLine("Все работники компании");
+
+            foreach (var person in dossier)
+            {
+                Console.WriteLine($"{person.Key}. {person.Value}");
+            }
+        }
+
+        static void AddDossier(Dictionary<int, string> dossier)
+        {
+            Console.WriteLine("Введите ID файла, затем должность и ФИО работника");
+            int idInput;
+            idInput = Convert.ToInt32(Console.ReadLine());
+            string nameInput;
+            nameInput = Console.ReadLine();
+            
+            if (dossier.ContainsKey(idInput))
+            {
+                Console.WriteLine("Досье под таким номером уже существует");
+            }
+            else
+            {
+                dossier.Add(idInput, nameInput);
+            }
+        }
+
+        static void DeleteDossier(Dictionary<int, string> dossier)
+        {
+            Console.WriteLine("Введите ID удаляемого файла");
+            int userInput;
+            userInput = Convert.ToInt32(Console.ReadLine());
+            if (userInput > dossier.Count)
+            {
+                Console.WriteLine("Такого досье не существует");
+            }
+            else
+            {
+                dossier.Remove(userInput);
+            }
+        }
+    }
+}
