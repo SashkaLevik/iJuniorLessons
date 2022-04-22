@@ -1,0 +1,28 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string[] fruitBusket = { "банан", "киви", "яблоко", "груша" };
+            string[] fruitBag = { "яблоко", "банан", "апельсин", "манго" };
+            List<string> fruitBox = new List<string>();
+            fruitBox.AddRange(fruitBusket);
+            fruitBox.AddRange(fruitBag);
+            HashSet<string> unicFruitBox = new HashSet<string>(fruitBox);
+                       
+            foreach (var fruit in unicFruitBox)
+            {                            
+                Console.WriteLine(fruit);
+            }
+            
+            Console.ReadLine();
+        }
+    }
+}
