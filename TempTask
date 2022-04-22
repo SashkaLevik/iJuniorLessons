@@ -1,0 +1,52 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int account = 0;
+            int price;
+            bool isWorking = true;
+            int minPrice = 100;
+            int maxPrice = 1000;
+            Random random = new Random();            
+            Queue<int> customers = new Queue<int>(3);
+          
+            while (isWorking)
+            {                
+                price = random.Next(minPrice, maxPrice);
+               
+                for (int i = 0; i == 0; i++)
+                {
+                    account += price;
+                    Console.WriteLine("В кассе " + account);
+                }
+                customers.Enqueue(price);
+                customers.Enqueue(price);
+                customers.Enqueue(price);
+
+                SaleGoods(customers, price);
+
+                if (customers.Count == 0)
+                {
+                    Console.WriteLine("Покупателей больше нет, мы закрываемся");
+                    Console.ReadLine();
+                    isWorking = false;
+                }
+            }
+        }
+
+        static void SaleGoods(Queue<int> customers, int price)
+        {
+            Console.WriteLine("Покупатель приобрёл товаров на сумму "+ customers.Dequeue());
+            Console.ReadLine();
+            Console.Clear();
+        }
+    }
+}
