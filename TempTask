@@ -12,17 +12,18 @@ namespace Task4
         {
             int account = 0;
             int price;
-            bool isWorking = true;
             int minPrice = 100;
             int maxPrice = 1000;
+            bool isWorking = true;
             Random random = new Random();            
             Queue<int> customers = new Queue<int>(3);
           
             while (isWorking)
-            {                
+            {
+
                 price = random.Next(minPrice, maxPrice);
-               
-                for (int i = 0; i == 0; i++)
+
+                for (int i = 0; i < customers.Count; i++)
                 {
                     account += price;
                     Console.WriteLine("В кассе " + account);
@@ -31,7 +32,7 @@ namespace Task4
                 customers.Enqueue(price);
                 customers.Enqueue(price);
 
-                SaleGoods(customers, price);
+                SaleGoods(customers);
 
                 if (customers.Count == 0)
                 {
@@ -42,8 +43,8 @@ namespace Task4
             }
         }
 
-        static void SaleGoods(Queue<int> customers, int price)
-        {
+        static void SaleGoods(Queue<int> customers)
+        {       
             Console.WriteLine("Покупатель приобрёл товаров на сумму "+ customers.Dequeue());
             Console.ReadLine();
             Console.Clear();
