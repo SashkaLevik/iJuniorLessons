@@ -17,23 +17,32 @@ namespace Task4
             bool isWorking = true;
             Random random = new Random();            
             Queue<int> customers = new Queue<int>(3);
-          
+            int customersCount = 3;
+            
+            
+            for (int i = 0; i < customersCount; i++)
+            {
+                price = random.Next(minPrice, maxPrice);
+                customers.Enqueue(price);                
+            }
+            
+            foreach (var customer in customers)
+            {                
+                Console.WriteLine(customer);
+            }
+            Console.ReadLine();
+
             while (isWorking)
             {
-
-                price = random.Next(minPrice, maxPrice);
-
-                for (int i = 0; i < customers.Count; i++)
+                foreach (var customer in customers)
                 {
-                    account += price;
-                    Console.WriteLine("В кассе " + account);
+                    account += customer;
+                    Console.WriteLine("Покупатель приобрёл товаров на сумму " + account);
+                    customers.Dequeue();
                 }
-                customers.Enqueue(price);
-                customers.Enqueue(price);
-                customers.Enqueue(price);
 
-                SaleGoods(customers);
-
+                //SaleGoods(customers);
+                               
                 if (customers.Count == 0)
                 {
                     Console.WriteLine("Покупателей больше нет, мы закрываемся");
@@ -44,10 +53,18 @@ namespace Task4
         }
 
         static void SaleGoods(Queue<int> customers)
-        {       
-            Console.WriteLine("Покупатель приобрёл товаров на сумму "+ customers.Dequeue());
+        {
+            int account = 0;
+            Console.WriteLine("Покупатель приобрёл товаров на сумму " + customers.Dequeue());
+            for (int i = 0; i < customers.Count; i++)
+            {
+                int proffit = customers.Dequeue();
+                account += proffit;
+            }
+
+            Console.WriteLine("В кассе " + account);
             Console.ReadLine();
-            Console.Clear();
+            //Console.Clear();
         }
     }
 }
