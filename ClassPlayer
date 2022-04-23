@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Player player = new Player(100, 10, 20);
+            player.ShowPlayerStats();
+            Console.ReadLine();
+        }
+        class Player
+        {
+            int Health;
+            int Speed;
+            int Attack;
+
+            public Player(int health, int speed, int attack)
+            {
+                Health = health;
+                Speed = speed;
+                Attack = attack;
+            }
+
+            public void ShowPlayerStats()
+            {
+                Console.WriteLine($"Жизнь {Health}\nСкорость {Speed}\nАтака {Attack}");
+            }
+        }
+    }
+}
