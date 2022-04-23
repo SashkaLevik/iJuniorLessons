@@ -12,28 +12,29 @@ namespace Task4
         {
             int account = 0;
             int price;
-            bool isWorking = true;
             int minPrice = 100;
             int maxPrice = 1000;
-
-            Queue<int> customers = new Queue<int>();
+            bool isWorking = true;
+            Random random = new Random();            
+            Queue<int> customers = new Queue<int>(3);
             customers.Enqueue(1);
             customers.Enqueue(2);
             customers.Enqueue(3);
 
             while (isWorking)
             {
-                Random random = new Random();
                 price = random.Next(minPrice, maxPrice);
-
-                for (int i = 0; i == 0; i++)
+                
+                SaleGoods(customers, price);
+                
+                for (int i = 0; i < customers.Count; i++)
                 {
-                    account += price;                    
-                    Console.WriteLine("В кассе " + account);
+                    account += price;
                 }
 
-                SaleGoods(customers, price);
+                Console.WriteLine("В кассе " + account);
 
+                Console.ReadLine();
                 if (customers.Count == 0)
                 {
                     Console.WriteLine("Покупателей больше нет, мы закрываемся");
@@ -44,10 +45,10 @@ namespace Task4
         }
 
         static void SaleGoods(Queue<int> customers, int price)
-        {
-            Console.WriteLine("Покупатель " + customers.Dequeue() + " приобрёл товаров на сумму " + price);                                
-            Console.ReadLine();
-            Console.Clear();
+        {            
+            Console.WriteLine("Покупатель приобрёл товаров на сумму "+ price);
+            customers.Dequeue();                                   
+            //Console.Clear();
         }
     }
 }
