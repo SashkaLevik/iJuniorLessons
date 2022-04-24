@@ -23,16 +23,13 @@ namespace Task4
                 customers.Enqueue(price);                
             }
 
-            ServingCustomer(customers);
+            ServeCustomers(customers);
 
-            if (customers.Count == 0)
-            {
-                Console.WriteLine("Покупателей больше нет, мы закрываемся");
-                Console.ReadLine();                
-            }
+            Console.WriteLine("Покупателей больше нет, мы закрываемся");
+            Console.ReadLine();
         }
 
-        static void ServingCustomer(Queue<int> customers)
+        static void ServeCustomers(Queue<int> customers)
         {
             int account = 0;
           
