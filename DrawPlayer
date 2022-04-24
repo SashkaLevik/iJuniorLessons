@@ -14,29 +14,28 @@ namespace Task2
             Rendering rendering = new Rendering();
             rendering.DrawPlayer(player.PositionX, player.PositionY, player.Symbol);
         }
+    }
 
-        class Rendering
+    class Rendering
+    {
+        public void DrawPlayer(int positionX, int positionY, char symbol)
         {
-            public void DrawPlayer(int positionX, int positionY, char symbol)
-            {
-                Console.SetCursorPosition(positionX, positionY);
-                Console.Write(symbol);
-                Console.ReadLine();
-            }
+            Console.SetCursorPosition(positionX, positionY);
+            Console.Write(symbol);
+            Console.ReadLine();
         }
+    }
 
-        class Player
+    class Player
+    {
+        public int PositionX;
+        public int PositionY;
+        public char Symbol;
+        public Player(int positionX, int positionY, char symbol)
         {
-            public int PositionX;
-            public int PositionY;
-            public char Symbol;
-            public Player(int positionX, int positionY, char symbol)
-            {
-                PositionX = positionX;
-                PositionY = positionY;
-                Symbol = symbol;
-            }
+            PositionX = positionX;
+            PositionY = positionY;
+            Symbol = symbol;
         }
-
     }
 }
