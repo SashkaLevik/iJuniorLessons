@@ -28,9 +28,9 @@ namespace Task2
 
     class Player
     {
-        public int PositionX;
-        public int PositionY;
-        public char Symbol;
+        public int PositionX { get; private set; }
+        public int PositionY { get; private set; }
+        public char Symbol { get; private set; }
         public Player(int positionX, int positionY, char symbol)
         {
             PositionX = positionX;
