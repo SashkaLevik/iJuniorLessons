@@ -11,26 +11,27 @@ namespace Task1
         static void Main(string[] args)
         {
             Player player = new Player(100, 10, 20);
-            player.ShowPlayerStats();
+            player.ShowStats();
             Console.ReadLine();
         }
-        class Player
+    }
+
+    class Player
+    {
+        private int _health;
+        private int _speed;
+        private int _attack;
+
+        public Player(int health, int speed, int attack)
         {
-            int Health;
-            int Speed;
-            int Attack;
+            _health = health;
+            _speed = speed;
+            _attack = attack;
+        }
 
-            public Player(int health, int speed, int attack)
-            {
-                Health = health;
-                Speed = speed;
-                Attack = attack;
-            }
-
-            public void ShowPlayerStats()
-            {
-                Console.WriteLine($"Жизнь {Health}\nСкорость {Speed}\nАтака {Attack}");
-            }
+        public void ShowStats()
+        {
+            Console.WriteLine($"Жизнь {_health}\nСкорость {_speed}\nАтака {_attack}");
         }
     }
 }
