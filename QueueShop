@@ -9,32 +9,25 @@ namespace Task4
     class Program
     {
         static void Main(string[] args)
-        {
-            int account = 0;
+        {            
             int price;
             int minPrice = 100;
             int maxPrice = 1000;
+            int customersCount = 3;
             bool isWorking = true;
             Random random = new Random();            
-            Queue<int> customers = new Queue<int>(3);
-            customers.Enqueue(1);
-            customers.Enqueue(2);
-            customers.Enqueue(3);
-
-            while (isWorking)
+            Queue<int> customers = new Queue<int>();
+                                   
+            for (int i = 0; i < customersCount; i++)
             {
                 price = random.Next(minPrice, maxPrice);
-                
-                SaleGoods(customers, price);
-                
-                for (int i = 0; i < customers.Count; i++)
-                {
-                    account += price;
-                }
+                customers.Enqueue(price);                
+            }
+                   
+            while (isWorking)
+            {
+                SaleGoods(customers);
 
-                Console.WriteLine("В кассе " + account);
-
-                Console.ReadLine();
                 if (customers.Count == 0)
                 {
                     Console.WriteLine("Покупателей больше нет, мы закрываемся");
@@ -44,11 +37,22 @@ namespace Task4
             }
         }
 
-        static void SaleGoods(Queue<int> customers, int price)
-        {            
-            Console.WriteLine("Покупатель приобрёл товаров на сумму "+ price);
-            customers.Dequeue();                                   
-            //Console.Clear();
+        static void SaleGoods(Queue<int> customers)
+        {
+            int account = 0;
+
+            foreach (var customer in customers)
+            {
+                account += customer;
+                Console.WriteLine("Покупатель приобрёл товаров на сумму " + customer);
+                Console.WriteLine("В кассе" + account);
+                Console.ReadLine();
+                Console.Clear();
+            }
+            while (customers.Count > 0)
+            {
+                customers.Dequeue();
+            }
         }
     }
 }
