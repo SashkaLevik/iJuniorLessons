@@ -4,84 +4,162 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task2
+namespace Task1
 {
     class Program
     {
         static void Main(string[] args)
         {
-            bool isPlaying = true;
-            Console.WriteLine("1.Вытянуть карту\n2.Завершить и показать результат\n3.Выход");
+            bool isPlaying = true;            
+            DataBase dataBase = new DataBase();
+
+            Console.WriteLine("Выберите действие\n1.Вывести всех игроков\n2.Добавить игрока" +
+                    "\n3.Удалить игрока\n4.Забанить игрока\n5.Разбанить игрока\n6.Выход");
 
             while (isPlaying)
-            {
+            {                
                 switch (Convert.ToInt32(Console.ReadLine()))
                 {
-                    case 1:
+                    case 1 :
+                        dataBase.ShowPlayers();
                         break;
                     case 2:
+                        dataBase.AddPlayer();
                         break;
                     case 3:
+                        dataBase.DeletePlayer();
+                        break;
+                    case 4:
+                        dataBase.BanPlayer();
+                        break;
+                    case 5:
+                        dataBase.UnBanPlayer();
+                        break;
+                    case 6:
+                        isPlaying = false;
                         break;
                 }
             }
         }
     }
-
-    class Card
-    {
-        public string CardSuit { get; private set; }
-        public int CardValue { get; private set; }
-
-        public Card(string cardSuit, int cardValue)
-        {
-            CardSuit = cardSuit;
-            CardValue = cardValue;
-        }
-    }
-
-    class Deck
-    {
-        Random random = new Random();
-        public List<Card> cards = new List<Card>();
-
-        public Deck()
-        {
-            cards.Add(new Card("Пики", GetCardValue()));
-            cards.Add(new Card("Крести", GetCardValue()));
-            cards.Add(new Card("Бубны", GetCardValue()));
-            cards.Add(new Card("Червы", GetCardValue()));
-        }
-
-        private int GetCardValue()
-        {
-            int cardValue;
-            int minCardValue = 1;
-            int maxCardValue = 6;
-            cardValue = random.Next(minCardValue, maxCardValue);
-            return cardValue;
-        }
-
     
-    }
-
     class Player
     {
-        public List<Deck> hand = new List<Deck>();
+        private static int _playerID = 1;
+        
+        public int ID { get; private set; }
+        public string Name { get; private set; }
+        public string Nickname { get; private set; }
+        public int Level { get; private set; }
 
-        //я хочу в этом методе удалять карту из колоды и добавлять её игроку
-        private void GetCard(Deck deck)
+        public Player(int playerID, string name, string nickname, int level)
         {
-            Random random = new Random();
-            int cardSuit;
-            int minCardsInDeck = 0;
-            int maxCardsInDeck = deck.cards.Count;
-          
-            if (deck.cards.Count > 0)
+            _playerID++;
+            ID = playerID;
+            Name = name;
+            Nickname = nickname;
+            Level = level;
+        }
+
+        public void ShowInfo()
+        {         
+            Console.Write($"ID игрока {ID} Имя игрока {Name} Никнейм игрока {Nickname} Уровень игрока {Level}\n");
+        }
+    }
+
+    class DataBase
+    {
+        List<Player> players = new List<Player>();
+        List<Player> bannedPlayers = new List<Player>();
+        
+        public void ShowPlayers()
+        {
+            if (players.Count == 0)
             {
-                cardSuit = random.Next(minCardsInDeck, maxCardsInDeck);
-                deck.cards.RemoveAt(cardSuit);
-                hand.Add(cardSuit);// так не выходит
+                Console.WriteLine("В базе нет ни одного игрока");
+            }
+            else
+            {
+                foreach (var player in players)
+                {
+                    player.ShowInfo();
+                }
+
+                if (bannedPlayers.Count != 0)
+                {
+                    Console.WriteLine("\nИгроки получившие бан");
+                    foreach (var player in bannedPlayers)
+                    {
+                        player.ShowInfo();
+                    }
+                }
+            }           
+        }
+
+        public void AddPlayer()
+        {
+            Random random = new Random();                       
+            Console.WriteLine("Введите имя игрока");
+            string Name = Console.ReadLine();
+            Console.WriteLine("Введите никнейм игрока");
+            string Nickname = Console.ReadLine();
+            int Level = random.Next(1, 10);
+
+            Player player = new Player(Name, Nickname, Level);
+            players.Add(player);
+        }
+
+        public void DeletePlayer()
+        {
+            Console.WriteLine("Введите ID игрока которого хотите удалить");
+            int idInput = Convert.ToInt32(Console.ReadLine());
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (idInput > players.Count)
+                {
+                    Console.WriteLine("Игрока с таким ID не существует");
+                }
+                else if (idInput == players[i].ID)
+                {
+                    players.RemoveAt(i);
+                }
+            }
+        }
+
+        public void BanPlayer()
+        {
+            Console.WriteLine("Введите ID игрока, которого хотите забанить");
+            int idInput = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (idInput > players.Count)
+                {
+                    Console.WriteLine("Игрока с таким ID не существует");
+                }
+                else if (idInput == players[i].ID)
+                {
+                    bannedPlayers.Add(players[i]);
+                }
+            }
+        }
+
+        public void UnBanPlayer()
+        {
+            Console.WriteLine("Введите ID игрока, которого хотите разбанить");
+            int idInput = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 0; i < bannedPlayers.Count; i++)
+            {
+                if (idInput > bannedPlayers.Count)
+                {
+                    Console.WriteLine("Игрока с таким ID не существует");
+                }
+                else if (idInput == bannedPlayers[i].ID)
+                {
+                    players.Add(bannedPlayers[i]);
+                    bannedPlayers.RemoveAt(i);
+                }
             }
         }
     }
