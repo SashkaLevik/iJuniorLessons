@@ -96,19 +96,24 @@ namespace Task1
 
         public void AddPlayer()
         {
-            Random random = new Random();           
+            Random random = new Random();
             Console.WriteLine("Введите ID игрока");
-            int idInput;
+            int idInput = 0;// = Convert.ToInt32(Console.ReadLine());
+            bool isFound = false;
 
-            while (true)
+
+            while (isFound == false)
             {
-                if (int.TryParse(Console.ReadLine(), out idInput) == false)
+                while (isFound == false)
                 {
-                    Console.WriteLine("Вы ввели не номер");
-                }
-                else
-                {
-                    break;
+                    if (int.TryParse(Console.ReadLine(), out idInput) == false)
+                    {
+                        Console.WriteLine("Вы ввели не номер");
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 foreach (var gamer in players)
@@ -117,9 +122,16 @@ namespace Task1
                     {
                         Console.WriteLine("Такой ID уже существует");
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
+                isFound = true;
             }
-   
+           
+
+
             Console.WriteLine("Введите имя игрока");
             string Name = Console.ReadLine();
             Console.WriteLine("Введите никнейм игрока");
