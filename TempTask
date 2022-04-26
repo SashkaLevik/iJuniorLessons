@@ -45,9 +45,9 @@ namespace Task1
     
     class Player
     {
-        private static int _playerID = 1;
+        private static int _playerID = 1;//создаю статичное поле и увеличиваю его в конструкторе на 1
         
-        public int ID { get; private set; }
+        public int ID { get; private set; }// как мне в ID присвоить _playerID?
         public string Name { get; private set; }
         public string Nickname { get; private set; }
         public int Level { get; private set; }
