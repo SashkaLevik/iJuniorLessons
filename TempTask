@@ -119,10 +119,10 @@ namespace Task1
 
             foreach (var gamer in _players)
             {
-                if (gamer.ID  == inputID && inputID > 0 && inputID < _players.Count)
+                if (gamer.ID  == inputID && inputID > 0 && inputID < _players.Count)//здесь я сравниваю inputID и ID генерируемый при создании игрока
                 {
-                    player = _players.ElementAt(gamer.ID);
-                    return true;
+                    player = _players.ElementAt(gamer.ID);//здесь как я понимаю присваивается индекс, а мне нужно присвоить ID и по нему совершать действия: удаление и прочее
+                    return true;                         // как мне присвоить не индекс а именно ID?
                 }                                
             }
             player = null;
