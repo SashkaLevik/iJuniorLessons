@@ -114,11 +114,21 @@ namespace Task1
 
         private bool TryGetPlayer(out Player player)
         {
-            
-
-            if (true)
+            int playerID;
+            playerID = Convert.ToInt32(Console.ReadLine());//запрашиваю число
+            if(playerID == player.ID)//-так нельзя. А как тогда сравнить ввод числа и ID игрока?
+            if (playerID > 0 && playerID < _players.Count)//проверяю вхождение в границы списка
             {
-
+                player = _players.ElementAt(playerID);//здесь возвращаю игрока по индексу списка
+                //но фигня в том что мне нужно возвращать игрока не по индексу а по player.ID
+                //который генерится при создании игрока и как это сделать не пойму
+                player = player.ID;// - ?
+                return true;
+            }
+            else
+            {
+                player = null;
+                return false;
             }
         }
         public void DeletePlayer()
