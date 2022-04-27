@@ -47,7 +47,6 @@ namespace Task1
     
     class Player
     {
-        private static int InputID = 0;
         
         public int ID { get; private set; }
         public string Name { get; private set; }
@@ -55,10 +54,12 @@ namespace Task1
         public int Level { get; private set; }
         public bool IsBanned { get; private set; }
 
+        private static int inputID = 0;
+
         public Player(string name, string nickname, int level)
         {
-            InputID++;            
-            ID = InputID;
+            inputID++;            
+            ID = inputID;
             Name = name;
             Nickname = nickname;
             Level = level;
@@ -86,8 +87,7 @@ namespace Task1
         private List<Player> _players = new List<Player>();        
         
         public void ShowPlayers()
-        {
-            
+        {           
             if (_players.Count == 0)
             {
                 Console.WriteLine("В базе нет ни одного игрока");
@@ -103,14 +103,15 @@ namespace Task1
 
         public void AddPlayer()
         {
-            Random random = new Random();                       
+            Random random = new Random();
+            int minLevel = 1;
+            int maxLevel = 10;
             Console.WriteLine("Введите имя игрока");
             string name = Console.ReadLine();
             Console.WriteLine("Введите никнейм игрока");
             string nickname = Console.ReadLine();
-            int level = random.Next(1, 10);
-            
-            
+            int level = random.Next(minLevel, maxLevel);
+                        
             Player player = new Player(name, nickname, level);
             _players.Add(player);
         }
@@ -126,11 +127,16 @@ namespace Task1
                 {
                     player = gamer;
                     return true;
-                }                                
+                }
+                else
+                {
+                    Console.WriteLine("Такого игрока не существует");
+                }
             }
             player = null;
             return false;
         }
+
         public void DeletePlayer()
         {
             Console.WriteLine("Введите ID игрока которого хотите удалить");
@@ -138,11 +144,7 @@ namespace Task1
             if (TryGetPlayer(out Player player))
             {
                 _players.Remove(player);
-            }
-            else
-            {
-                Console.WriteLine("Такого игрока не существует");
-            }            
+            }                       
         }
 
         public void BanPlayer()
@@ -155,11 +157,7 @@ namespace Task1
                 {
                     player.Ban();
                 }               
-            }            
-            else
-            {
-                Console.WriteLine("Такого игрока не существует");
-            }
+            }                       
         }
 
         public void UnBanPlayer()
@@ -172,11 +170,7 @@ namespace Task1
                 {
                     player.UnBan();
                 }                
-            }
-            else
-            {
-                Console.WriteLine("Такого игрока не существует");
-            }
+            }            
         }
     }
 }
