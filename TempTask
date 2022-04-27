@@ -61,7 +61,7 @@ namespace Task1
             Level = level;
             IsBanned = false;
         }
-
+        
         public void ShowInfo()
         {         
             Console.Write($"ID {ID}. Имя игрока {Name}. Никнейм игрока {Nickname}. Уровень игрока {Level}. Бан игрока {IsBanned}\n");
@@ -84,6 +84,7 @@ namespace Task1
         
         public void ShowPlayers()
         {
+            
             if (_players.Count == 0)
             {
                 Console.WriteLine("В базе нет ни одного игрока");
@@ -93,7 +94,7 @@ namespace Task1
                 foreach (var player in _players)
                 {
                     player.ShowInfo();
-                }                
+                }
             }           
         }
 
@@ -106,51 +107,26 @@ namespace Task1
             string nickname = Console.ReadLine();
             int level = random.Next(1, 10);
             
+            
             Player player = new Player(name, nickname, level);
             _players.Add(player);
         }
 
-        public int GetNumber(out int number)
-        {
-            string playerID;
-
-            do
-            {
-                playerID = Console.ReadLine();
-            }
-            while(int.TryParse(playerID, out number) == false);
-
-            return number = Convert.ToInt32(playerID);
-        }
         private bool TryGetPlayer(out Player player)
         {
-            int playerID;
-            playerID = GetNumber(out int number) - 1;
+            
 
-            if (playerID >=0 && playerID < _players.Count)
+            if (true)
             {
-                player = _players.ElementAt(playerID);
-                return true;
-            }
-            else
-            {
-                player = null;
-                return false;
+
             }
         }
         public void DeletePlayer()
         {
             Console.WriteLine("Введите ID игрока которого хотите удалить");
-            //int idInput = Convert.ToInt32(Console.ReadLine());
+            int idInput = Convert.ToInt32(Console.ReadLine());
 
-            if (TryGetPlayer(out Player player))
-            {
-                _players.Remove(player);
-            }
-            else
-            {
-                Console.WriteLine("Такого игрока не существует");
-            }
+            
         }
 
         public void BanPlayer()
