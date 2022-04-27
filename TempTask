@@ -121,15 +121,12 @@ namespace Task1
             {
                 if (gamer.ID  == inputID && inputID > 0 && inputID < _players.Count)
                 {
-                    player = _players.ElementAt(gamer.ID);//правильно ли это и как мне вернуть bool если if else внутри foreach не возвращает значение?
+                    player = _players.ElementAt(gamer.ID);
                     return true;
-                }                
-                else
-                {
-                    player = null;
-                    return false;
-                }
-            }            
+                }                                
+            }
+            player = null;
+            return false;
         }
         public void DeletePlayer()
         {
