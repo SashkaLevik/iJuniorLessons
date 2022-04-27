@@ -11,10 +11,10 @@ namespace Task1
         static void Main(string[] args)
         {
             bool isPlaying = true;            
-            Database dataBase = new Database();
+            Database database = new Database();
             string userInput;
             Console.WriteLine("Выберите действие\n1.Вывести всех игроков\n2.Добавить игрока" +
-                    "\n3.Удалить игрока\n4.Изменить статус бана игрока\n6.Выход");
+                    "\n3.Удалить игрока\n4.Забанить игрока\n5.Разбанить игрока\n6.Выход");
 
             while (isPlaying)
             {
@@ -23,18 +23,21 @@ namespace Task1
                 switch (userInput)
                 {
                     case "1" :
-                        dataBase.ShowPlayers();
+                        database.ShowPlayers();
                         break;
                     case "2":
-                        dataBase.AddPlayer();
+                        database.AddPlayer();
                         break;
                     case "3":
-                        dataBase.DeletePlayer();
+                        database.DeletePlayer();
                         break;
                     case "4":
-                        dataBase.BanPlayer();
+                        database.BanPlayer();
                         break;                   
                     case "5":
+                        database.UnBanPlayer();
+                        break;
+                    case "6":
                         isPlaying = false;
                         break;
                 }
@@ -61,7 +64,7 @@ namespace Task1
             Level = level;
             IsBanned = false;
         }
-
+        
         public void ShowInfo()
         {         
             Console.Write($"ID {ID}. Имя игрока {Name}. Никнейм игрока {Nickname}. Уровень игрока {Level}. Бан игрока {IsBanned}\n");
@@ -84,6 +87,7 @@ namespace Task1
         
         public void ShowPlayers()
         {
+            
             if (_players.Count == 0)
             {
                 Console.WriteLine("В базе нет ни одного игрока");
@@ -93,7 +97,7 @@ namespace Task1
                 foreach (var player in _players)
                 {
                     player.ShowInfo();
-                }                
+                }
             }           
         }
 
@@ -106,56 +110,73 @@ namespace Task1
             string nickname = Console.ReadLine();
             int level = random.Next(1, 10);
             
+            
             Player player = new Player(name, nickname, level);
             _players.Add(player);
         }
 
+        private bool TryGetPlayer(out Player player)
+        {
+            int inputID;
+            inputID = Convert.ToInt32(Console.ReadLine());
+
+            foreach (var gamer in _players)
+            {
+                if (inputID == gamer.ID && inputID > 0 && inputID <= _players.Count)
+                {
+                    player = gamer;
+                    return true;
+                }                                
+            }
+            player = null;
+            return false;
+        }
         public void DeletePlayer()
         {
             Console.WriteLine("Введите ID игрока которого хотите удалить");
-            int idInput = Convert.ToInt32(Console.ReadLine());
 
-            if (_players.Count == 0)
+            if (TryGetPlayer(out Player player))
             {
-                Console.WriteLine("В базе нет ни одного игрока");                
-            }
-            else if (idInput > _players.Count)
-            {
-                Console.WriteLine("Такого игрока не существует");
+                _players.Remove(player);
             }
             else
             {
-                for (int i = 0; i < _players.Count; i++)
-                {
-                    _players.RemoveAt(idInput - 1);
-                }
+                Console.WriteLine("Такого игрока не существует");
             }            
         }
 
         public void BanPlayer()
         {
-            Console.WriteLine("Введите ID игрока, чтобы изменить его статус бана");
-            int idInput = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Введите ID игрока, которого хотите забанить");
 
-            if (idInput > _players.Count)
+            if (TryGetPlayer(out Player player))
+            {
+                if (player.IsBanned == false)
+                {
+                    player.Ban();
+                }               
+            }            
+            else
             {
                 Console.WriteLine("Такого игрока не существует");
             }
-            else if (_players.Count > 0)
+        }
+
+        public void UnBanPlayer()
+        {
+            Console.WriteLine("Введите ID игрока, которого хотите разабанить");
+
+            if (TryGetPlayer(out Player player))
             {
-                if (_players[idInput - 1].IsBanned == false)
+                if (player.IsBanned == true)
                 {
-                    _players[idInput - 1].Ban();
-                }
-                else
-                {
-                    _players[idInput - 1].UnBan();
-                }
+                    player.UnBan();
+                }                
             }
             else
             {
-                Console.WriteLine("В базе нет ни одного игрока");
+                Console.WriteLine("Такого игрока не существует");
             }
-        }        
+        }
     }
 }
