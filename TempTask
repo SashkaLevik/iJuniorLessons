@@ -114,28 +114,35 @@ namespace Task1
 
         private bool TryGetPlayer(out Player player)
         {
-            int playerID;
-            playerID = Convert.ToInt32(Console.ReadLine());//запрашиваю число
-            if(playerID == player.ID)//-так нельзя. А как тогда сравнить ввод числа и ID игрока?
-            if (playerID > 0 && playerID < _players.Count)//проверяю вхождение в границы списка
+            int inputID;
+            inputID = Convert.ToInt32(Console.ReadLine());
+
+            foreach (var gamer in _players)
             {
-                player = _players.ElementAt(playerID);//здесь возвращаю игрока по индексу списка
-                //но фигня в том что мне нужно возвращать игрока не по индексу а по player.ID
-                //который генерится при создании игрока и как это сделать не пойму
-                player = player.ID;// - ?
-                return true;
-            }
-            else
-            {
-                player = null;
-                return false;
-            }
+                if (gamer.ID  == inputID && inputID > 0 && inputID < _players.Count)
+                {
+                    player = _players.ElementAt(gamer.ID);//правильно ли это и как мне вернуть bool если if else внутри foreach не возвращает значение?
+                    return true;
+                }                
+                else
+                {
+                    player = null;
+                    return false;
+                }
+            }            
         }
         public void DeletePlayer()
         {
             Console.WriteLine("Введите ID игрока которого хотите удалить");
-            int idInput = Convert.ToInt32(Console.ReadLine());
 
+            if (TryGetPlayer(out Player player))
+            {
+                _players.Remove(player);
+            }
+            else
+            {
+                Console.WriteLine("Такого игрока не существует");
+            }
             
         }
 
