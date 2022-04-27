@@ -46,14 +46,13 @@ namespace Task1
     }
     
     class Player
-    {        
+    {       
+        private static int inputID = 0;
         public int ID { get; private set; }
         public string Name { get; private set; }
         public string Nickname { get; private set; }
         public int Level { get; private set; }
         public bool IsBanned { get; private set; }
-
-        private static int inputID = 0;
 
         public Player(string name, string nickname, int level)
         {
@@ -115,27 +114,6 @@ namespace Task1
             _players.Add(player);
         }
 
-        private bool TryGetPlayer(out Player player)
-        {
-            int inputID;
-            inputID = Convert.ToInt32(Console.ReadLine());
-
-            foreach (var gamer in _players)
-            {
-                if (inputID == gamer.ID && inputID > 0 && inputID <= _players.Count)
-                {
-                    player = gamer;
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("Такого игрока не существует");
-                }
-            }
-            player = null;
-            return false;
-        }
-
         public void DeletePlayer()
         {
             Console.WriteLine("Введите ID игрока которого хотите удалить");
@@ -170,6 +148,28 @@ namespace Task1
                     player.UnBan();
                 }                
             }            
+        }
+
+        private bool TryGetPlayer(out Player player)
+        {
+            int inputID;
+            inputID = Convert.ToInt32(Console.ReadLine());
+
+            foreach (var gamer in _players)
+            {
+                if (inputID == gamer.ID && inputID > 0 && inputID <= _players.Count)
+                {
+                    player = gamer;
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Такого игрока не существует");
+                }
+            }
+
+            player = null;
+            return false;
         }
     }
 }
