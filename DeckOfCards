@@ -24,7 +24,7 @@ namespace Task2
             while (isPlaying)
             {               
                 Console.SetCursorPosition(40, 2);
-                Console.Write($"Ваш счёт        { player.GetValueCount(deck)}/{maxValueCount}\n");                
+                Console.Write($"Ваш счёт        { player.GetValueCount()}/{maxValueCount}\n");                
                 userInput = Console.ReadLine();
 
                 switch (userInput)
@@ -41,7 +41,7 @@ namespace Task2
                         Console.WriteLine("Карты противника");
                         enemy.ShowEnemyCards();                        
                         Console.SetCursorPosition(40, 3);
-                        Console.Write($"Счёт противника {enemy.EnemyGetValueCount(deck)}/{maxValueCount}");
+                        Console.Write($"Счёт противника {enemy.EnemyGetValueCount()}/{maxValueCount}");
                         player.ShowResult(enemy, deck);
                         break;
                     case "3":
@@ -88,8 +88,8 @@ namespace Task2
         public int GetCardValue()
         {
             int cardValue;
-            int minCardValue = 1;
-            int maxCardValue = 7;
+            int minCardValue = 2;
+            int maxCardValue = 8;
             cardValue = random.Next(minCardValue, maxCardValue);
             return cardValue;
         }
@@ -126,13 +126,13 @@ namespace Task2
 
     class Player
     {
-        public List<Card> hand = new List<Card>();
+        private List<Card> _hand = new List<Card>();
 
         public bool GetCard(Deck deck)
         {
             if (deck.TryGetCard(out Card card))
             {
-                hand.Add(card);                
+                _hand.Add(card);                
             }
             else
             {
@@ -141,10 +141,10 @@ namespace Task2
             return true;
         }
 
-        public int GetValueCount(Deck deck)
+        public int GetValueCount()
         {
             int cardValueCount = 0;            
-            foreach (var card in hand)
+            foreach (var card in _hand)
             {
                 cardValueCount += card.CardValue;
             }
@@ -153,9 +153,9 @@ namespace Task2
 
         public void ShowPlayerCards()
         {
-            for (int i = 0; i < hand.Count; i++)
+            for (int i = 0; i < _hand.Count; i++)
             {
-                Console.WriteLine($"{hand[i].CardSuit} {hand[i].CardValue}");
+                Console.WriteLine($"{_hand[i].CardSuit} {_hand[i].CardValue}");
             }
         }
 
@@ -163,17 +163,17 @@ namespace Task2
         {
             int maxValueCount = 20;
 
-            if (GetValueCount(deck) <= maxValueCount && GetValueCount(deck) > enemy.EnemyGetValueCount(deck))
+            if (GetValueCount() <= maxValueCount && GetValueCount() > enemy.EnemyGetValueCount())
             {
                 Console.SetCursorPosition(40, 10);
                 Console.WriteLine("Вы победили!");
             }
-            else if (GetValueCount(deck) < maxValueCount && enemy.EnemyGetValueCount(deck) > maxValueCount)
+            else if (GetValueCount() < maxValueCount && enemy.EnemyGetValueCount() > maxValueCount)
             {
                 Console.SetCursorPosition(40, 10);
                 Console.WriteLine("Вы победили!");
             }
-            else if (GetValueCount(deck) == enemy.EnemyGetValueCount(deck))
+            else if (GetValueCount() == enemy.EnemyGetValueCount())
             {
                 Console.SetCursorPosition(40, 10);
                 Console.WriteLine("Ничья, попробуйте ещё");
@@ -188,21 +188,21 @@ namespace Task2
 
     class Enemy
     {
-        public List<Card> enemyHand = new List<Card>();
+        private List<Card> _enemyHand = new List<Card>();
 
         public bool EnemyGetCard(Deck deck)
         {
             if (deck.TryGetCard(out Card card))
             {
-                enemyHand.Add(card);
+                _enemyHand.Add(card);
             }
             return true;
         }
 
-        public int EnemyGetValueCount(Deck deck)
+        public int EnemyGetValueCount()
         {
             int cardValueCount = 0;
-            foreach (var card in enemyHand)
+            foreach (var card in _enemyHand)
             {
                 cardValueCount += card.CardValue;
             }
@@ -211,9 +211,9 @@ namespace Task2
 
         public void ShowEnemyCards()
         {
-            for (int i = 0; i < enemyHand.Count; i++)
+            for (int i = 0; i < _enemyHand.Count; i++)
             {
-                Console.WriteLine($"{enemyHand[i].CardSuit} {enemyHand[i].CardValue}");
+                Console.WriteLine($"{_enemyHand[i].CardSuit} {_enemyHand[i].CardValue}");
             }
         }
     }    
