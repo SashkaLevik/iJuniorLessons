@@ -1,0 +1,220 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isPlaying = true;
+            string userInput;            
+            int maxValueCount = 20;
+            Player player = new Player();
+            Enemy enemy = new Enemy();
+            Deck deck = new Deck();
+            Console.WriteLine("Необходимо набрать очков больше чем у противника " +
+                "но не превысить максимум");
+            Console.SetCursorPosition(0, 1);
+            Console.WriteLine("1.Вытянуть карту\n2.Завершить и показать результат\n3.Выход");
+
+            while (isPlaying)
+            {               
+                Console.SetCursorPosition(40, 2);
+                Console.Write($"Ваш счёт        { player.GetValueCount(deck)}/{maxValueCount}\n");                
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        player.GetCard(deck);
+                        enemy.EnemyGetCard(deck);
+                        Console.SetCursorPosition(0, 10);
+                        Console.WriteLine("Ваши карты");
+                        player.ShowPlayerCards();
+                        break;
+                    case "2":                      
+                        Console.SetCursorPosition(0, 18);
+                        Console.WriteLine("Карты противника");
+                        enemy.ShowEnemyCards();                        
+                        Console.SetCursorPosition(40, 3);
+                        Console.Write($"Счёт противника {enemy.EnemyGetValueCount(deck)}/{maxValueCount}");
+                        player.ShowResult(enemy, deck);
+                        break;
+                    case "3":
+                        isPlaying = false;
+                        break;
+                }
+            }
+        }
+    }
+
+    class Card
+    {
+        public string CardSuit { get; private set; }
+        public int CardValue { get; private set; }
+
+        public Card(string cardSuit, int cardValue)
+        {
+            CardSuit = cardSuit;
+            CardValue = cardValue;
+        }
+    }
+
+    class Deck
+    {
+        Random random = new Random();
+        private List<Card> _cards = new List<Card>();
+
+        public Deck()
+        {
+            _cards.Add(new Card("Пики", GetCardValue()));
+            _cards.Add(new Card("Крести", GetCardValue()));
+            _cards.Add(new Card("Бубны", GetCardValue()));
+            _cards.Add(new Card("Червы", GetCardValue()));
+            _cards.Add(new Card("Пики", GetCardValue()));
+            _cards.Add(new Card("Крести", GetCardValue()));
+            _cards.Add(new Card("Бубны", GetCardValue()));
+            _cards.Add(new Card("Червы", GetCardValue()));
+            _cards.Add(new Card("Пики", GetCardValue()));
+            _cards.Add(new Card("Крести", GetCardValue()));
+            _cards.Add(new Card("Бубны", GetCardValue()));
+            _cards.Add(new Card("Червы", GetCardValue()));
+        }
+
+        public int GetCardValue()
+        {
+            int cardValue;
+            int minCardValue = 1;
+            int maxCardValue = 7;
+            cardValue = random.Next(minCardValue, maxCardValue);
+            return cardValue;
+        }
+
+        public bool TryGetCard(out Card card)
+        {
+            if (_cards.Count > 0)
+            {
+                card = _cards[GetCardNumber()];
+                _cards.Remove(card);
+                return true;
+            }
+            else
+            {
+                card = null;
+                return false;
+            }
+        }
+
+        private int GetCardNumber()
+        {
+            int numberCard = 0;
+            int minimalNumberCard = 0;
+            int maximumNumberCard = 12;
+
+            if (_cards.Count > maximumNumberCard)
+            {
+                numberCard = random.Next(minimalNumberCard, maximumNumberCard);
+            }
+
+            return numberCard;
+        }
+    }
+
+    class Player
+    {
+        public List<Card> hand = new List<Card>();
+
+        public bool GetCard(Deck deck)
+        {
+            if (deck.TryGetCard(out Card card))
+            {
+                hand.Add(card);                
+            }
+            else
+            {
+                Console.WriteLine("В колоде законились карты");
+            }
+            return true;
+        }
+
+        public int GetValueCount(Deck deck)
+        {
+            int cardValueCount = 0;            
+            foreach (var card in hand)
+            {
+                cardValueCount += card.CardValue;
+            }
+            return cardValueCount;
+        }
+
+        public void ShowPlayerCards()
+        {
+            for (int i = 0; i < hand.Count; i++)
+            {
+                Console.WriteLine($"{hand[i].CardSuit} {hand[i].CardValue}");
+            }
+        }
+
+        public void ShowResult(Enemy enemy, Deck deck)
+        {
+            int maxValueCount = 20;
+
+            if (GetValueCount(deck) <= maxValueCount && GetValueCount(deck) > enemy.EnemyGetValueCount(deck))
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Вы победили!");
+            }
+            else if (GetValueCount(deck) < maxValueCount && enemy.EnemyGetValueCount(deck) > maxValueCount)
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Вы победили!");
+            }
+            else if (GetValueCount(deck) == enemy.EnemyGetValueCount(deck))
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Ничья, попробуйте ещё");
+            }
+            else
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Увы, вы проиграли");
+            }
+        }
+    }
+
+    class Enemy
+    {
+        public List<Card> enemyHand = new List<Card>();
+
+        public bool EnemyGetCard(Deck deck)
+        {
+            if (deck.TryGetCard(out Card card))
+            {
+                enemyHand.Add(card);
+            }
+            return true;
+        }
+
+        public int EnemyGetValueCount(Deck deck)
+        {
+            int cardValueCount = 0;
+            foreach (var card in enemyHand)
+            {
+                cardValueCount += card.CardValue;
+            }
+            return cardValueCount;
+        }
+
+        public void ShowEnemyCards()
+        {
+            for (int i = 0; i < enemyHand.Count; i++)
+            {
+                Console.WriteLine($"{enemyHand[i].CardSuit} {enemyHand[i].CardValue}");
+            }
+        }
+    }    
+}
