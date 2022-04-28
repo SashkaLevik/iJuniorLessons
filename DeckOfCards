@@ -42,7 +42,7 @@ namespace Task2
                         enemy.ShowEnemyCards();                        
                         Console.SetCursorPosition(40, 3);
                         Console.Write($"Счёт противника {enemy.EnemyGetValueCount()}/{maxValueCount}");
-                        player.ShowResult(enemy, deck);
+                        player.ShowResult(enemy);
                         break;
                     case "3":
                         isPlaying = false;
@@ -159,7 +159,7 @@ namespace Task2
             }
         }
 
-        public void ShowResult(Enemy enemy, Deck deck)
+        public void ShowResult(Enemy enemy)
         {
             int maxValueCount = 20;
 
