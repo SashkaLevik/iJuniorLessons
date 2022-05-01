@@ -4,169 +4,159 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task1
+namespace Task2
 {
     class Program
     {
         static void Main(string[] args)
         {
-            bool isPlaying = true;            
-            Database database = new Database();
+            bool isPlaying = true;
             string userInput;
-            Console.WriteLine("Выберите действие\n1.Вывести всех игроков\n2.Добавить игрока" +
-                    "\n3.Удалить игрока\n4.Изменить статус бана игрока\n6.Выход");
+            int maxValueCount = 21;
+            Gambler player = new Gambler();
+            Gambler enemy = new Gambler();
+            Deck deck = new Deck();
+            Console.WriteLine("Необходимо набрать очков больше чем у противника " +
+                "но не превысить максимум");
+            Console.SetCursorPosition(0, 1);
+            Console.WriteLine("1.Вытянуть карту\n2.Завершить и показать результат\n3.Выход");
 
             while (isPlaying)
             {
+                Console.SetCursorPosition(40, 2);
+                Console.Write($"Ваш счёт        { player.GetValueCount()}/{maxValueCount}\n");            
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
-                    case "1" :
-                        database.ShowPlayers();
+                    case "1":
+                        player.GetCard(deck);
+                        enemy.GetCard(deck);
+                        Console.SetCursorPosition(0, 10);
+                        Console.WriteLine("Ваши карты");
+                        player.ShowCards();                        
                         break;
                     case "2":
-                        database.AddPlayer();
+                        //Console.SetCursorPosition(0, 18);
+                        //Console.WriteLine("Карты противника");
+                        //enemy.ShowEnemyCards();
+                        //Console.SetCursorPosition(40, 3);
+                        //Console.Write($"Счёт противника {enemy.EnemyGetValueCount()}/{maxValueCount}");
+                        //player.ShowResult(enemy);
                         break;
                     case "3":
-                        database.DeletePlayer();
-                        break;
-                    case "4":
-                        database.BanPlayer();
-                        break;                   
-                    case "5":
                         isPlaying = false;
                         break;
                 }
             }
         }
     }
-    
-    class Player
+
+    class Card
     {
-        private static int InputID = 0;
-        
-        public int ID { get; private set; }
-        public string Name { get; private set; }
-        public string Nickname { get; private set; }
-        public int Level { get; private set; }
-        public bool IsBanned { get; private set; }
+        public string CardSuit { get; private set; }
+        public int CardValue { get; private set; }
 
-        public Player(string name, string nickname, int level)
+        public Card(string cardSuit, int cardValue)
         {
-            InputID++;            
-            ID = InputID;
-            Name = name;
-            Nickname = nickname;
-            Level = level;
-            IsBanned = false;
-        }
-        
-        public void ShowInfo()
-        {         
-            Console.Write($"ID {ID}. Имя игрока {Name}. Никнейм игрока {Nickname}. Уровень игрока {Level}. Бан игрока {IsBanned}\n");
-        }
-
-        public void Ban()
-        {
-            IsBanned = true;
-        }
-
-        public void UnBan()
-        {
-            IsBanned = false;
+            CardSuit = cardSuit;
+            CardValue = cardValue;
         }
     }
 
-    class Database
+    class Deck
     {
-        private List<Player> _players = new List<Player>();        
-        
-        public void ShowPlayers()
+        Random random = new Random();
+        private List<Card> _cards = new List<Card>();
+
+        public Deck()
         {
-            
-            if (_players.Count == 0)
+            _cards.Add(new Card("Пики", GetCardValue()));
+            _cards.Add(new Card("Крести", GetCardValue()));
+            _cards.Add(new Card("Бубны", GetCardValue()));
+            _cards.Add(new Card("Червы", GetCardValue()));
+            _cards.Add(new Card("Пики", GetCardValue()));
+            _cards.Add(new Card("Крести", GetCardValue()));
+            _cards.Add(new Card("Бубны", GetCardValue()));
+            _cards.Add(new Card("Червы", GetCardValue()));
+            _cards.Add(new Card("Пики", GetCardValue()));
+            _cards.Add(new Card("Крести", GetCardValue()));
+            _cards.Add(new Card("Бубны", GetCardValue()));
+            _cards.Add(new Card("Червы", GetCardValue()));
+        }
+
+        public int GetCardValue()
+        {
+            int cardValue;
+            int minCardValue = 2;
+            int maxCardValue = 8;
+            cardValue = random.Next(minCardValue, maxCardValue);
+            return cardValue;
+        }
+
+        public bool TryGetCard(out Card card)
+        {
+            if (_cards.Count > 0)
             {
-                Console.WriteLine("В базе нет ни одного игрока");
+                card = _cards[GetCardNumber()];
+                _cards.Remove(card);
+                return true;
             }
             else
             {
-                foreach (var player in _players)
-                {
-                    player.ShowInfo();
-                }
-            }           
+                card = null;
+                return false;
+            }
         }
 
-        public void AddPlayer()
+        private int GetCardNumber()
         {
-            Random random = new Random();                       
-            Console.WriteLine("Введите имя игрока");
-            string name = Console.ReadLine();
-            Console.WriteLine("Введите никнейм игрока");
-            string nickname = Console.ReadLine();
-            int level = random.Next(1, 10);
-            
-            
-            Player player = new Player(name, nickname, level);
-            _players.Add(player);
+            int numberCard = 0;
+            int minimalNumberCard = 0;
+            int maximumNumberCard = 12;
+
+            if (_cards.Count > maximumNumberCard)
+            {
+                numberCard = random.Next(minimalNumberCard, maximumNumberCard);
+            }
+
+            return numberCard;
         }
-
-        private bool TryGetPlayer(out Player player)
-        {
-            int inputID;
-            inputID = Convert.ToInt32(Console.ReadLine());
-
-            foreach (var gamer in _players)
-            {
-                if (gamer.ID  == inputID && inputID > 0 && inputID < _players.Count)//здесь я сравниваю inputID и ID генерируемый при создании игрока
-                {
-                    player = _players.ElementAt(gamer.ID);//здесь как я понимаю присваивается индекс, а мне нужно присвоить ID и по нему совершать действия: удаление и прочее
-                    return true;                         // как мне присвоить не индекс а именно ID?
-                }                                
-            }
-            player = null;
-            return false;
-        }
-        public void DeletePlayer()
-        {
-            Console.WriteLine("Введите ID игрока которого хотите удалить");
-
-            if (TryGetPlayer(out Player player))
-            {
-                _players.Remove(player);
-            }
-            else
-            {
-                Console.WriteLine("Такого игрока не существует");
-            }
-            
-        }
-
-        public void BanPlayer()
-        {
-            Console.WriteLine("Введите ID игрока, чтобы изменить его статус бана");
-            int idInput = Convert.ToInt32(Console.ReadLine());
-
-            if (idInput > _players.Count)
-            {
-                Console.WriteLine("Такого игрока не существует");
-            }
-            else if (_players.Count > 0)
-            {
-                if (_players[idInput - 1].IsBanned == false)
-                {
-                    _players[idInput - 1].Ban();
-                }
-                else
-                {
-                    _players[idInput - 1].UnBan();
-                }
-            }
-            else
-            {
-                Console.WriteLine("В базе нет ни одного игрока");
-            }
-        }        
     }
+
+    class Gambler
+    {
+        public List<Card> hand = new List<Card>();
+
+        public bool GetCard(Deck deck)
+        {
+            if (deck.TryGetCard(out Card card))
+            {
+                hand.Add(card);                
+            }
+            else
+            {
+                Console.WriteLine("В колоде законились карты");
+            }
+            return true;
+        }
+
+        public int GetValueCount()
+        {
+            int cardValueCount = 0;
+            foreach (var card in hand)
+            {
+                cardValueCount += card.CardValue;
+            }
+            return cardValueCount;
+        }
+
+        public void ShowCards()
+        {
+            for (int i = 0; i < hand.Count; i++)
+            {
+                Console.WriteLine($"{hand[i].CardSuit} {hand[i].CardValue}");
+            }
+        }
+    }    
 }
