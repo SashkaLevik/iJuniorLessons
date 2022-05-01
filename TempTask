@@ -16,33 +16,25 @@ namespace Task2
             Gambler player = new Gambler();
             Gambler enemy = new Gambler();
             Deck deck = new Deck();
+            Game game = new Game();
             Console.WriteLine("Необходимо набрать очков больше чем у противника " +
                 "но не превысить максимум");
             Console.SetCursorPosition(0, 1);
-            Console.WriteLine("1.Вытянуть карту\n2.Завершить и показать результат\n3.Выход");
+            Console.WriteLine("1.Вытянуть карту\n2.Завершить и показать результат\n3.Выход");           
 
             while (isPlaying)
             {
                 Console.SetCursorPosition(40, 2);
-                Console.Write($"Ваш счёт        { player.GetValueCount()}/{maxValueCount}\n");            
+                Console.Write($"Ваш счёт        { player.GetValueCount()}/{maxValueCount}\n");
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
-                        player.GetCard(deck);
-                        enemy.GetCard(deck);
-                        Console.SetCursorPosition(0, 10);
-                        Console.WriteLine("Ваши карты");
-                        player.ShowCards();                        
+                        game.PickCard(player, enemy, deck);                         
                         break;
                     case "2":
-                        //Console.SetCursorPosition(0, 18);
-                        //Console.WriteLine("Карты противника");
-                        //enemy.ShowEnemyCards();
-                        //Console.SetCursorPosition(40, 3);
-                        //Console.Write($"Счёт противника {enemy.EnemyGetValueCount()}/{maxValueCount}");
-                        //player.ShowResult(enemy);
+                        game.ShowWiner(player, enemy);                       
                         break;
                     case "3":
                         isPlaying = false;
@@ -51,7 +43,7 @@ namespace Task2
             }
         }
     }
-
+   
     class Card
     {
         public string CardSuit { get; private set; }
@@ -66,7 +58,7 @@ namespace Task2
 
     class Deck
     {
-        Random random = new Random();
+        private Random _random = new Random();
         private List<Card> _cards = new List<Card>();
 
         public Deck()
@@ -90,7 +82,7 @@ namespace Task2
             int cardValue;
             int minCardValue = 2;
             int maxCardValue = 8;
-            cardValue = random.Next(minCardValue, maxCardValue);
+            cardValue = _random.Next(minCardValue, maxCardValue);
             return cardValue;
         }
 
@@ -117,7 +109,7 @@ namespace Task2
 
             if (_cards.Count > maximumNumberCard)
             {
-                numberCard = random.Next(minimalNumberCard, maximumNumberCard);
+                numberCard = _random.Next(minimalNumberCard, maximumNumberCard);
             }
 
             return numberCard;
@@ -126,13 +118,13 @@ namespace Task2
 
     class Gambler
     {
-        public List<Card> hand = new List<Card>();
-
+        private List<Card> _hand = new List<Card>();
+        
         public bool GetCard(Deck deck)
         {
             if (deck.TryGetCard(out Card card))
             {
-                hand.Add(card);                
+                _hand.Add(card);                
             }
             else
             {
@@ -144,7 +136,7 @@ namespace Task2
         public int GetValueCount()
         {
             int cardValueCount = 0;
-            foreach (var card in hand)
+            foreach (var card in _hand)
             {
                 cardValueCount += card.CardValue;
             }
@@ -153,10 +145,59 @@ namespace Task2
 
         public void ShowCards()
         {
-            for (int i = 0; i < hand.Count; i++)
+            for (int i = 0; i < _hand.Count; i++)
             {
-                Console.WriteLine($"{hand[i].CardSuit} {hand[i].CardValue}");
+                Console.WriteLine($"{_hand[i].CardSuit} {_hand[i].CardValue}");
+            }
+        }        
+    }
+    
+    class Game
+    {        
+        public void ShowResult(Gambler player, Gambler enemy)
+        {
+            int maxValueCount = 21;
+
+            if (player.GetValueCount() < maxValueCount && player.GetValueCount() > enemy.GetValueCount())
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Вы победили!");
+            }
+            else if (player.GetValueCount() < maxValueCount && enemy.GetValueCount() > maxValueCount)
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Вы победили!");
+            }
+            else if (player.GetValueCount() == enemy.GetValueCount())
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Ничья, попробуйте ещё");
+            }
+            else
+            {
+                Console.SetCursorPosition(40, 10);
+                Console.WriteLine("Увы, вы проиграли");
             }
         }
-    }    
+
+        public void PickCard(Gambler player, Gambler enemy, Deck deck)
+        {
+            player.GetCard(deck);
+            enemy.GetCard(deck);
+            Console.SetCursorPosition(0, 10);
+            Console.WriteLine("Ваши карты");
+            player.ShowCards();                        
+        }
+
+        public void ShowWiner(Gambler player, Gambler enemy)
+        {
+            int maxValueCount = 21;
+            Console.SetCursorPosition(0, 18);
+            Console.WriteLine("Карты противника");
+            enemy.ShowCards();
+            Console.SetCursorPosition(40, 3);
+            Console.Write($"Счёт противника {enemy.GetValueCount()}/{maxValueCount}");
+            ShowResult(player, enemy);
+        }   
+    }
 }
