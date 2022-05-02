@@ -3,201 +3,252 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
-namespace Task2
+namespace Task4
 {
     class Program
     {
         static void Main(string[] args)
         {
-            bool isPlaying = true;
+            bool isOpen = true;
             string userInput;
-            int maxValueCount = 21;
-            Gambler player = new Gambler();
-            Gambler enemy = new Gambler();
-            Deck deck = new Deck();
-            Game game = new Game();
-            Console.WriteLine("Необходимо набрать очков больше чем у противника " +
-                "но не превысить максимум");
-            Console.SetCursorPosition(0, 1);
-            Console.WriteLine("1.Вытянуть карту\n2.Завершить и показать результат\n3.Выход");           
+            Library library = new Library();
+            Console.WriteLine("1.Все книги в библиотеке\n2.Добавить книгу\n3.Удалить книгу\n4.Найти книгу по параметрам\n5.Выход");
 
-            while (isPlaying)
+            while (isOpen)
             {
-                Console.SetCursorPosition(40, 2);
-                Console.Write($"Ваш счёт        { player.GetValueCount()}/{maxValueCount}\n");
                 userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
-                        game.PickCard(player, enemy, deck);                         
+                        library.BooksInLibrary();
                         break;
                     case "2":
-                        game.ShowWiner(player, enemy);                       
+                        library.AddBook();
                         break;
                     case "3":
-                        isPlaying = false;
+                        library.RemoveBook();
+                        break;
+                    case "4":
+                        library.FindBook();
+                        break;
+                    case "5":
+                        isOpen = false;
                         break;
                 }
             }
-        }
-    }
-   
-    class Card
-    {
-        public string CardSuit { get; private set; }
-        public int CardValue { get; private set; }
-
-        public Card(string cardSuit, int cardValue)
-        {
-            CardSuit = cardSuit;
-            CardValue = cardValue;
-        }
+        }    
     }
 
-    class Deck
+    class Book
     {
-        private Random _random = new Random();
-        private List<Card> _cards = new List<Card>();
+        public int BookNumber { get; private set; }
+        public string BookTitle { get; private set; }
+        public string Author { get; private set; }
+        public string Genre { get; private set; }
+        public int Year { get; private set; }
 
-        public Deck()
-        {
-            _cards.Add(new Card("Пики", GetCardValue()));
-            _cards.Add(new Card("Крести", GetCardValue()));
-            _cards.Add(new Card("Бубны", GetCardValue()));
-            _cards.Add(new Card("Червы", GetCardValue()));
-            _cards.Add(new Card("Пики", GetCardValue()));
-            _cards.Add(new Card("Крести", GetCardValue()));
-            _cards.Add(new Card("Бубны", GetCardValue()));
-            _cards.Add(new Card("Червы", GetCardValue()));
-            _cards.Add(new Card("Пики", GetCardValue()));
-            _cards.Add(new Card("Крести", GetCardValue()));
-            _cards.Add(new Card("Бубны", GetCardValue()));
-            _cards.Add(new Card("Червы", GetCardValue()));
+        public Book(string bookTitle, string author, string genre, int year)
+        {            
+            BookTitle = bookTitle;
+            Author = author;
+            Genre = genre;
+            Year = year;
+        }
+    }
+
+    class Library
+    {
+        private List<Book> _books = new List<Book>();
+
+        public Library()
+        {            
+            _books.Add(new Book("Гиперион", "Дэн Симмонс", "Фантастика", 1989));
+            _books.Add(new Book("Безымянный раб", "Виталий Зыков", "Фэнтези", 2004));
+            _books.Add(new Book("Долгая прогулка", "Стивен Кинг", "Триллер", 1979));
+            _books.Add(new Book("Убить Пересмешника", "Харпер Ли", "Роман", 1960));
         }
 
-        public int GetCardValue()
+        public void BooksInLibrary()
         {
-            int cardValue;
-            int minCardValue = 2;
-            int maxCardValue = 8;
-            cardValue = _random.Next(minCardValue, maxCardValue);
-            return cardValue;
-        }
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
 
-        public bool TryGetCard(out Card card)
-        {
-            if (_cards.Count > 0)
+            foreach (var book in _books)
             {
-                card = _cards[GetCardNumber()];
-                _cards.Remove(card);
+                Console.WriteLine($"Название: {textInfo.ToTitleCase(book.BookTitle)}, Автор: {textInfo.ToTitleCase(book.Author)}, Жанр: {textInfo.ToTitleCase(book.Genre)}, Год издания: {book.Year}");
+            }
+        }
+        
+        public void AddBook()
+        {
+            string bookTitle;
+            string author;
+            string genre;
+            int year;
+
+            Console.WriteLine("Введите название книги");
+            bookTitle = GetUserText();
+            Console.WriteLine("Введите имя и фамилию автора");
+            author = GetUserText();
+            Console.WriteLine("Введите жанр книги");
+            genre = GetUserText();
+            Console.WriteLine("Введите год выпуска");
+            year = GetUserDate();
+
+            if (bookTitle == null && author == null && genre == null)
+            {
+                Console.WriteLine("Введите корректные данные");
+            }
+            else
+            {
+                _books.Add(new Book(bookTitle, author, genre, year));
+                Console.WriteLine($"Книга {bookTitle} добавлена в библиотеку");
+            }
+        }
+
+        public void RemoveBook()
+        {
+            Console.WriteLine("Введите номер книги которую хотите удалить");
+
+            if (TryGetBook(out Book book))
+            {
+                _books.Remove(book);
+            }
+        }
+       
+        public void FindBook()
+        {
+            Console.WriteLine("1.Найти книгу по названию. 2.Найти книгу по автору. 3.Найти книгу по жанру. 4.Найти книгу по году выпуска");
+            string userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case "1":
+                    FindByName();
+                    break;
+                case "2":
+                    FindByAuthor();
+                    break;
+                case "3":
+                    FindByGenre();
+                    break;
+                case "4":
+                    FindByYear();
+                    break;
+            }
+        }       
+        
+        private void FindByYear()
+        {
+            Console.WriteLine("Введите год выпуска книги");
+            int year = GetUserDate();
+
+            foreach (var book in _books)
+            {
+                if (year == book.Year)
+                {
+                    Console.WriteLine($"Книги выпущенные в {year} году: {book.BookTitle}. {book.Author}. {book.Genre}");
+                }
+                else
+                {
+                    Console.WriteLine("Нет таких книг");
+                }
+            }
+        }
+
+        private void FindByAuthor()
+        {
+            Console.Write("Введите имя и фамилию автора: ");
+            string author = Console.ReadLine();
+            
+            foreach (var book in _books)
+            {
+                if (author.ToLower() == book.Author.ToLower())
+                {
+                    Console.WriteLine($"Книги автора {author}: {book.BookTitle}. {book.Genre}. {book.Year}");
+                }
+                else
+                {
+                    Console.WriteLine($"В библиотеке нет книг {author}");
+                }
+            }
+        }
+
+        private void FindByGenre()
+        {
+            Console.WriteLine("Введите жанр книги");
+            string genre = Console.ReadLine();
+
+            foreach (var book in _books)
+            {
+                if (genre.ToLower() == book.Genre.ToLower())
+                {
+                    Console.WriteLine($"Книги жанра {genre}: {book.Author}. {book.BookTitle}. {book.Year}");
+                }
+                else
+                {
+                    Console.WriteLine("В библиотеке нет книг этого жанра");
+                }
+            }
+        }
+
+        private void FindByName()
+        {
+            Console.WriteLine("Введите название книги");
+            string bookTitle = Console.ReadLine();
+
+            foreach (var book in _books)
+            {
+                if (bookTitle.ToLower() == book.BookTitle.ToLower())
+                {
+                    Console.WriteLine($"Книга {bookTitle}: {book.Author}. {book.Genre}. {book.Year}");
+                }
+                else
+                {
+                    Console.WriteLine("В библиотеке нет книг с таким названием");
+                }
+            }
+        }
+
+        private bool TryGetBook(out Book book)
+        {
+            int userInput = Convert.ToInt32(Console.ReadLine());
+
+            if (userInput > 0 && userInput - 1 < _books.Count)
+            {
+                book = _books[userInput - 1];
                 return true;
             }
             else
             {
-                card = null;
+                book = null;
+                Console.WriteLine("Книги под таким номером не существует");
                 return false;
             }
         }
 
-        private int GetCardNumber()
+        private int GetUserDate()
         {
-            int numberCard = 0;
-            int minimalNumberCard = 0;
-            int maximumNumberCard = 12;
+            bool isNumber = int.TryParse(Console.ReadLine(), out int year);
 
-            if (_cards.Count > maximumNumberCard)
+            if (isNumber == false)
             {
-                numberCard = _random.Next(minimalNumberCard, maximumNumberCard);
-            }
-
-            return numberCard;
-        }
-    }
-
-    class Gambler
-    {
-        private List<Card> _hand = new List<Card>();
-        
-        public bool GetCard(Deck deck)
-        {
-            if (deck.TryGetCard(out Card card))
-            {
-                _hand.Add(card);                
+                Console.WriteLine("Введите корректный год");
+                year = 0;
+                return year;
             }
             else
             {
-                Console.WriteLine("В колоде законились карты");
-            }
-            return true;
-        }
-
-        public int GetValueCount()
-        {
-            int cardValueCount = 0;
-            foreach (var card in _hand)
-            {
-                cardValueCount += card.CardValue;
-            }
-            return cardValueCount;
-        }
-
-        public void ShowCards()
-        {
-            for (int i = 0; i < _hand.Count; i++)
-            {
-                Console.WriteLine($"{_hand[i].CardSuit} {_hand[i].CardValue}");
-            }
-        }        
-    }
-    
-    class Game
-    {        
-        public void ShowResult(Gambler player, Gambler enemy)
-        {
-            int maxValueCount = 21;
-
-            if (player.GetValueCount() < maxValueCount && player.GetValueCount() > enemy.GetValueCount())
-            {
-                Console.SetCursorPosition(40, 10);
-                Console.WriteLine("Вы победили!");
-            }
-            else if (player.GetValueCount() < maxValueCount && enemy.GetValueCount() > maxValueCount)
-            {
-                Console.SetCursorPosition(40, 10);
-                Console.WriteLine("Вы победили!");
-            }
-            else if (player.GetValueCount() == enemy.GetValueCount())
-            {
-                Console.SetCursorPosition(40, 10);
-                Console.WriteLine("Ничья, попробуйте ещё");
-            }
-            else
-            {
-                Console.SetCursorPosition(40, 10);
-                Console.WriteLine("Увы, вы проиграли");
+                return year;
             }
         }
 
-        public void PickCard(Gambler player, Gambler enemy, Deck deck)
+        private string GetUserText()
         {
-            player.GetCard(deck);
-            enemy.GetCard(deck);
-            Console.SetCursorPosition(0, 10);
-            Console.WriteLine("Ваши карты");
-            player.ShowCards();                        
+            string userInput = Console.ReadLine();
+            return userInput;
         }
-
-        public void ShowWiner(Gambler player, Gambler enemy)
-        {
-            int maxValueCount = 21;
-            Console.SetCursorPosition(0, 18);
-            Console.WriteLine("Карты противника");
-            enemy.ShowCards();
-            Console.SetCursorPosition(40, 3);
-            Console.Write($"Счёт противника {enemy.GetValueCount()}/{maxValueCount}");
-            ShowResult(player, enemy);
-        }   
     }
 }
