@@ -1,0 +1,258 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Globalization;
+
+namespace Task4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isOpen = true;
+            string userInput;
+            Library library = new Library();
+            Console.WriteLine("1.Все книги в библиотеке\n2.Добавить книгу\n3.Удалить книгу\n4.Найти книгу по параметрам\n5.Выход");
+
+            while (isOpen)
+            {
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        library.BooksInLibrary();
+                        break;
+                    case "2":
+                        library.AddBook();
+                        break;
+                    case "3":
+                        library.RemoveBook();
+                        break;
+                    case "4":
+                        library.FindBook();
+                        break;
+                    case "5":
+                        isOpen = false;
+                        break;
+                }
+            }
+        }    
+    }
+
+    class Book
+    {
+        public int BookNumber { get; private set; }
+        public string BookTitle { get; private set; }
+        public string Author { get; private set; }
+        public string Genre { get; private set; }
+        public int Year { get; private set; }
+
+        public Book(string bookTitle, string author, string genre, int year)
+        {            
+            BookTitle = bookTitle;
+            Author = author;
+            Genre = genre;
+            Year = year;
+        }
+    }
+
+    class Library
+    {
+        private List<Book> _books = new List<Book>();
+        private List<Book> _foundBooks = new List<Book>();
+        public Library()
+        {            
+            _books.Add(new Book("Гиперион", "Дэн Симмонс", "Фантастика", 1989));
+            _books.Add(new Book("Безымянный раб", "Виталий Зыков", "Фэнтези", 2004));
+            _books.Add(new Book("Долгая прогулка", "Стивен Кинг", "Триллер", 1979));
+            _books.Add(new Book("Убить Пересмешника", "Харпер Ли", "Роман", 1960));
+        }
+
+        public void BooksInLibrary()
+        {
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+            foreach (var book in _books)
+            {
+                Console.WriteLine($"Название: {textInfo.ToTitleCase(book.BookTitle)}, Автор: {textInfo.ToTitleCase(book.Author)}, Жанр: {textInfo.ToTitleCase(book.Genre)}, Год издания: {book.Year}");
+            }
+        }
+        
+        public void AddBook()
+        {
+            string bookTitle;
+            string author;
+            string genre;
+            int year;
+
+            Console.WriteLine("Введите название книги");
+            bookTitle = GetUserText();
+            Console.WriteLine("Введите имя и фамилию автора");
+            author = GetUserText();
+            Console.WriteLine("Введите жанр книги");
+            genre = GetUserText();
+            Console.WriteLine("Введите год выпуска");
+            year = GetUserDate();
+
+            if (bookTitle == null && author == null && genre == null)
+            {
+                Console.WriteLine("Введите корректные данные");
+            }
+            else
+            {
+                _books.Add(new Book(bookTitle, author, genre, year));
+                Console.WriteLine($"Книга {bookTitle} добавлена в библиотеку");
+            }
+        }
+
+        public void RemoveBook()
+        {            
+            Console.WriteLine("Введите номер книги которую хотите удалить");
+
+            if (TryGetBook(out Book book))
+            {
+                _books.Remove(book);
+            }
+        }
+       
+        public void FindBook()
+        {
+            Console.WriteLine("1.Найти книгу по названию. 2.Найти книгу по автору. 3.Найти книгу по жанру. 4.Найти книгу по году выпуска");
+            string userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case "1":
+                    FindByTitle();
+                    break;
+                case "2":
+                    FindByAuthor();
+                    break;
+                case "3":
+                    FindByGenre();
+                    break;
+                case "4":
+                    FindByYear();
+                    break;
+            }
+        }       
+        
+        public void FoundBooks()
+        {
+            if (_foundBooks.Count > 0)
+            {
+                foreach (var foundBook in _foundBooks)
+                {
+                    Console.WriteLine($"Найденные книги: {foundBook.Author}. {foundBook.BookTitle}. {foundBook.Genre}. {foundBook.Year}");                    
+                }                
+            }
+            else
+            {
+                Console.WriteLine($"В библиотеке нет таких книг");
+            }
+            _foundBooks.Clear();
+        }
+
+        private void FindByYear()
+        {
+            Console.WriteLine("Введите год выпуска книги");
+            int year = GetUserDate();
+
+            foreach (var book in _books)
+            {
+                if (year == book.Year)
+                {
+                    _foundBooks.Add(book);
+                }                
+            }
+            FoundBooks();
+        }
+
+        private void FindByAuthor()
+        {
+            Console.Write("Введите имя и фамилию автора: ");
+            string author = Console.ReadLine();
+            
+            foreach (var book in _books)
+            {
+                if (author.ToLower() == book.Author.ToLower())
+                {
+                    _foundBooks.Add(book);
+                }                
+            }
+            FoundBooks();
+        }
+
+        private void FindByGenre()
+        {
+            Console.WriteLine("Введите жанр книги");
+            string genre = Console.ReadLine();
+
+            foreach (var book in _books)
+            {
+                if (genre.ToLower() == book.Genre.ToLower())
+                {
+                    _foundBooks.Add(book);
+                }                
+            }
+            FoundBooks();
+        }
+
+        private void FindByTitle()
+        {
+            Console.WriteLine("Введите название книги");
+            string bookTitle = Console.ReadLine();
+
+            foreach (var book in _books)
+            {
+                if (bookTitle.ToLower() == book.BookTitle.ToLower())
+                {
+                    _foundBooks.Add(book);
+                }                
+            }
+            FoundBooks();
+        }
+
+        private bool TryGetBook(out Book book)
+        {
+            int userInput = Convert.ToInt32(Console.ReadLine());
+
+            if (userInput > 0 && userInput - 1 < _books.Count)
+            {
+                book = _books[userInput - 1];
+                return true;
+            }
+            else
+            {
+                book = null;
+                Console.WriteLine("Книги под таким номером не существует");
+                return false;
+            }
+        }
+
+        private int GetUserDate()
+        {
+            bool isNumber = int.TryParse(Console.ReadLine(), out int year);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите корректный год");
+                year = 0;
+                return year;
+            }
+            else
+            {
+                return year;
+            }
+        }
+
+        private string GetUserText()
+        {
+            string userInput = Console.ReadLine();
+            return userInput;
+        }
+    }
+}
