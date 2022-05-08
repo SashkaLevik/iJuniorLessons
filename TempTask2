@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Globalization;
+
+namespace Task1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isOpen = true;
+            string userInput;
+            Player player = new Player();
+            Seller seller = new Seller();
+            Console.WriteLine("Добро пожаловать в лавку");
+            Console.WriteLine("1.Показать инвентарь. 2.Показать товары. 3.Купить. 4.Продать. 5.Выйти из лавки");
+
+            while (isOpen)
+            {
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        player.ShowInventory();
+                        break;
+                    case "2":
+                        seller.ItemsInShop();
+                        break;
+                    case "3":
+                        //player.BuyItem(seller);
+                        break;
+                    case "4":
+                        //player.SellItem(player, seller);
+                        break;
+                    case "5":
+                        isOpen = false;
+                        break;
+                }
+
+            }
+        }
+    }
+
+    class Item
+    {
+        int amount = 0;
+        public string Name { get; private set; }
+        public string Stats { get; private set; }
+        public int Price { get; private set; }
+
+        public Item(string name, string stats, int price)
+        {
+            Name = name;
+            Stats = stats;
+            Price = price;
+        }
+
+        //public void ShowItem(int itemID)
+        //{
+        //    Console.WriteLine($"{itemID + 1}.{Name}, Параметры: {Stats}, Цена: {Price}");
+        //}
+
+
+    }
+
+    class Slot
+    {
+        int count = 0;
+        public List<Item> cell = new List<Item>();
+
+        public Slot()
+        {
+            cell.Add(new Item("Пелье зутаницы", "Атака +3", 20));
+            cell.Add(new Item("Шипованый гульфик", "Атака +3", 30));
+        }
+        public void ShowItem(Item item, int itemID)
+        {
+            Console.WriteLine($"{itemID + 1}.{item.Name}, Параметры: {item.Stats}, Цена: {item.Price}");
+        }
+    }
+    class Player
+    {
+        private int _money = 100;
+        public List<Slot> _inventory = new List<Slot>();
+
+        public Player()
+        {
+            
+        }
+
+        public void ShowInventory(Item item)
+        {
+            Console.WriteLine($"Ваши вещи    Ваши деньги {_money}");
+            for (int i = 0; i < _inventory.Count; i++)
+            {
+                _inventory[i].ShowItem(item, i);
+            }
+        }
