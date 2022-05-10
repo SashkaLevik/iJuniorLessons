@@ -50,20 +50,12 @@ namespace Task2
                 _secondWarior.TakeDamage(_firstWarior.Damage);
                 _firstWarior.ShowStats();
                 _secondWarior.ShowStats();
-                _firstWarior.UseSpecial();
-                _secondWarior.UseSpecial();
+                _firstWarior.SpecialAttack();
+                _secondWarior.SpecialAttack();
                 Console.ReadLine();
                 Console.Clear();
             }
-        }
-
-        public void SpecialAttack(Warior warior)
-        {
-            if (_firstWarior.Health < 50 || _secondWarior.Health < 50)
-            {
-                warior.UseSpecial();
-            }
-        }
+        }        
        
         public void ShowWiner()
         {
@@ -168,7 +160,15 @@ namespace Task2
             }
             
             Console.WriteLine($"{Name} получает {damage} урона");
-        }        
+        }
+
+        public void SpecialAttack()
+        {
+            if (Health < 50)
+            {
+                UseSpecial();
+            }
+        }
 
         public virtual void UseSpecial()
         {
