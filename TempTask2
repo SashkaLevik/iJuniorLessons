@@ -36,10 +36,10 @@ namespace Task2
         public Arena()
         {
             _wariors.Add(new Gladiator("Гладиатор", 100, 20, 10));
-            _wariors.Add(new Gladiator("Убийца", 80, 30, 0));
-            _wariors.Add(new Gladiator("Варвар", 100, 25, 0));
-            _wariors.Add(new Gladiator("Монах", 90, 20, 0));
-            _wariors.Add(new Gladiator("Рыцарь", 120, 20, 20));
+            _wariors.Add(new Assasin("Убийца", 80, 30, 0));
+            _wariors.Add(new Barbarian("Варвар", 100, 25, 0));
+            _wariors.Add(new Monk("Монах", 90, 20, 0));
+            _wariors.Add(new Knight("Рыцарь", 120, 20, 20));
         }
 
         public void Battle()
@@ -53,7 +53,7 @@ namespace Task2
                 _firstWarior.SpecialAttack();
                 _secondWarior.SpecialAttack();
                 Console.ReadLine();
-                Console.Clear();
+                //Console.Clear();
             }
         }        
        
@@ -75,12 +75,11 @@ namespace Task2
 
         public bool TryCreateBattle()
         {
-            Console.SetCursorPosition(0, 2);
             ShowWariors();
             Console.WriteLine("Выберите воина в синем углу");
             ChooseWarior(out _firstWarior);
             Console.WriteLine("Выберите воина в красном углу");
-            ChooseWarior(out _secondWarior);
+            ChooseWarior(out _secondWarior);            
 
             if (_firstWarior == null || _secondWarior == null)
             {
@@ -90,7 +89,7 @@ namespace Task2
             {
                 Console.WriteLine("Выбор сделан");
                 return true;
-            }
+            }            
         }
 
         public void ChooseWarior(out Warior warior)
@@ -172,7 +171,7 @@ namespace Task2
 
         public virtual void UseSpecial()
         {
-
+            
         }
     }
     
