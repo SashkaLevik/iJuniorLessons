@@ -31,7 +31,7 @@ namespace Task2
     {
         private Warior _firstWarior;
         private Warior _secondWarior;
-        private List<Warior> _wariors = new List<Warior>();
+        private List<Warior> _wariors = new List<Warior>();        
         
         public Arena()
         {
@@ -39,7 +39,7 @@ namespace Task2
             _wariors.Add(new Assasin("Убийца", 80, 30, 0));
             _wariors.Add(new Barbarian("Варвар", 100, 25, 0));
             _wariors.Add(new Monk("Монах", 90, 20, 0));
-            _wariors.Add(new Knight("Рыцарь", 120, 20, 20));
+            _wariors.Add(new Knight("Рыцарь", 110, 20, 10));
         }
 
         public void Battle()
@@ -79,8 +79,8 @@ namespace Task2
             Console.WriteLine("Выберите воина в синем углу");
             ChooseWarior(out _firstWarior);
             Console.WriteLine("Выберите воина в красном углу");
-            ChooseWarior(out _secondWarior);            
-
+            ChooseWarior(out _secondWarior);
+            
             if (_firstWarior == null || _secondWarior == null)
             {
                 return false;
@@ -124,14 +124,14 @@ namespace Task2
     }
 
     class Warior
-    {
+    {      
         public string Name { get; private set; }
         public int Health { get; protected set; }
         public int Damage { get; protected set; }
         public int Armor { get; protected set; }
 
         public Warior(string name, int health, int damage, int armor)
-        {
+        {           
             Name = name;
             Health = health;
             Damage = damage;
@@ -141,29 +141,30 @@ namespace Task2
         public void ShowStats()
         {
             Console.WriteLine($"{Name}, здоровье {Health}, атака {Damage}, защита {Armor}");
-        }
+        }       
 
         public void TakeDamage(int damage)
         {
-            int blockedDamage;
-
-            if (Armor == 0)
+            if (Armor > 0)
             {
-                Health -= damage;
-            }
+                Health -= damage - Armor;
+                Armor -= damage;
+                if (Armor < 0)
+                {
+                    Armor = 0;
+                }
+            }            
             else
             {
-                blockedDamage = damage - Armor;
-                Armor -= blockedDamage;
-                Health -= blockedDamage;
-            }
-            
+                Health -= damage;
+            }            
+
             Console.WriteLine($"{Name} получает {damage} урона");
         }
 
         public void SpecialAttack()
         {
-            if (Health < 50)
+            if (Health <= 60 && Health >= 40)
             {
                 UseSpecial();
             }
