@@ -168,7 +168,10 @@ namespace Task2
 
         public void SpecialAttack()
         {
-            if (Health <= 60 && Health >= 40)
+            int maxHealthForSpetial = 60;
+            int minHealthForSpetial = 40;
+
+            if (Health <= maxHealthForSpetial && Health >= minHealthForSpetial)
             {
                 UseSpecial();
             }
@@ -184,7 +187,7 @@ namespace Task2
         
         public override void UseSpecial()
         {            
-            Console.WriteLine($"{Name} использует атаку двумя руками атака + 20");
+            Console.WriteLine($"{Name} использует атаку двумя руками атака + {_twoHandAttack}");
             Damage += _twoHandAttack;
         }
     }
@@ -196,7 +199,7 @@ namespace Task2
 
         public override void UseSpecial()
         {
-            Console.WriteLine($"{Name} использует духовный свет здоровье + 30");
+            Console.WriteLine($"{Name} использует духовный свет здоровье + {_spiritualLight}");
             Health += _spiritualLight;
         }
     }
@@ -208,7 +211,7 @@ namespace Task2
 
         public override void UseSpecial()
         {
-            Console.WriteLine($"{Name} использует атаку из тени атака + 30");
+            Console.WriteLine($"{Name} использует атаку из тени атака + {_shadowAttack}");
             Damage += _shadowAttack;
         }
     }
@@ -220,7 +223,7 @@ namespace Task2
 
         public override void UseSpecial()
         {
-            Console.WriteLine($"{Name} использует ярость атака + 15");
+            Console.WriteLine($"{Name} использует ярость атака + {_rage}");
             Damage += _rage;
         }
     }
@@ -232,7 +235,7 @@ namespace Task2
 
         public override void UseSpecial()
         {
-            Console.WriteLine($"{Name} использует молитву здоровье + 10, защита + 10");
+            Console.WriteLine($"{Name} использует молитву здоровье + {_pray}, защита + {_pray}");
             Health += _pray;
             Armor += _pray;
         }
