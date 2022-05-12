@@ -1,0 +1,240 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isFighting = true;
+            Arena arena = new Arena();
+            
+            while (isFighting)
+            {
+                if (arena.TryCreateBattle())
+                {
+                    Console.ReadKey();
+                    arena.Battle();                    
+                    arena.ShowWiner();
+                    Console.ReadKey();
+                    isFighting = false;
+                }
+            }
+        }
+    } 
+    
+    class Arena
+    {
+        private Warior _firstWarior;
+        private Warior _secondWarior;
+        private List<Warior> _wariors = new List<Warior>();        
+        
+        public Arena()
+        {
+            _wariors.Add(new Gladiator("Гладиатор", 100, 20, 10));
+            _wariors.Add(new Assasin("Убийца", 80, 30, 0));
+            _wariors.Add(new Barbarian("Варвар", 100, 25, 0));
+            _wariors.Add(new Monk("Монах", 90, 20, 0));
+            _wariors.Add(new Knight("Рыцарь", 110, 20, 10));
+        }
+
+        public void Battle()
+        {
+            while (_firstWarior.Health > 0 && _secondWarior.Health > 0)
+            {
+                _firstWarior.TakeDamage(_secondWarior.Damage);
+                _secondWarior.TakeDamage(_firstWarior.Damage);
+                _firstWarior.ShowStats();
+                _secondWarior.ShowStats();
+                _firstWarior.SpecialAttack();
+                _secondWarior.SpecialAttack();
+                Console.ReadLine();
+            }
+        }        
+       
+        public void ShowWiner()
+        {
+            if (_firstWarior.Health <= 0 && _secondWarior.Health <=0)
+            {
+                Console.WriteLine("Оба воина погибли");
+            }
+            else if (_firstWarior.Health <= 0)
+            {
+                Console.WriteLine($"Победил {_secondWarior.Name}");
+            }
+            else if (_secondWarior.Health <= 0)
+            {
+                Console.WriteLine($"Победил {_firstWarior.Name}");
+            }
+        }
+
+        public bool TryCreateBattle()
+        {
+            ShowWariors();
+            Console.WriteLine("Выберите воина в синем углу");
+            ChooseWarior(out _firstWarior);
+            Console.WriteLine("Выберите воина в красном углу");
+            ChooseWarior(out _secondWarior);
+            
+            if (_firstWarior == null || _secondWarior == null)
+            {
+                return false;
+            }
+            else if (_firstWarior == _secondWarior)
+            {
+                Console.WriteLine("Выберите разных воинов");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("Выбор сделан, битва началась!\n");
+                return true;
+            }            
+        }
+
+        public void ChooseWarior(out Warior warior)
+        {
+            bool isNumber = int.TryParse(Console.ReadLine(), out int inputID);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите номер");
+                warior = null;
+            }
+            else if (inputID > 0 && inputID <= _wariors.Count)
+            {
+                warior = _wariors[inputID - 1];
+                Console.WriteLine($"Вы выбрали {warior.Name}");
+            }
+            else
+            {
+                Console.WriteLine("Нет воина под таким номером!");
+                warior = null;
+            }
+        }
+
+        private void ShowWariors()
+        {
+            for (int i = 0; i < _wariors.Count; i++)
+            {
+                Console.WriteLine(i + 1);
+                _wariors[i].ShowStats();
+            }
+        }
+    }
+
+    class Warior
+    {      
+        public string Name { get; private set; }
+        public int Health { get; protected set; }
+        public int Damage { get; protected set; }
+        public int Armor { get; protected set; }
+
+        public Warior(string name, int health, int damage, int armor)
+        {           
+            Name = name;
+            Health = health;
+            Damage = damage;
+            Armor = armor;
+        }
+
+        public void ShowStats()
+        {
+            Console.WriteLine($"{Name}, здоровье {Health}, атака {Damage}, защита {Armor}");
+        }       
+
+        public void TakeDamage(int damage)
+        {
+            if (Armor > 0)
+            {
+                Health -= damage - Armor;
+                Armor -= damage;
+                if (Armor < 0)
+                {
+                    Armor = 0;
+                }
+            }            
+            else
+            {
+                Health -= damage;
+            }            
+
+            Console.WriteLine($"{Name} получает {damage} урона");
+        }
+
+        public void SpecialAttack()
+        {
+            if (Health <= 60 && Health >= 40)
+            {
+                UseSpecial();
+            }
+        }
+
+        public virtual void UseSpecial() { }       
+    }
+    
+    class Gladiator: Warior
+    {
+        private int _twoHandAttack = 10;
+        public Gladiator(string name, int health, int damage, int armor): base(name, health, damage, armor) { }
+        
+        public override void UseSpecial()
+        {            
+            Console.WriteLine($"{Name} использует атаку двумя руками атака + 20");
+            Damage += _twoHandAttack;
+        }
+    }
+
+    class Monk: Warior
+    {
+        private int _spiritualLight = 30;
+        public Monk(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+        public override void UseSpecial()
+        {
+            Console.WriteLine($"{Name} использует духовный свет здоровье + 30");
+            Health += _spiritualLight;
+        }
+    }
+
+    class Assasin: Warior
+    {
+        private int _shadowAttack = 30;
+        public Assasin(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+        public override void UseSpecial()
+        {
+            Console.WriteLine($"{Name} использует атаку из тени атака + 30");
+            Damage += _shadowAttack;
+        }
+    }
+
+    class Barbarian: Warior
+    {
+        private int _rage = 15;
+        public Barbarian(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+        public override void UseSpecial()
+        {
+            Console.WriteLine($"{Name} использует ярость атака + 15");
+            Damage += _rage;
+        }
+    }
+
+    class Knight: Warior
+    {
+        private int _pray = 10;
+        public Knight(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
+
+        public override void UseSpecial()
+        {
+            Console.WriteLine($"{Name} использует молитву здоровье + 10, защита + 10");
+            Health += _pray;
+            Armor += _pray;
+        }
+    }
+}
