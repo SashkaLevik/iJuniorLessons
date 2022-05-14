@@ -3,237 +3,215 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
-namespace Task2
+namespace Task1
 {
     class Program
     {
         static void Main(string[] args)
         {
-            bool isFighting = true;
-            Arena arena = new Arena();
-            
-            while (isFighting)
+            bool isOpen = true;
+            string userInput;
+            Player player = new Player();
+            Merchant merchant = new Merchant();
+            Console.WriteLine("Добро пожаловать в лавку");
+            Console.WriteLine("1.Показать инвентарь. 2.Показать товары. 3.Купить. 4.Выйти из лавки");
+
+            while (isOpen)
             {
-                if (arena.TryCreateBattle())
+                userInput = Console.ReadLine();
+
+                switch (userInput)
                 {
-                    Console.ReadKey();
-                    arena.Battle();                    
-                    arena.ShowWiner();
-                    Console.ReadKey();
-                    isFighting = false;
+                    case "1":
+                        player.ShowInventory();
+                        break;
+                    case "2":
+                        merchant.ShowGoods();
+                        break;
+                    case "3":
+                        player.BuyGoods(merchant);
+                        break;                   
+                    case "4":
+                        isOpen = false;
+                        break;
                 }
             }
         }
-    } 
-    
-    class Arena
+    }
+              
+    class Item
     {
-        private Warior _firstWarior;
-        private Warior _secondWarior;
-        private List<Warior> _wariors = new List<Warior>();        
+        public List<Item> Items = new List<Item>();
+        public string Name { get; private set; }
+        public string Stats { get; private set; }
+        public int Price { get; private set; }
+        public int Amount { get; private set; }
+
+        public Item(string name, string stats, int price, int amount)
+        {
+            Name = name;
+            Stats = stats;
+            Price = price;
+            Amount = amount;
+        }
+
+        public void ShowItem(int itemID)
+        {
+            Console.WriteLine($"{itemID + 1}.{Name}, Параметры: {Stats}, Цена: {Price}, Количество: {Amount}");
+        }
+
+        public void ReduceCount(int count)
+        {
+            if (count <= Amount)
+                Amount -= count;
+        }
+    }
+    
+    class Merchant
+    {
+        private int _storeAccount = 200;
+
+        public List<Item> Store = new List<Item>();
         
-        public Arena()
+        public Merchant()
         {
-            _wariors.Add(new Gladiator("Гладиатор", 100, 20, 10));
-            _wariors.Add(new Assasin("Убийца", 80, 30, 0));
-            _wariors.Add(new Barbarian("Варвар", 100, 25, 0));
-            _wariors.Add(new Monk("Монах", 90, 20, 0));
-            _wariors.Add(new Knight("Рыцарь", 110, 20, 10));
+            Store.Add(new Item("Шлем отваги", "Атака +1", 30, 1));
+            Store.Add(new Item("Фляга клея", "Инициатива +2", 40, 2));
+            Store.Add(new Item("Хотельное кольцо", "Проклятье -1", 50, 1));
+            Store.Add(new Item("Утка обречённости", "Уровень -2", 60, 2));
+            Store.Add(new Item("Зелье идиотской храбрости", "Атака +2", 20, 3));
         }
 
-        public void Battle()
+        public void ShowGoods()
         {
-            while (_firstWarior.Health > 0 && _secondWarior.Health > 0)
+            Console.WriteLine($"Товары в магазине    Деньги торговца{_storeAccount}");
+
+            for (int i = 0; i < Store.Count; i++)
             {
-                _firstWarior.TakeDamage(_secondWarior.Damage);
-                _secondWarior.TakeDamage(_firstWarior.Damage);
-                _firstWarior.ShowStats();
-                _secondWarior.ShowStats();
-                _firstWarior.SpecialAttack();
-                _secondWarior.SpecialAttack();
-                Console.ReadLine();
-                //Console.Clear();
-            }
-        }        
-       
-        public void ShowWiner()
-        {
-            if (_firstWarior.Health <= 0 && _secondWarior.Health <=0)
-            {
-                Console.WriteLine("Оба воина погибли");
-            }
-            else if (_firstWarior.Health <= 0)
-            {
-                Console.WriteLine($"Победил {_secondWarior.Name}");
-            }
-            else if (_secondWarior.Health <= 0)
-            {
-                Console.WriteLine($"Победил {_firstWarior.Name}");
+                Store[i].ShowItem(i);
             }
         }
 
-        public bool TryCreateBattle()
+        public void SellGoods(int itemID)
         {
-            ShowWariors();
-            Console.WriteLine("Выберите воина в синем углу");
-            ChooseWarior(out _firstWarior);
-            Console.WriteLine("Выберите воина в красном углу");
-            ChooseWarior(out _secondWarior);
-            
-            if (_firstWarior == null || _secondWarior == null)
+            _storeAccount += Store[itemID - 1].Price;
+        }
+    }
+    class Player
+    {
+        private string _name;
+        private int _count;
+        private int _money = 100;
+        private List<Player> _inventory = new List<Player>();
+
+        public Player(string name, int count)
+        {
+            _name = name;
+            _count = count;
+        }
+        public Player() { }
+
+        public void ShowInventory()
+        {
+            Console.WriteLine($"Ваши вещи    Ваши деньги {_money}");
+
+            if (_inventory.Count == 0)
+            {
+                Console.WriteLine("Ваш инвентарь пуст");
+            }
+            else
+            {
+                for (int i = 0; i < _inventory.Count; i++)
+                {
+                    Console.WriteLine($"{_inventory[i]._name} количество {_inventory[i]._count}");
+                }
+            }            
+        }
+
+        public void BuyGoods(Merchant merchant)
+        {
+            int itemID;
+            int itemCount;
+            Console.WriteLine("Что вы хотите купить?");
+            itemID = GetNumber();
+            Console.WriteLine("Сколько вы хотите купить?");
+            itemCount = GetNumber();
+
+            if (itemID <= merchant.Store.Count)
+            {
+                if (itemCount <= merchant.Store[itemID - 1].Amount)
+                {
+                    if (_money - merchant.Store[itemID - 1].Price * itemCount > 0)
+                    {
+                        _money -= merchant.Store[itemID - 1].Price * itemCount;
+                        merchant.SellGoods(itemID);
+                        merchant.Store[itemID - 1].ReduceCount(itemCount);
+                        if (IsItemExist(itemID))
+                        {
+                            _inventory[itemID - 1]._count += itemCount;
+                        }
+                        else
+                        {
+                            _inventory.Add(new Player(merchant.Store[itemID - 1].Name, itemCount)); 
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("У вас не хватает денег!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Извините, у нас нет такого количества");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Извините, у нас нет такого товара");
+            }            
+        }
+
+        public bool IsItemExist(int itemID)
+        {
+            Merchant merchant = new Merchant();
+            string itemInStore = merchant.Store[itemID - 1].Name;
+            string itemInInventory = string.Empty;
+
+            for (int i = 0; i < _inventory.Count; i++)
+            {
+                if (_inventory[i]._name == itemInStore)
+                {
+                    itemInInventory = itemInStore;
+                    break;
+                }
+            }
+
+            if (itemInInventory == itemInStore)
+            {
+                return true;
+            }
+            else
             {
                 return false;
             }
-            else
-            {
-                Console.WriteLine("Выбор сделан");
-                return true;
-            }            
         }
 
-        public void ChooseWarior(out Warior warior)
+        private int GetNumber()
         {
-            bool isNumber = int.TryParse(Console.ReadLine(), out int inputID);
+            bool isNumber = int.TryParse(Console.ReadLine(), out int number);
 
             if (isNumber == false)
             {
-                Console.WriteLine("Введите номер");
-                warior = null;
-            }
-            else if (inputID > 0 && inputID <= _wariors.Count)
-            {
-                warior = _wariors[inputID - 1];
-                Console.WriteLine($"Вы выбрали {warior.Name}");
+                Console.WriteLine("Введите число");
+                number = 0;
+                return number;
             }
             else
             {
-                Console.WriteLine("Нет воина под таким номером!");
-                warior = null;
+                return number;
             }
-        }
-
-        private void ShowWariors()
-        {
-            for (int i = 0; i < _wariors.Count; i++)
-            {
-                Console.WriteLine(i + 1);
-                _wariors[i].ShowStats();
-            }
-        }
-    }
-
-    class Warior
-    {      
-        public string Name { get; private set; }
-        public int Health { get; protected set; }
-        public int Damage { get; protected set; }
-        public int Armor { get; protected set; }
-
-        public Warior(string name, int health, int damage, int armor)
-        {           
-            Name = name;
-            Health = health;
-            Damage = damage;
-            Armor = armor;
-        }
-
-        public void ShowStats()
-        {
-            Console.WriteLine($"{Name}, здоровье {Health}, атака {Damage}, защита {Armor}");
-        }       
-
-        public void TakeDamage(int damage)
-        {
-            if (Armor > 0)
-            {
-                Health -= damage - Armor;
-                Armor -= damage;
-                if (Armor < 0)
-                {
-                    Armor = 0;
-                }
-            }            
-            else
-            {
-                Health -= damage;
-            }            
-
-            Console.WriteLine($"{Name} получает {damage} урона");
-        }
-
-        public void SpecialAttack()
-        {
-            if (Health <= 60 && Health >= 40)
-            {
-                UseSpecial();
-            }
-        }
-
-        public virtual void UseSpecial()
-        {
-            
-        }
-    }
-    
-    class Gladiator: Warior
-    {
-        private int _twoHandAttack = 10;
-        public Gladiator(string name, int health, int damage, int armor): base(name, health, damage, armor) { }
-        
-        public override void UseSpecial()
-        {            
-            Console.WriteLine($"{Name} использует атаку двумя руками атака + 20");
-            Damage += _twoHandAttack;
-        }
-    }
-
-    class Monk: Warior
-    {
-        private int _spiritualLight = 30;
-        public Monk(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
-
-        public override void UseSpecial()
-        {
-            Console.WriteLine($"{Name} использует духовный свет здоровье + 30");
-            Health += _spiritualLight;
-        }
-    }
-
-    class Assasin: Warior
-    {
-        private int _shadowAttack = 30;
-        public Assasin(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
-
-        public override void UseSpecial()
-        {
-            Console.WriteLine($"{Name} использует атаку из тени атака + 30");
-            Damage += _shadowAttack;
-        }
-    }
-
-    class Barbarian: Warior
-    {
-        private int _rage = 15;
-        public Barbarian(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
-
-        public override void UseSpecial()
-        {
-            Console.WriteLine($"{Name} использует ярость атака + 15");
-            Damage += _rage;
-        }
-    }
-
-    class Knight: Warior
-    {
-        private int _pray = 10;
-        public Knight(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
-
-        public override void UseSpecial()
-        {
-            Console.WriteLine($"{Name} использует молитву здоровье + 10, защита + 10");
-            Health += _pray;
-            Armor += _pray;
         }
     }
 }
