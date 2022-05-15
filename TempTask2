@@ -14,9 +14,9 @@ namespace Task1
             bool isOpen = true;
             string userInput;
             Player player = new Player();
-            Merchant merchant = new Merchant();
+            Seller seller = new Seller();
             Console.WriteLine("Добро пожаловать в лавку");
-            Console.WriteLine("1.Показать инвентарь. 2.Показать товары. 3.Купить. 4.Выйти из лавки");
+            Console.WriteLine("1.Показать инвентарь. 2.Показать товары. 3.Купить. 4.Продать. 5.Выйти из лавки");
 
             while (isOpen)
             {
@@ -28,22 +28,25 @@ namespace Task1
                         player.ShowInventory();
                         break;
                     case "2":
-                        merchant.ShowGoods();
+                        seller.ItemsInShop();
                         break;
                     case "3":
-                        //player.BuyGoods(merchant);
-                        break;                   
+                        player.BuyItem(seller);
+                        break;
                     case "4":
+                        //player.SellItem(player, seller);
+                        break;
+                    case "5":
                         isOpen = false;
                         break;
                 }
+
             }
         }
     }
-              
+
     class Item
     {
-        public List<Item> Items = new List<Item>();
         public string Name { get; private set; }
         public string Stats { get; private set; }
         public int Price { get; private set; }
@@ -53,11 +56,6 @@ namespace Task1
             Name = name;
             Stats = stats;
             Price = price;
-            Items.Add(new Item("Шлем отваги", "Атака +1", 30));
-            Items.Add(new Item("Фляга клея", "Инициатива +2", 40));
-            Items.Add(new Item("Хотельное кольцо", "Проклятье -1", 50));
-            Items.Add(new Item("Утка обречённости", "Уровень -2", 60));
-            Items.Add(new Item("Зелье идиотской храбрости", "Атака +2", 20));
         }
 
         public void ShowItem(int itemID)
@@ -66,13 +64,104 @@ namespace Task1
         }        
     }
 
-    class Slot
+    class Player
     {
-        private Item _item;
-        private Item _amount;
+        private int _money = 100;
+        public List<Item> _inventory = new List<Item>();
 
-        public Slot()
+        public Player()
         {
-            
+            _inventory.Add(new Item("Пелье зутаницы", "Атака +3", 20));
+            _inventory.Add(new Item("Шипованый гульфик", "Атака +3", 30));
+        }
+
+        public void ShowInventory()
+        {
+            Console.WriteLine($"Ваши вещи    Ваши деньги {_money}");
+            for (int i = 0; i < _inventory.Count; i++)
+            {
+                _inventory[i].ShowItem(i);
+            }
+        }
+
+        public void BuyItem(Seller seller)
+        {
+            int itemID;
+            //int itemCount;
+            Console.WriteLine("Что вы хотите купить?");
+            itemID = GetNumber();
+            //Console.WriteLine("Сколько вы хотите купить?");
+            //itemCount = GetNumber();
+
+            if (itemID <= seller._shop.Count)
+            {
+                if (_money - seller._shop[itemID - 1].Price > 0)
+                {
+                    _money -= seller._shop[itemID - 1].Price;
+                    seller.SellItem(itemID);
+                    _inventory.Add(seller._shop[itemID - 1]);
+                }
+                else
+                {
+                    Console.WriteLine("У вас не хватает денег");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Нет такого товара");
+            }
+        }
+
+        
+        private int GetNumber()
+        {
+            bool isNumber = int.TryParse(Console.ReadLine(), out int number);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите число");
+                number = 0;
+                return number;
+            }
+            else
+            {
+                return number;
+            }
         }
     }
+
+    class Seller
+    {
+        public int shopAccount = 200;
+        public List<Item> _shop = new List<Item>();
+
+        public Seller()
+        {
+            _shop.Add(new Item("Зелье идиотской храбрости", "Атака +2", 20));
+            _shop.Add(new Item("Шлем отваги", "Атака +1", 30));
+            _shop.Add(new Item("Фляга клея", "Инициатива +2", 40));
+            _shop.Add(new Item("Хотельное кольцо", "Проклятье -1", 50));
+            _shop.Add(new Item("Утка обречённости", "Уровень -2", 60));
+        }
+
+        public void ItemsInShop()
+        {
+            Console.WriteLine($"Товары в магазине     Деньги торговца {shopAccount}");
+
+            for (int i = 0; i < _shop.Count; i++)
+            {
+                _shop[i].ShowItem(i);
+            }
+        }
+
+        public void SellItem(int itemID)
+        {
+            shopAccount += _shop[itemID - 1].Price;
+        }
+
+        //public void BuyItem(Player player, int itemID)
+        //{
+        //    shopAccount -= player._inventory[itemID - 1].Price * player._inventory[itemID - 1].Amount;
+        //}
+    }
+}
