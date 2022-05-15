@@ -1,0 +1,140 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isStationWork = true;
+            TrainStation station = new TrainStation();
+
+            while (isStationWork)
+            {
+                if (station.TryCreateDirection())
+                {
+                    int pasangersOnTrain = station.SellTickets();
+                    int depaturePlatform = station.DepaturePlatform();
+                    station.ShowSoldTickets(pasangersOnTrain);
+                    Console.SetCursorPosition(0, 0);
+
+                    if (station.TryCreateTrain(pasangersOnTrain))
+                    {
+                        Console.WriteLine($"Поезд по направлению {station.Depature} - {station.Destination}\n" +
+                        $"Количество пассажиров {pasangersOnTrain}\nОтправляется с {depaturePlatform} пути");
+                    }
+                                        
+                    Console.ReadLine();
+                    Console.Clear();
+                }                                
+            }
+        }
+    }    
+
+    class TrainStation
+    {
+        public string Depature { get; private set; }
+        public string Destination { get; private set; }
+
+        private Random _random = new Random();
+        private Train _train = new Train();
+
+        public bool TryCreateDirection()
+        {
+            Console.SetCursorPosition(0, 5);
+            Console.WriteLine("Введите город отбытия");
+            Depature = GetInputText();
+            Console.WriteLine("Введите город прибытия");
+            Destination = GetInputText();
+
+            if (Depature == null && Destination == null)
+            {
+                Console.WriteLine("Введите корректные данные");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine($"Направление {Depature} - {Destination} создано");
+                return true;
+            }
+        }        
+
+        public int SellTickets()
+        {
+            int minPasangersCount = 10;
+            int maxPasangersCount = 90;
+            int pasangersOnTrain = _random.Next(minPasangersCount, maxPasangersCount);
+            return pasangersOnTrain;
+        }        
+
+        public void ShowSoldTickets(int pasangersOnTrain)
+        {
+            Console.WriteLine($"{pasangersOnTrain} человек купило билеты");
+        }
+
+        public int DepaturePlatform()
+        {
+            int minPlatform = 1;
+            int maxPlatform = 5;
+            int depaturePlatform = _random.Next(minPlatform, maxPlatform);
+            return depaturePlatform;
+        }
+
+        public bool TryCreateTrain(int pasangersOnTrain)
+        {            
+            int newTrain = _train.WagonCapacity() * _train.NumberOfWagons();
+            Console.WriteLine($"Количество мест {newTrain}");
+
+            if (newTrain <= pasangersOnTrain)
+            {
+                Console.WriteLine("Количество мест в вашем поезде " +
+                    "меньше количества проданных билетов,\nпопробуйте создать новый поезд");
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }        
+
+        private string GetInputText()
+        {
+            string text = Console.ReadLine();
+
+            foreach (char symbol in text)
+            {
+                if (char.IsLetter(symbol) == false)
+                {
+                    Console.WriteLine("Введите корректные данные");
+                    return null;
+                }                
+            }
+            return text;
+        }
+    }
+
+    class Train
+    {
+        private Random _random = new Random();
+        private int _minWagonCapacity = 10;
+        private int _maxWagonCapacity = 20;
+        private int _minWagonsCount = 1;
+        private int _maxWagonsCount = 5;        
+
+        public int WagonCapacity()
+        {
+            int wagonCapacity = _random.Next(_minWagonCapacity, _maxWagonCapacity);
+            return wagonCapacity;
+        }
+
+        public int NumberOfWagons()
+        {
+            int wagonsNumber = _random.Next(_minWagonsCount, _maxWagonsCount);
+            return wagonsNumber;
+        }        
+    }
+}
