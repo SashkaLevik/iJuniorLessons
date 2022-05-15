@@ -37,11 +37,12 @@ namespace Task2
 
     class TrainStation
     {
+        private Random _random = new Random();
+        private Train _train = new Train();
+
         public string Depature { get; private set; }
         public string Destination { get; private set; }
 
-        private Random _random = new Random();
-        private Train _train = new Train();
 
         public bool TryCreateDirection()
         {
@@ -86,7 +87,7 @@ namespace Task2
 
         public bool TryCreateTrain(int pasangersOnTrain)
         {            
-            int newTrain = _train.WagonCapacity() * _train.NumberOfWagons();
+            int newTrain = _train.GetWagonCapacity() * _train.GetNumberOfWagons();
             Console.WriteLine($"Количество мест {newTrain}");
 
             if (newTrain <= pasangersOnTrain)
@@ -125,13 +126,13 @@ namespace Task2
         private int _minWagonsCount = 1;
         private int _maxWagonsCount = 5;        
 
-        public int WagonCapacity()
+        public int GetWagonCapacity()
         {
             int wagonCapacity = _random.Next(_minWagonCapacity, _maxWagonCapacity);
             return wagonCapacity;
         }
 
-        public int NumberOfWagons()
+        public int GetNumberOfWagons()
         {
             int wagonsNumber = _random.Next(_minWagonsCount, _maxWagonsCount);
             return wagonsNumber;
