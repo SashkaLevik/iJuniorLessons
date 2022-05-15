@@ -1,25 +1,23 @@
+    class Item
+    {
+        public string Name { get; private set; }
+        public string Stats { get; private set; }
+        public int Price { get; private set; }
+
         public Item(string name, string stats, int price)
         {
             Name = name;
             Stats = stats;
             Price = price;
-        }
-
-        //public void ShowItem(int itemID)
-        //{
-        //    Console.WriteLine($"{itemID + 1}.{Name}, Параметры: {Stats}, Цена: {Price}");
-        //}        
+        }                
     }
 
     class Slot
     {
-        private Item _item;
+        public Item _item;
         private int _amount;
 
-        public Slot(int amount)
-        {
-            
-        }
+        
         public void ShowItem(int itemID)
         {
             Console.WriteLine($"{itemID + 1}.{_item.Name}, Параметры: {_item.Stats}, Цена: {_item.Price}");
@@ -32,11 +30,13 @@
 
         public Player()
         {
-            // как мне эти предметы поместить _inventory? вот это я не пойму
-            _inventory.Add(new Slot("Пелье зутаницы", "Атака +3", 20));
-            _inventory.Add(new Slot("Шипованый гульфик", "Атака +3", 30));
+            //_inventory.Add() ("Пелье зутаницы", "Атака +3", 20));
         }
 
+        public void AddItem(Item item)
+        {
+            _inventory.Add(item);//вот это не работает 
+        }
         public void ShowInventory()
         {
             Console.WriteLine($"Ваши вещи    Ваши деньги {_money}");
