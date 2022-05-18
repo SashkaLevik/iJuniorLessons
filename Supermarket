@@ -1,0 +1,174 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isOpen = true;
+            string userInput;
+            Supermarket supermarket = new Supermarket();
+            Console.WriteLine("1.Открыть кассу. 2.Продать товары. 3.Закрыть магазин");
+
+            while (isOpen)
+            {
+                userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        supermarket.CreateQueue();
+                        break;
+                    case "2":
+                        supermarket.ServeCustomers();
+                        break;
+                    case "3":
+                        isOpen = false;
+                        break;
+                }
+            }
+
+            Console.ReadLine();
+        }
+    }
+    
+    class Supermarket
+    {
+        private Random _random = new Random();
+        private Queue<Customer> _customers = new Queue<Customer>();
+        private List<Product> _products = new List<Product>();
+
+        public Supermarket()
+        {
+            _products.Add(new Product("Колбаса", 200));
+            _products.Add(new Product("Вино", 500));
+            _products.Add(new Product("Пельмешки", 450));
+            _products.Add(new Product("Торт", 400));
+            _products.Add(new Product("Кетчуп", 80));
+            _products.Add(new Product("Огурцы", 120));
+        }
+
+        public void CreateQueue()
+        {
+            int minNumberCustomers = 2;
+            int maxNumberCustomers = 6;
+            int customersCount = _random.Next(minNumberCustomers, maxNumberCustomers);
+
+            for (int i = 0; i < customersCount; i++)
+            {
+                _customers.Enqueue(GetCustomer());
+            }
+
+            Console.WriteLine($"В очереди {customersCount} покупателей");
+        }
+
+        public void ServeCustomers()
+        {
+            while (_customers.Count > 0)
+            {
+                _customers.Dequeue().PurchaseProducts();
+            }            
+        }
+                
+        private Customer GetCustomer()
+        {
+            List<Product> products = new List<Product>();
+            int minProductsCount = 2;
+            int maxProductsCount = 6;
+            int minCustomerMoney = 500;
+            int maxCustomerMoney = 2000;
+            int productsCount = _random.Next(minProductsCount, maxProductsCount);
+            int customerMoney = _random.Next(minCustomerMoney, maxCustomerMoney);
+
+            for (int i = 0; i < productsCount; i++)
+            {
+                products.Add(_products[_random.Next(0, _products.Count - 1)]);
+            }
+            return new Customer(customerMoney, products);
+        }
+    }
+
+    class Customer
+    {
+        private Random _random = new Random();
+        private List<Product> _busketOfProducts;
+        private int _money;
+
+        public Customer(int money, List<Product> busketOfProducts)
+        {
+            _money = money;
+            _busketOfProducts = busketOfProducts;
+        }
+
+        public void PurchaseProducts()
+        {
+            int purchasePrice = GetBusketCost();
+            ShowBusket();
+            Console.WriteLine($"Сумма продуктов покупателя {purchasePrice}. Деньги покупателя{_money}");
+
+            if (purchasePrice <= _money)
+            {
+                Console.WriteLine("Покупатель оплатил полную стоимость продуктов");
+            }
+            else
+            {
+                RemoveFromBusket();
+                Console.WriteLine("Покупатель оплатил полную стоимость продуктов");
+            }
+
+            Console.ReadLine();
+        }
+
+        private void ShowBusket()
+        {
+            foreach (var product in _busketOfProducts)
+            {
+                Console.WriteLine($"{product.Name}, цена {product.Price}");
+            }
+        }
+
+        private void RemoveProduct()
+        {
+            int productID = _random.Next(0, _busketOfProducts.Count);
+            Product productRemove = _busketOfProducts[productID];
+            Console.WriteLine($"Сделан возврат товара {productRemove.Name}");
+            _busketOfProducts.Remove(productRemove);
+        }
+
+        private void RemoveFromBusket()
+        {
+            while (GetBusketCost() > _money)
+            {
+                RemoveProduct();
+            }
+        }
+
+        private int GetBusketCost()
+        {
+            int fullPrice = 0;
+
+            foreach (var product in _busketOfProducts)
+            {
+                fullPrice += product.Price;
+            }
+            return fullPrice;
+        }
+    }
+
+    class Product
+    {
+        public string Name { get; private set; }
+        public int Price { get; private set; }
+
+        public Product(string name, int price)
+        {
+            Name = name;
+            Price = price;
+        }
+    }
+}
