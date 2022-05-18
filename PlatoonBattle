@@ -1,0 +1,230 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Globalization;
+
+namespace Task1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            BattleField battleField = new BattleField();
+            battleField.Battle();
+            battleField.ShowBattleResults();
+            Console.ReadLine();
+        }
+    }
+
+    class BattleField
+    {
+        private Platoon _vellaribo = new Platoon();
+        private Platoon _vellabajo = new Platoon();
+        private Soldier _vellariboSoldier;
+        private Soldier _vellabajoSoldier;
+
+        public void Battle()
+        {
+            while (_vellaribo.GetSoldiersCount() > 0 && _vellabajo.GetSoldiersCount() > 0)
+            {
+                Console.WriteLine("Взвод деревни Велларибо");
+                _vellaribo.ShowPlatoon();
+                Console.WriteLine("Взвод деревни Веллабаджо");
+                _vellabajo.ShowPlatoon();
+                _vellariboSoldier = _vellaribo.GetOneSoldier();
+                _vellabajoSoldier = _vellabajo.GetOneSoldier();
+                _vellariboSoldier.TakeDamage(_vellabajoSoldier.Damage);
+                _vellabajoSoldier.TakeDamage(_vellariboSoldier.Damage);
+                RemoveDeadSoldier();
+                _vellariboSoldier.UseSpecial();
+                _vellabajoSoldier.UseSpecial();
+                Console.ReadLine();
+            }
+        }
+
+        public void ShowBattleResults()
+        {
+            if (_vellaribo.GetSoldiersCount() <= 0 && _vellabajo.GetSoldiersCount() <= 0)
+            {
+                Console.WriteLine("Это была кровавая битва, но она ни к чему не привела");
+            }
+            else if (_vellaribo.GetSoldiersCount() <= 0)
+            {
+                Console.WriteLine("Победила деревня Веллабаджо");
+            }
+            else if (_vellabajo.GetSoldiersCount() <= 0)
+            {
+                Console.WriteLine("Победила деревня Велларибо");
+            }
+        }
+
+        private void RemoveDeadSoldier()
+        {
+            if (_vellariboSoldier.Health <= 0)
+            {
+                _vellaribo.RemoveSoldier(_vellariboSoldier);
+            }
+            else if (_vellabajoSoldier.Health <= 0)
+            {
+                _vellabajo.RemoveSoldier(_vellabajoSoldier);
+            }
+        }
+    }
+
+    class Platoon
+    {
+        private List<Soldier> _soldiers = new List<Soldier>();
+        private Random _random = new Random();
+
+        public Platoon()
+        {
+            CreatePlatoon(6, _soldiers);
+        }
+
+        public void ShowPlatoon()
+        {
+            foreach (var soldier in _soldiers)
+            {
+                Console.WriteLine($"Должность {soldier.Name}. Здоровье {soldier.Health}. Атака {soldier.Damage}");
+            }
+        }
+
+        public int GetSoldiersCount()
+        {
+            return _soldiers.Count;
+        }
+
+        public Soldier GetOneSoldier()
+        {
+            return _soldiers[_random.Next(0, _soldiers.Count)];
+        }
+
+        private Soldier GetSoldier()
+        {
+            int firstPositionSoldier = 1;
+            int lastPositionSoldier = 4;
+            int soldierInPlatoon = _random.Next(firstPositionSoldier, lastPositionSoldier);
+
+            if (soldierInPlatoon == 1)
+            {
+                return new Cook("Повар", 90, 15);
+            }
+            else if (soldierInPlatoon == 2)
+            {
+                return new Teacher("Учитель", 80, 15);
+            }
+            else if (soldierInPlatoon == 3)
+            {
+                return new Gardener("Садовник", 100, 10);
+            }
+            else
+            {
+                return new Plumber("Сантехник", 110, 10);
+            }
+        }
+
+        public void RemoveSoldier(Soldier soldier)
+        {
+            _soldiers.Remove(soldier);
+        }
+
+        private void CreatePlatoon(int soldiersCount, List<Soldier> soldiers)
+        {
+            for (int i = 0; i < soldiersCount; i++)
+            {
+                soldiers.Add(GetSoldier());
+            }
+        }
+    }
+
+    class Soldier
+    {
+        private Random _random = new Random();
+        public string Name { get; private set; }
+        public int Health { get; protected set; }
+        public int Damage { get; protected set; }
+
+        public Soldier(string name, int health, int damage)
+        {
+            Name = name;
+            Health = health;
+            Damage = damage;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            Health -= Damage;
+        }
+
+        protected virtual void SpecialAttack() { }
+
+        public void UseSpecial()
+        {
+            int numbersForSpecial = 10;
+            int fortuneNumber = 5;
+            int chanceForSpecial = _random.Next(0, numbersForSpecial);
+
+            if (chanceForSpecial > fortuneNumber)
+            {
+                SpecialAttack();
+            }
+        }
+    }
+
+    class Cook : Soldier
+    {
+        private int _sharpenKnives = 5;
+
+        public Cook(string name, int health, int damage) : base(name, health, damage) { }
+
+        protected override void SpecialAttack()
+        {
+            Console.WriteLine("Повар заточил ножи! Атака увеличена");
+            Damage += _sharpenKnives;
+        }
+    }
+
+    class Teacher : Soldier
+    {
+        private int _badGrade = 20;
+        private int _scream = 5;
+
+        public Teacher(string name, int health, int damage) : base(name, health, damage) { }
+
+        protected override void SpecialAttack()
+        {
+            Console.WriteLine("Вы не сдали домашку! Здоровье увеличено. Атака увеличена");
+            Health += _badGrade;
+            Damage += _scream;
+        }
+    }
+
+    class Gardener : Soldier
+    {
+        private int _prunerAttack = 5;
+
+        public Gardener(string name, int health, int damage) : base(name, health, damage) { }
+
+        protected override void SpecialAttack()
+        {
+            Console.WriteLine("Атака секатором! Атака увеличена");
+            Damage += _prunerAttack;
+        }
+    }
+
+    class Plumber : Soldier
+    {
+        private int _tippingGlass = 15;
+
+        public Plumber(string name, int health, int damage) : base(name, health, damage) { }
+
+        protected override void SpecialAttack()
+        {
+            Console.WriteLine("Сантехник опрокинул рюмашку! Здоровье уменьшено. Атака увеличена");
+            Health -= _tippingGlass;
+            Damage += _tippingGlass;
+        }
+    }
+}
