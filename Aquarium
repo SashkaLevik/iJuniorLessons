@@ -1,0 +1,191 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task3
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            bool isWork = true;
+            Aquarium aquarium = new Aquarium();
+            Console.WriteLine("1.Показать всех рыбок 2.Добавить рыбку 3.Достать рыбку 4.Выход\n");
+
+            while (isWork)
+            {
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        aquarium.ShowAquarium();
+                        break;
+                    case "2":
+                        aquarium.AddFish();
+                        break;
+                    case "3":
+                        aquarium.RemoveFish();
+                        break;
+                    case "4":
+                        isWork = false;
+                        break;
+                }
+
+                aquarium.CheckFishLives();
+                aquarium.RemoveDeadFish();
+            }
+        }
+    }
+
+    class Aquarium
+    {
+        private int _aquariumCapacity = 5;
+        private List<Fish> _fish = new List<Fish>();
+
+        public Aquarium()
+        {
+            _fish.Add(new Fish("Жорик", 3));
+            _fish.Add(new Fish("Кузя", 5));
+        }
+
+        public void AddFish()
+        {
+            string name;
+            int age;
+            Console.WriteLine("Введите имя рыбки");
+            name = Console.ReadLine();
+            Console.WriteLine("Введите возраст рыбки. Рыбка не может быть младше года и старше 5 лет");
+            age = GetInputAge();
+
+            if (age == 0)
+            {
+                Console.WriteLine("Ошибка");
+            }
+            else if (_aquariumCapacity == _fish.Count)
+            {
+                Console.WriteLine("В аквариуме больше нет места");
+            }
+            else
+            {
+                _fish.Add(new Fish(name, age));
+            }
+        }
+
+        public void RemoveFish()
+        {
+            if (TryGetFish(out Fish fish))
+            {
+                _fish.Remove(fish);
+            }
+        }
+
+        public void RemoveDeadFish()
+        {
+            for (int i = 0; i < _fish.Count; i++)
+            {
+                if (_fish[i].IsAlive == false)
+                {
+                    _fish.Remove(_fish[i]);
+                }
+            }
+        }
+
+        public void CheckFishLives()
+        {
+            foreach (var fish in _fish)
+            {
+                fish.Lives();
+
+                if (fish.Age > 5)
+                {
+                    Console.WriteLine($"Рыбка {fish.Name} умерла");
+                }
+            }
+        }
+       
+        public void ShowAquarium()
+        {
+            int fishID = 1;
+
+            foreach (var fish in _fish)
+            {
+                Console.WriteLine($"{fishID++}.{fish.Name}, возраст {fish.Age}");
+            }
+        }               
+
+        public bool TryGetFish(out Fish fish)
+        {
+            Console.WriteLine("Введите номер рыбки");
+            bool inputNumber = int.TryParse(Console.ReadLine(), out int fishNumber);
+
+            if (inputNumber == false)
+            {
+                Console.WriteLine("Введите номер");
+                fish = null;
+                return false;
+            }
+            else if (fishNumber > 0 && fishNumber - 1 < _fish.Count)
+            {
+                fish = _fish[fishNumber - 1];
+                Console.WriteLine($"Вы вынули {fish.Name} из аквариума");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Такой рыбки нет в аквариуме");
+                fish = null;
+                return false;
+            }
+        }
+        
+        private int GetInputAge()
+        {
+            int minAge = 1;
+            int maxAge = 5;
+            bool isNumber = int.TryParse(Console.ReadLine(), out int age);
+
+            if (isNumber == true && age >= minAge && age <= maxAge)
+            {
+                return age;
+            }
+            else
+            {
+                Console.WriteLine("Введите правильный возраст рыбки");
+                age = 0;
+                return age;
+            }
+        }
+    }
+
+    class Fish
+    {
+        private int _yearOfDeath = 6;
+
+        public string Name { get; private set; }
+
+        public int Age { get; private set; }
+
+        public bool IsAlive
+        {
+            get
+            {
+                return Age < _yearOfDeath;
+            }
+            private set { }
+        }
+
+        public Fish(string name, int age)
+        {
+            Name = name;
+            Age = age;
+        }               
+
+        public void Lives()
+        {
+            Age++;
+        }
+    }
+}
