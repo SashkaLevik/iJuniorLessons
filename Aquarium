@@ -21,7 +21,7 @@ namespace Task3
                 switch (userInput)
                 {
                     case "1":
-                        aquarium.ShowAquarium();
+                        aquarium.ShowAllFish();
                         break;
                     case "2":
                         aquarium.AddFish();
@@ -34,7 +34,7 @@ namespace Task3
                         break;
                 }
 
-                aquarium.CheckFishLives();
+                aquarium.UpdateFishAge();
                 aquarium.RemoveDeadFish();
             }
         }
@@ -43,12 +43,12 @@ namespace Task3
     class Aquarium
     {
         private int _aquariumCapacity = 5;
-        private List<Fish> _fish = new List<Fish>();
+        private List<Fish> _fishes = new List<Fish>();
 
         public Aquarium()
         {
-            _fish.Add(new Fish("Жорик", 3));
-            _fish.Add(new Fish("Кузя", 5));
+            _fishes.Add(new Fish("Жорик", 3));
+            _fishes.Add(new Fish("Кузя", 5));
         }
 
         public void AddFish()
@@ -64,13 +64,13 @@ namespace Task3
             {
                 Console.WriteLine("Ошибка");
             }
-            else if (_aquariumCapacity == _fish.Count)
+            else if (_aquariumCapacity == _fishes.Count)
             {
                 Console.WriteLine("В аквариуме больше нет места");
             }
             else
             {
-                _fish.Add(new Fish(name, age));
+                _fishes.Add(new Fish(name, age));
             }
         }
 
@@ -78,42 +78,50 @@ namespace Task3
         {
             if (TryGetFish(out Fish fish))
             {
-                _fish.Remove(fish);
+                _fishes.Remove(fish);
             }
         }
 
         public void RemoveDeadFish()
         {
-            for (int i = 0; i < _fish.Count; i++)
+            for (int i = 0; i < _fishes.Count; i++)
             {
-                if (_fish[i].IsAlive == false)
+                if (_fishes[i].IsAlive == false)
                 {
-                    _fish.Remove(_fish[i]);
+                    _fishes.Remove(_fishes[i]);
                 }
             }
         }
 
-        public void CheckFishLives()
+        public void UpdateFishAge()
         {
-            foreach (var fish in _fish)
+            foreach (var fish in _fishes)
             {
-                fish.Lives();
+                fish.IncreaseLives();
 
-                if (fish.Age > 5)
+                if (fish.IsAlive == false)
                 {
                     Console.WriteLine($"Рыбка {fish.Name} умерла");
                 }
             }
         }
        
-        public void ShowAquarium()
+        public void ShowAllFish()
         {
             int fishID = 1;
 
-            foreach (var fish in _fish)
+            if (_fishes.Count == 0)
             {
-                Console.WriteLine($"{fishID++}.{fish.Name}, возраст {fish.Age}");
+                Console.WriteLine("В аквариуме нет рыбов");
             }
+            else
+            {
+                foreach (var fish in _fishes)
+                {
+                    Console.WriteLine($"{fishID++}.{fish.Name}, возраст {fish.Age}");
+                }
+            }
+            
         }               
 
         public bool TryGetFish(out Fish fish)
@@ -127,9 +135,9 @@ namespace Task3
                 fish = null;
                 return false;
             }
-            else if (fishNumber > 0 && fishNumber - 1 < _fish.Count)
+            else if (fishNumber > 0 && fishNumber - 1 < _fishes.Count)
             {
-                fish = _fish[fishNumber - 1];
+                fish = _fishes[fishNumber - 1];
                 Console.WriteLine($"Вы вынули {fish.Name} из аквариума");
                 return true;
             }
@@ -162,20 +170,10 @@ namespace Task3
 
     class Fish
     {
-        private int _yearOfDeath = 6;
-
+        public int yearOfDeath = 6;
         public string Name { get; private set; }
-
         public int Age { get; private set; }
-
-        public bool IsAlive
-        {
-            get
-            {
-                return Age < _yearOfDeath;
-            }
-            private set { }
-        }
+        public bool IsAlive => Age < yearOfDeath;        
 
         public Fish(string name, int age)
         {
@@ -183,7 +181,7 @@ namespace Task3
             Age = age;
         }               
 
-        public void Lives()
+        public void IncreaseLives()
         {
             Age++;
         }
