@@ -89,6 +89,7 @@ namespace Task3
                 if (_fishes[i].IsAlive == false)
                 {
                     _fishes.Remove(_fishes[i]);
+                    i--;
                 }
             }
         }
