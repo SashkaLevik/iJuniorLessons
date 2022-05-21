@@ -171,10 +171,10 @@ namespace Task3
 
     class Fish
     {
-        public int yearOfDeath = 6;
+        private int _yearOfDeath = 6;
         public string Name { get; private set; }
         public int Age { get; private set; }
-        public bool IsAlive => Age < yearOfDeath;        
+        public bool IsAlive => Age < _yearOfDeath;        
 
         public Fish(string name, int age)
         {
