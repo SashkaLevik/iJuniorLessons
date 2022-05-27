@@ -1,0 +1,130 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Zoo zoo = new Zoo();            
+            zoo.StartExcursion();
+        }
+    }
+    
+    class Zoo
+    {
+        private List<Aviary> _aviaries = new List<Aviary>();
+
+        public void StartExcursion()
+        {
+            CreateAviary(4);
+            bool isOpen = true;
+
+            while (isOpen)
+            {
+                Console.WriteLine($"Приветствуем в нашем зоопарке! У нас {_aviaries.Count} вольеров" +
+                    $"\n1.Начало экскурсии 2.Выход из зоопарка");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        ShowAviary();
+                        break;
+                    case "2":
+                        isOpen = false;
+                        break;
+                }
+            }
+        }
+
+        private void ShowAviary()
+        {
+            Console.WriteLine("К какому вольеру вы хотите подойти?");
+            bool isNumber = int.TryParse(Console.ReadLine(), out int numberAviary);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите число!");
+            }
+            else if (numberAviary > 0 && numberAviary <= _aviaries.Count)
+            {
+                _aviaries[numberAviary - 1].ShowAnimals(numberAviary - 1);
+            }
+            else
+            {
+                Console.WriteLine("Такого вольера нет в нашем зоопарке");
+            }
+        }
+
+        private void CreateAviary(int numberAviary)
+        {
+            for (int i = 0; i < numberAviary; i++)
+            {
+                _aviaries.Add(new Aviary());
+            }
+        }
+    }
+
+    class Aviary
+    {
+        private Random _random = new Random();
+        private List<Animal> _animals = new List<Animal>();
+
+        public Aviary()
+        {
+            _animals.Add(new Animal("Львами", "Р-р-р-мяу"));
+            _animals.Add(new Animal("Гиппопотамами", "Чав-чав"));
+            _animals.Add(new Animal("Приматами", "Ставки на спорт"));
+            _animals.Add(new Animal("Зебрами", "Игого"));
+        }
+
+        
+        public void ShowAnimals(int animalID)
+        {
+            Console.WriteLine($"Вольер с {_animals[animalID].Species} вы слышите звук {_animals[animalID].Voice}. Здесь {GetAnimalsCount()} особи {_animals[animalID].GetGender()}");                        
+        }      
+       
+        public int GetAnimalsCount()
+        {
+            int animalsCount = 0;
+            int minNumberAnimals = 2;
+            int maxNumberAnimals = 4;
+            animalsCount = _random.Next(minNumberAnimals, maxNumberAnimals);
+            return animalsCount;
+        }               
+    }
+
+    class Animal
+    {
+        private Random _random = new Random();
+        public string Species { get; private set; }
+        public string Voice { get; private set; }
+
+        public Animal(string species,  string voice)
+        {
+            Species = species;
+            Voice = voice;
+        }
+
+        public string GetGender()
+        {
+            int minGenderNumber = 1;
+            int maxGenderNumber = 2;
+            int gender = _random.Next(minGenderNumber, maxGenderNumber);
+
+            if (gender == 1)
+            {
+                return "Самцы";
+            }
+            else
+            {
+                return "Самки";
+            }
+        }
+    }       
+}
