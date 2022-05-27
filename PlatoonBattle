@@ -101,6 +101,11 @@ namespace Task1
             return _soldiers[_random.Next(0, _soldiers.Count)];
         }
 
+        public void RemoveSoldier(Soldier soldier)
+        {
+            _soldiers.Remove(soldier);
+        }
+
         private Soldier GetSoldier()
         {
             int firstPositionSoldier = 1;
@@ -123,12 +128,7 @@ namespace Task1
             {
                 return new Plumber("Сантехник", 110, 10);
             }
-        }
-
-        public void RemoveSoldier(Soldier soldier)
-        {
-            _soldiers.Remove(soldier);
-        }
+        }        
 
         private void CreatePlatoon(int soldiersCount, List<Soldier> soldiers)
         {
@@ -158,8 +158,6 @@ namespace Task1
             Health -= Damage;
         }
 
-        protected virtual void SpecialAttack() { }
-
         public void UseSpecial()
         {
             int numbersForSpecial = 10;
@@ -171,6 +169,8 @@ namespace Task1
                 SpecialAttack();
             }
         }
+
+        protected virtual void SpecialAttack() { }
     }
 
     class Cook : Soldier
