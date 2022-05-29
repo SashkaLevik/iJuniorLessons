@@ -53,7 +53,7 @@ namespace Task2
         {
             foreach (var client in _clients)
             {
-                Console.WriteLine(client.Breackdown);
+                Console.WriteLine(client.BrokenPart);
             }
         }
 
@@ -72,69 +72,45 @@ namespace Task2
 
         private Client GetClient()
         {
-            Part part;
-            List<Part> parts = new List<Part>();
-            parts.Add(new Part("Колодки", 250));
-            parts.Add(new Part("Фильтр воздушный", 100));
-            parts.Add(new Part("Фильтр масляный", 200));
-            parts.Add(new Part("Лампа ДС", 150));
-            parts.Add(new Part("Масло", 500));
-            parts.Add(new Part("Свеча", 50));
-
+                        
             int minMoneyCount = 500;
             int maxMoneyCount = 1000;
-            int moneyCount = _random.Next(minMoneyCount, maxMoneyCount);
-            foreach (var item in parts)
-            {
-                part = item;
-            }
-            return new Client(moneyCount, part);
+            int moneyCount = _random.Next(minMoneyCount, maxMoneyCount);            
         }
     }
 
 
     class Client
     {
+        List<Part> parts = new List<Part>();
+
         private Random _random = new Random();
         public int Money { get; private set; }
-        public Part Breackdown { get; private set; }
+        public Part BrokenPart { get; private set; }
         
-        public Client(int money, Part breackdown)
+        public Client(int money, Part brokenPart)
         {
             Money = money;
-            Breackdown = breackdown;            
+            BrokenPart = brokenPart;
+            brokenPart = GetPart();
+        }
+
+        public Part GetPart()
+        {
+            Part brokenPart;
+            parts.Add(new Part("Колодки", 250));
+            parts.Add(new Part("Фильтр воздушный", 100));
+            parts.Add(new Part("Фильтр масляный", 200));
+            parts.Add(new Part("Лампа ДС", 150));
+            parts.Add(new Part("Масло", 500));
+            parts.Add(new Part("Свеча", 50));
+            brokenPart = _random.Next(0, parts.Count);
+            return brokenPart;
         }
     }
 
-    class Breackdown
-    {
-        private List<Breackdown> _breackdowns = new List<Breackdown>();
-        public string Task { get; private set; }
-        public Breackdown(string task)
-        {
-            Task = task;
-            _breackdowns.Add(new Breackdown("Требуется замена: масло"));
-            _breackdowns.Add(new Breackdown("Требуется замена: воздушный фильтр"));
-            _breackdowns.Add(new Breackdown("Требуется замена: свечей"));
-            _breackdowns.Add(new Breackdown("Требуется замена: лампа ДС"));
-            _breackdowns.Add(new Breackdown("Требуется замена: колодок"));
-            _breackdowns.Add(new Breackdown("Требуется замена: масляный фильтр"));
-            _breackdowns.Add(new Breackdown("Требуется замена: масло"));
-        }
-
-        public string GetBreackdown()
-        {
-
-            string breackdown;
-
-            for (int i = 0; i < _breackdowns.Count; i++)
-            {
-                breackdown = _breackdowns[i].Task;
-                return breackdown;
-            }
-            return null;
-        }
-    }
+  
+    
 
     class Warehouse
     {
