@@ -53,7 +53,7 @@ namespace Task2
         {
             foreach (var client in _clients)
             {
-                Console.WriteLine(client.BrokenPart);
+                Console.WriteLine($"Требуется замена {client.BrokenPart.PartName}");
             }
         }
 
@@ -65,39 +65,32 @@ namespace Task2
 
             for (int i = 0; i < clientsCount; i++)
             {
-                _clients.Enqueue(GetClient());
+                _clients.Enqueue(new Client());
             }
-        }
-
-
-        private Client GetClient()
-        {                        
-            int minMoneyCount = 500;
-            int maxMoneyCount = 1000;
-            int moneyCount = _random.Next(minMoneyCount, maxMoneyCount);
-
-            return new Client(moneyCount, );
-        }
+        }        
     }
 
 
     class Client
     {
-        List<Part> parts = new List<Part>();
 
-        private Random _random = new Random();
-        public int Money { get; private set; }
-        public Part BrokenPart { get; private set; }
+        private Random _random = new Random();        
         
-        public Client(int money, Part brokenPart)
+        public Client()
         {
-            Money = money;
-            BrokenPart = brokenPart;
+            IdentifyBreackdown();
+        }
+
+        public Part BrokenPart { get; private set; }
+
+        private void IdentifyBreackdown()
+        {
             BrokenPart = GetPart();
         }
 
         public Part GetPart()
         {
+            List<Part> parts = new List<Part>();
             int part;
             Part brokenPart;
             parts.Add(new Part("Колодки", 250));
