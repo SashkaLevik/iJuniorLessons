@@ -14,6 +14,7 @@ namespace Task2
             serviceStation.FillWarehouse();
             serviceStation.ShowWarehouse();
             serviceStation.CreateQueue();
+            serviceStation.ShowClient();
             Console.ReadLine();
         }
     }
@@ -48,6 +49,14 @@ namespace Task2
             }
         }
 
+        public void ShowClient()
+        {
+            foreach (var client in _clients)
+            {
+                Console.WriteLine(client.Breackdown);
+            }
+        }
+
         public void CreateQueue()
         {
             int minNumberClient = 6;
@@ -56,20 +65,31 @@ namespace Task2
 
             for (int i = 0; i < clientsCount; i++)
             {
-                //_clients.Enqueue(GetClient());
+                _clients.Enqueue(GetClient());
             }
         }
 
-        
+
         private Client GetClient()
         {
-            BreackDown breackDown;
+            Part part;
+            List<Part> parts = new List<Part>();
+            parts.Add(new Part("Колодки", 250));
+            parts.Add(new Part("Фильтр воздушный", 100));
+            parts.Add(new Part("Фильтр масляный", 200));
+            parts.Add(new Part("Лампа ДС", 150));
+            parts.Add(new Part("Масло", 500));
+            parts.Add(new Part("Свеча", 50));
+
             int minMoneyCount = 500;
             int maxMoneyCount = 1000;
             int moneyCount = _random.Next(minMoneyCount, maxMoneyCount);
-            
-            return new Client(moneyCount, breackDown.GetBreackdown());
-        }       
+            foreach (var item in parts)
+            {
+                part = item;
+            }
+            return new Client(moneyCount, part);
+        }
     }
 
 
@@ -77,29 +97,29 @@ namespace Task2
     {
         private Random _random = new Random();
         public int Money { get; private set; }
-        public string BreackDown { get; private set; }
+        public Part Breackdown { get; private set; }
         
-        public Client(int money, string breackdown)
+        public Client(int money, Part breackdown)
         {
             Money = money;
-            BreackDown = breackdown;
+            Breackdown = breackdown;            
         }
     }
 
-    class BreackDown
+    class Breackdown
     {
-        private List<BreackDown> _breackDowns = new List<BreackDown>();
+        private List<Breackdown> _breackdowns = new List<Breackdown>();
         public string Task { get; private set; }
-        public BreackDown(string task)
+        public Breackdown(string task)
         {
             Task = task;
-            _breackDowns.Add(new BreackDown("Требуется замена масла"));
-            _breackDowns.Add(new BreackDown("Требуется замена воздушного фильтра"));
-            _breackDowns.Add(new BreackDown("Требуется замена свечей"));
-            _breackDowns.Add(new BreackDown("Требуется замена лампы дальнего света"));
-            _breackDowns.Add(new BreackDown("Требуется замена колодок"));
-            _breackDowns.Add(new BreackDown("Требуется замена масляного фильтра"));
-            _breackDowns.Add(new BreackDown("Требуется замена масла"));
+            _breackdowns.Add(new Breackdown("Требуется замена: масло"));
+            _breackdowns.Add(new Breackdown("Требуется замена: воздушный фильтр"));
+            _breackdowns.Add(new Breackdown("Требуется замена: свечей"));
+            _breackdowns.Add(new Breackdown("Требуется замена: лампа ДС"));
+            _breackdowns.Add(new Breackdown("Требуется замена: колодок"));
+            _breackdowns.Add(new Breackdown("Требуется замена: масляный фильтр"));
+            _breackdowns.Add(new Breackdown("Требуется замена: масло"));
         }
 
         public string GetBreackdown()
@@ -107,9 +127,9 @@ namespace Task2
 
             string breackdown;
 
-            for (int i = 0; i < _breackDowns.Count; i++)
+            for (int i = 0; i < _breackdowns.Count; i++)
             {
-                breackdown = _breackDowns[i].Task;
+                breackdown = _breackdowns[i].Task;
                 return breackdown;
             }
             return null;
