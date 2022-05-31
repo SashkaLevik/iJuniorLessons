@@ -14,8 +14,8 @@ namespace Task2
             warehouse.ShowInfo();
             ServiceStation serviceStation = new ServiceStation();
             //serviceStation.ShowWarehouse();
-            //serviceStation.CreateQueue();
-            //serviceStation.ShowClient();
+            serviceStation.CreateQueue();
+            serviceStation.ShowClient();
             Console.ReadLine();
         }
     }
@@ -30,9 +30,7 @@ namespace Task2
         public ServiceStation()
         {
         }
-
         
-
         public void ServClients()
         {
             bool isWork = true;
@@ -92,73 +90,80 @@ namespace Task2
 
     class Client
     {
-
+        SparePartsDataBase SpareParts = new SparePartsDataBase();
         private static Random _random = new Random();        
         public Part BrokenPart { get; private set; }
-        
+
         public Client()
         {
             IdentifyBreackdown();
         }
 
-
         private void IdentifyBreackdown()
         {
-            BrokenPart = GetPart();
+            BrokenPart = SpareParts.GetPart();
         }
-
-        public Part GetPart()
-        {
-            List<Part> parts = new List<Part>();
-            int part;
-            Part brokenPart;
-            parts.Add(new Part("Колодки", 250));
-            parts.Add(new Part("Фильтр воздушный", 100));
-            parts.Add(new Part("Фильтр масляный", 200));
-            parts.Add(new Part("Лампа ДС", 150));
-            parts.Add(new Part("Масло", 500));
-            parts.Add(new Part("Свеча", 50));
-            part = _random.Next(0, parts.Count);
-            brokenPart = parts[part];            
-            return brokenPart;
-        }
+        
     }
 
     class SparePartsDataBase
     {
-        public List<Part> parts = new List<Part>();
+        private static Random _random = new Random();
+        private List<Part> _parts = new List<Part>();
 
         public SparePartsDataBase()
         {
-            parts.Add(new Part("Колодки", 250));
-            parts.Add(new Part("Свеча", 50));
-            parts.Add(new Part("Масло", 500));
-            parts.Add(new Part("Лампа ДС", 150));
-            parts.Add(new Part("Фильтр масляный", 200));
-            parts.Add(new Part("Фильтр воздушный", 100));
-            parts.Add(new Part("Тосол", 150));
+            _parts.Add(new Part("Колодки", 250));
+            _parts.Add(new Part("Свеча", 50));
+            _parts.Add(new Part("Масло", 500));
+            _parts.Add(new Part("Лампа ДС", 150));
+            _parts.Add(new Part("Фильтр масляный", 200));
+            _parts.Add(new Part("Фильтр воздушный", 100));
+            _parts.Add(new Part("Тосол", 150));
+        }
+
+        public List<Part> GetParts()
+        {
+            List<Part> warehouseParts = new List<Part>();
+
+            for (int i = 0; i < _parts.Count; i++)
+            {
+                warehouseParts.Add(_parts[i]);
+            }
+            return warehouseParts;
+        }
+
+        public Part GetPart()
+        {
+            Part brokenPart;
+            int part;
+            part = _random.Next(0, _parts.Count);
+            brokenPart = _parts[part];
+            return brokenPart;
         }
     }
   
     class Warehouse
     {
-        private Random _random = new Random();
+        private static Random _random = new Random();
         private List<WarehouseCell> _partsInWarehouse = new List<WarehouseCell>();
-        SparePartsDataBase dataBase = new SparePartsDataBase();
+        //SparePartsDataBase dataBase = new SparePartsDataBase();
+        
         public Warehouse()
         {
-            FillWarehouse(6);            
+            
         }
 
-        private void FillWarehouse(int sparePart)
-        {
-            int partAmount = _random.Next(3, 6);
+        //private void FillWarehouse(int sparePart)
+        //{
+        //    int partAmount = _random.Next(3, 6);
             
-            for (int i = 0; i < dataBase.parts.Count; i++)
-            {
-                _partsInWarehouse.Add(new WarehouseCell(dataBase.parts[i], partAmount));
-            }
-        }
+        //    for (int i = 0; i < dataBase.parts.Count; i++)
+        //    {
+        //        _partsInWarehouse.Add(new WarehouseCell(dataBase.parts[i], partAmount));
+        //    }
+        //}
+        
 
         public void ShowInfo()
         {
@@ -166,8 +171,6 @@ namespace Task2
             {
                 Console.WriteLine($"Деталь: {i + 1}.{_partsInWarehouse[i]._part.PartName} Цена {_partsInWarehouse[i]._part.PartPrice} Количество {_partsInWarehouse[i]._partAmount}");
             }
-
-            //Console.WriteLine($"Деталь: {_partsInWarehouse} Цена: {_part.PartPrice} Количество: {_partsInWarehouse}");
         }
 
         //public bool TryRepairCar(Client client)
