@@ -12,32 +12,25 @@ namespace Task2
         {
             ServiceStation serviceStation = new ServiceStation();
             serviceStation.FillWarehouse();
-            serviceStation.ShowWarehouse();
+           // warehouse.ShowWarehouse();
             serviceStation.CreateQueue();
             serviceStation.ShowClient();
             Console.ReadLine();
         }
     }
-    
+
     class ServiceStation
     {
         private int ShopAccount = 1000;
         private Random _random = new Random();
         private Queue<Client> _clients = new Queue<Client>();
-        private List<Warehouse> _partsInWarehouse = new List<Warehouse>();
-
         public ServiceStation()
         {
         }
 
         public void FillWarehouse()
         {
-            _partsInWarehouse.Add(new Warehouse(new Part("Колодки", 250), 2));
-            _partsInWarehouse.Add(new Warehouse(new Part("Свеча", 50), 10));
-            _partsInWarehouse.Add(new Warehouse(new Part("Масло", 500), 2));
-            _partsInWarehouse.Add(new Warehouse(new Part("Лампа ДС", 150), 6));
-            _partsInWarehouse.Add(new Warehouse(new Part("Фильтр масляный", 200), 4));
-            _partsInWarehouse.Add(new Warehouse(new Part("Фильтр воздушный", 100), 4));
+            
         }
 
         public void ServClients()
@@ -47,31 +40,6 @@ namespace Task2
             while (isWork && _clients.Count > 0)
             {
 
-            }
-        }
-        
-        public int GetRepairPrice(Client client)
-        {
-            int repairPrice = 0;
-            int workPayment = 200;
-
-            foreach (var part in _partsInWarehouse)
-            {
-                if (client.BrokenPart == part._part)
-                {
-                    repairPrice += part._part.PartPrice * workPayment;
-                    break;
-                }
-            }
-
-            return repairPrice;
-        }
-        
-        public void ShowWarehouse()
-        {            
-            for (int i = 0; i < _partsInWarehouse.Count; i++)
-            {
-                _partsInWarehouse[i].ShowInfo();
             }
         }
 
@@ -93,16 +61,16 @@ namespace Task2
             {
                 _clients.Enqueue(new Client());
             }
-        }        
+        }
     }
 
 
     class Client
     {
 
-        private static Random _random = new Random();        
+        private static Random _random = new Random();
         public Part BrokenPart { get; private set; }
-        
+
         public Client()
         {
             IdentifyBreackdown();
@@ -126,30 +94,96 @@ namespace Task2
             parts.Add(new Part("Масло", 500));
             parts.Add(new Part("Свеча", 50));
             part = _random.Next(0, parts.Count);
-            brokenPart = parts[part];            
+            brokenPart = parts[part];
             return brokenPart;
         }
     }
-  
+
     class Warehouse
     {
+        private List<Warehouse> _partsInWarehouse = new List<Warehouse>();
         public Part _part;
         public int _partAmount;
 
+        public Warehouse() { }
         public Warehouse(Part part, int partAmount)
         {
             _part = part;
             _partAmount = partAmount;
+            _partsInWarehouse.Add(new Warehouse(new Part("Колодки", 250), 2));
+            _partsInWarehouse.Add(new Warehouse(new Part("Свеча", 50), 10));
+            _partsInWarehouse.Add(new Warehouse(new Part("Масло", 500), 2));
+            _partsInWarehouse.Add(new Warehouse(new Part("Лампа ДС", 150), 6));
+            _partsInWarehouse.Add(new Warehouse(new Part("Фильтр масляный", 200), 4));
+            _partsInWarehouse.Add(new Warehouse(new Part("Фильтр воздушный", 100), 4));
         }
 
         public void ShowInfo()
         {
             Console.WriteLine($"Деталь: {_part.PartName} Цена: {_part.PartPrice} Количество: {_partAmount}");
-        }  
-        
-        
-    }    
-    
+        }
+
+        public void ShowWarehouse()
+        {
+            for (int i = 0; i < _partsInWarehouse.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {_partsInWarehouse[i]._part.PartName} Цена: {_partsInWarehouse[i]._part.PartPrice} Количество: {_partAmount}");
+            }
+        }
+
+        public int GetRepairPrice(Client client)
+        {
+            int repairPrice = 0;
+            int workPayment = 200;
+
+            foreach (var part in _partsInWarehouse)
+            {
+                if (client.BrokenPart == part._part)
+                {
+                    repairPrice += part._part.PartPrice * workPayment;
+                    break;
+                }
+            }
+
+            return repairPrice;
+        }
+
+        public bool TryRepairCar(Client client)
+        {
+            ShowWarehouse();
+            Console.WriteLine("Введите номер детали для замены");
+            bool isNumber = int.TryParse(Console.ReadLine(), out int partID);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите число!");
+                return false;
+            }
+            else if (partID > 0 && partID - 1 < _partsInWarehouse.Count && client.BrokenPart == _partsInWarehouse[partID - 1]._part)
+            {
+                int partToChange = partID - 1;
+
+                for (int i = 0; i < _partsInWarehouse.Count; i++)
+                {
+                    if (_partsInWarehouse[i]._partAmount > 0)
+                    {
+                        _partAmount--;
+                    }
+                    else
+                    {
+                        _partsInWarehouse.RemoveAt(partToChange);
+                    }                    
+                }
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Такой детали нет на складе");
+            }
+            return false;
+        }        
+    }
+
     class Part
     {
         public string PartName { get; private set; }
@@ -159,6 +193,6 @@ namespace Task2
         {
             PartName = partName;
             PartPrice = partPrice;
-        }        
+        }
     }
 }
