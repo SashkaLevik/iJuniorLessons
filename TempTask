@@ -147,23 +147,22 @@ namespace Task2
     {
         private static Random _random = new Random();
         private List<WarehouseCell> _partsInWarehouse = new List<WarehouseCell>();
-        //SparePartsDataBase dataBase = new SparePartsDataBase();
+        SparePartsDataBase dataBase = new SparePartsDataBase();
         
         public Warehouse()
         {
-            
         }
 
-        //private void FillWarehouse(int sparePart)
-        //{
-        //    int partAmount = _random.Next(3, 6);
-            
-        //    for (int i = 0; i < dataBase.parts.Count; i++)
-        //    {
-        //        _partsInWarehouse.Add(new WarehouseCell(dataBase.parts[i], partAmount));
-        //    }
-        //}
-        
+        private void FillWarehouse(int sparePart)
+        {
+            int partAmount = _random.Next(3, 6);
+
+            foreach (var part in dataBase.GetParts())
+            {
+                _partsInWarehouse.Add(part, partAmount);
+            }            
+        }
+
 
         public void ShowInfo()
         {
