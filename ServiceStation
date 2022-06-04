@@ -12,7 +12,7 @@ namespace Task2
         {
             ServiceStation serviceStation = new ServiceStation();
             serviceStation.CreateQueue();
-            serviceStation.GetToWork();            
+            serviceStation.StartedWork();            
         }
     }
     
@@ -21,13 +21,9 @@ namespace Task2
         private int _serviceStationAccount = 1000;
         private Random _random = new Random();
         private Queue<Client> _clients = new Queue<Client>();
-        private Warehouse _warehouse = new Warehouse();
-
-        public ServiceStation()
-        {
-        }
+        private Warehouse _warehouse = new Warehouse();        
         
-        public void GetToWork()
+        public void StartedWork()
         {
             bool isWork = true;
 
@@ -89,7 +85,7 @@ namespace Task2
             else if (partID > 0 && partID - 1 <= _warehouse.GetWarehouseParts().Count && client.BrokenPart.PartName != _warehouse.GetWarehouseParts()[partID - 1].Part.PartName)
             {
                 Console.WriteLine("Механик ошибся, сервис должен выплатить штраф");
-                GetFine();
+                AssignFine();
                 return false;
             }
             else
@@ -133,7 +129,7 @@ namespace Task2
                     RepairCar(client);
                     break;
                 case "2":
-                    GetFine();
+                    AssignFine();
                     break;
             }
         }
@@ -147,7 +143,7 @@ namespace Task2
             }
         }
 
-        private void GetFine()
+        private void AssignFine()
         {
             int penalty = 200;
             Console.WriteLine($"Сервиc не смог устранить неисправность - штраф {penalty}");
@@ -214,7 +210,7 @@ namespace Task2
     {
         private List<WarehouseCell> _partsInWarehouse = new List<WarehouseCell>();
         private static Random _random = new Random();
-        private SparePartsDataBase dataBase = new SparePartsDataBase();
+        private SparePartsDataBase _dataBase = new SparePartsDataBase();
         
         public Warehouse()
         {
@@ -245,7 +241,7 @@ namespace Task2
         {
             int partAmount = _random.Next(2, 4);
 
-            foreach (var part in dataBase.GetParts())
+            foreach (var part in _dataBase.GetParts())
             {
                 _partsInWarehouse.Add(new WarehouseCell(part, partAmount));
             }            
