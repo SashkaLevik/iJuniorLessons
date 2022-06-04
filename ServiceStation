@@ -78,7 +78,7 @@ namespace Task2
 
                 if (_warehouse.partsInWarhouse[partToChange].partAmount >= 0)
                 {
-                    _warehouse.partsInWarhouse[partToChange].partAmount--;
+                    _warehouse.partsInWarhouse[partToChange].ReduceAmount();
                 }
                 else
                 {
@@ -218,7 +218,7 @@ namespace Task2
         
         public Warehouse()
         {
-            FillWarehouse(4);
+            FillWarehouse();
         }
 
         public void ShowInfo()
@@ -230,7 +230,7 @@ namespace Task2
             }
         }        
 
-        private void FillWarehouse(int sparePart)
+        private void FillWarehouse()
         {
             int partAmount = _random.Next(2, 4);
 
@@ -243,13 +243,18 @@ namespace Task2
 
     class WarehouseCell
     {
-        public Part part;
-        public int partAmount;
+        public Part part { get; private set; }
+        public int partAmount { get; private set; }
 
         public WarehouseCell(Part part, int partAmount)
         {
             this.partAmount = partAmount;
             this.part = part;
+        }
+
+        public void ReduceAmount()
+        {
+            partAmount--;
         }
     }
 
