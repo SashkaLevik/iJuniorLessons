@@ -1,0 +1,267 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ServiceStation serviceStation = new ServiceStation();
+            serviceStation.CreateQueue();
+            serviceStation.GetToWork();            
+        }
+    }
+    
+    class ServiceStation
+    {
+        private int _serviceStationAccount = 1000;
+        private Random _random = new Random();
+        private Queue<Client> _clients = new Queue<Client>();
+        private Warehouse _warehouse = new Warehouse();
+
+        public ServiceStation()
+        {
+        }
+        
+        public void GetToWork()
+        {
+            bool isWork = true;
+
+            while (isWork && _clients.Count > 0)
+            {
+                _warehouse.ShowInfo();
+                Console.WriteLine($"\nНа балансе автосервиса {_serviceStationAccount}");
+                Console.WriteLine($"В очереди на обслуживание {_clients.Count} машин\n1.Начать техосмотр\n2.Завершить работу");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        ServeClient();
+                        break;
+                    case "2":
+                        isWork = false;
+                        break;
+                }
+            }
+        }
+
+        public void CreateQueue()
+        {
+            int minNumberClient = 4;
+            int maxNumberClient = 8;
+            int clientsCount = _random.Next(minNumberClient, maxNumberClient);
+
+            for (int i = 0; i < clientsCount; i++)
+            {
+                _clients.Enqueue(new Client());
+            }
+        }
+
+        private bool TryRepairCar(Client client)
+        {
+            Console.WriteLine("Введите номер детали для замены");
+            bool isNumber = int.TryParse(Console.ReadLine(), out int partID);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите число!");
+                return false;
+            }
+            else if (partID > 0 && partID - 1 <= _warehouse.partsInWarhouse.Count && client.BrokenPart.PartName == _warehouse.partsInWarhouse[partID - 1].part.PartName)
+            {
+                int partToChange = partID - 1;
+
+                if (_warehouse.partsInWarhouse[partToChange].partAmount >= 0)
+                {
+                    _warehouse.partsInWarhouse[partToChange].partAmount--;
+                }
+                else
+                {
+                    _warehouse.partsInWarhouse.RemoveAt(partToChange);
+                }
+                return true;
+            }
+            else if (partID > 0 && partID - 1 <= _warehouse.partsInWarhouse.Count && client.BrokenPart.PartName != _warehouse.partsInWarhouse[partID - 1].part.PartName)
+            {
+                Console.WriteLine("Механик ошибся, сервис должен выплатить штраф");
+                GetFine();
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("Такой детали нет на складе");
+            }
+            return false;
+        }        
+
+        private int GetRepairPrice(Client client)
+        {
+            int repairPrice = 0;
+            int workPayment = 200;
+
+            for (int i = 0; i < _warehouse.partsInWarhouse.Count; i++)
+            {
+                if (client.BrokenPart.PartName == _warehouse.partsInWarhouse[i].part.PartName)
+                {
+                    repairPrice += _warehouse.partsInWarhouse[i].part.PartPrice + workPayment;
+                    break;
+                }
+            }            
+            return repairPrice;
+        }                
+
+        private void ShowBreackdown(Client client)
+        {
+            Console.WriteLine($"Требуется замена {client.BrokenPart.PartName}");
+        }        
+
+        private void ServeClient()
+        {
+            var client = _clients.Dequeue();
+            ShowBreackdown(client);
+            Console.WriteLine("\nВыберите дальнейшие действия\n1.Устранить поломку\n2.Отказать в обслуживании");
+            string userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case "1":
+                    RepairCar(client);
+                    break;
+                case "2":
+                    GetFine();
+                    break;
+            }
+        }
+        
+        private void RepairCar(Client client)
+        {
+            if (TryRepairCar(client))
+            {
+                Console.WriteLine($"Автомобиль отремонтирован, сервис заработал {GetRepairPrice(client)}");
+                _serviceStationAccount += GetRepairPrice(client);
+            }
+        }
+
+        private void GetFine()
+        {
+            int penalty = 200;
+            Console.WriteLine($"Сервиc не смог устранить неисправность - штраф {penalty}");
+            _serviceStationAccount -= penalty;
+        }
+    }
+
+
+    class Client
+    {
+        private SparePartsDataBase _spareParts = new SparePartsDataBase();
+        public Part BrokenPart { get; private set; }
+
+        public Client()
+        {
+            IdentifyBreackdown();
+        }
+
+        private void IdentifyBreackdown()
+        {
+            BrokenPart = _spareParts.GetPart();
+        }
+        
+    }
+
+    class SparePartsDataBase
+    {
+        private static Random _random = new Random();
+        private List<Part> _parts = new List<Part>();
+
+        public SparePartsDataBase()
+        {
+            _parts.Add(new Part("Колодки", 250));
+            _parts.Add(new Part("Свеча", 50));
+            _parts.Add(new Part("Масло", 500));
+            _parts.Add(new Part("Лампа ДС", 150));
+            _parts.Add(new Part("Фильтр масляный", 200));
+            _parts.Add(new Part("Фильтр воздушный", 100));
+            _parts.Add(new Part("Тосол", 150));
+        }
+
+        public List<Part> GetParts()
+        {
+            List<Part> warehouseParts = new List<Part>();
+
+            for (int i = 0; i < _parts.Count; i++)
+            {
+                warehouseParts.Add(_parts[i]);
+            }
+            return warehouseParts;
+        }
+
+        public Part GetPart()
+        {
+            Part brokenPart;
+            int part;
+            part = _random.Next(0, _parts.Count);
+            brokenPart = _parts[part];
+            return brokenPart;
+        }
+    }
+  
+    class Warehouse
+    {
+        public List<WarehouseCell> partsInWarhouse = new List<WarehouseCell>();
+        private static Random _random = new Random();
+        private SparePartsDataBase dataBase = new SparePartsDataBase();
+        
+        public Warehouse()
+        {
+            FillWarehouse(4);
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine("Запчасти на складе:");
+            for (int i = 0; i < partsInWarhouse.Count; i++)
+            {
+                Console.WriteLine($"Деталь: {i + 1}.{partsInWarhouse[i].part.PartName} Цена {partsInWarhouse[i].part.PartPrice} Количество {partsInWarhouse[i].partAmount}");
+            }
+        }        
+
+        private void FillWarehouse(int sparePart)
+        {
+            int partAmount = _random.Next(2, 4);
+
+            foreach (var part in dataBase.GetParts())
+            {
+                partsInWarhouse.Add(new WarehouseCell(part, partAmount));
+            }            
+        }                
+    }
+
+    class WarehouseCell
+    {
+        public Part part;
+        public int partAmount;
+
+        public WarehouseCell(Part part, int partAmount)
+        {
+            this.partAmount = partAmount;
+            this.part = part;
+        }
+    }
+
+    class Part
+    {
+        public string PartName { get; private set; }
+        public int PartPrice { get; private set; }
+
+        public Part(string partName, int partPrice)
+        {
+            PartName = partName;
+            PartPrice = partPrice;
+        }        
+    }
+}
