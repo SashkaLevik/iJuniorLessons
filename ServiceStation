@@ -72,21 +72,21 @@ namespace Task2
                 Console.WriteLine("Введите число!");
                 return false;
             }
-            else if (partID > 0 && partID - 1 <= _warehouse.partsInWarhouse.Count && client.BrokenPart.PartName == _warehouse.partsInWarhouse[partID - 1].part.PartName)
+            else if (partID > 0 && partID - 1 <= _warehouse.GetWarehouseParts().Count && client.BrokenPart.PartName == _warehouse.GetWarehouseParts()[partID - 1].Part.PartName)
             {
                 int partToChange = partID - 1;
 
-                if (_warehouse.partsInWarhouse[partToChange].partAmount >= 0)
+                if (_warehouse.GetWarehouseParts()[partToChange].PartAmount > 1)
                 {
-                    _warehouse.partsInWarhouse[partToChange].ReduceAmount();
+                    _warehouse.GetWarehouseParts()[partToChange].ReduceAmount();
                 }
                 else
                 {
-                    _warehouse.partsInWarhouse.RemoveAt(partToChange);
+                    _warehouse.GetWarehouseParts().RemoveAt(partToChange);
                 }
                 return true;
             }
-            else if (partID > 0 && partID - 1 <= _warehouse.partsInWarhouse.Count && client.BrokenPart.PartName != _warehouse.partsInWarhouse[partID - 1].part.PartName)
+            else if (partID > 0 && partID - 1 <= _warehouse.GetWarehouseParts().Count && client.BrokenPart.PartName != _warehouse.GetWarehouseParts()[partID - 1].Part.PartName)
             {
                 Console.WriteLine("Механик ошибся, сервис должен выплатить штраф");
                 GetFine();
@@ -104,11 +104,11 @@ namespace Task2
             int repairPrice = 0;
             int workPayment = 200;
 
-            for (int i = 0; i < _warehouse.partsInWarhouse.Count; i++)
+            for (int i = 0; i < _warehouse.GetWarehouseParts().Count; i++)
             {
-                if (client.BrokenPart.PartName == _warehouse.partsInWarhouse[i].part.PartName)
+                if (client.BrokenPart.PartName == _warehouse.GetWarehouseParts()[i].Part.PartName)
                 {
-                    repairPrice += _warehouse.partsInWarhouse[i].part.PartPrice + workPayment;
+                    repairPrice += _warehouse.GetWarehouseParts()[i].Part.PartPrice + workPayment;
                     break;
                 }
             }            
@@ -212,7 +212,7 @@ namespace Task2
   
     class Warehouse
     {
-        public List<WarehouseCell> partsInWarhouse = new List<WarehouseCell>();
+        private List<WarehouseCell> _partsInWarehouse = new List<WarehouseCell>();
         private static Random _random = new Random();
         private SparePartsDataBase dataBase = new SparePartsDataBase();
         
@@ -224,11 +224,22 @@ namespace Task2
         public void ShowInfo()
         {
             Console.WriteLine("Запчасти на складе:");
-            for (int i = 0; i < partsInWarhouse.Count; i++)
+            for (int i = 0; i < _partsInWarehouse.Count; i++)
             {
-                Console.WriteLine($"Деталь: {i + 1}.{partsInWarhouse[i].part.PartName} Цена {partsInWarhouse[i].part.PartPrice} Количество {partsInWarhouse[i].partAmount}");
+                Console.WriteLine($"Деталь: {i + 1}.{_partsInWarehouse[i].Part.PartName} Цена {_partsInWarehouse[i].Part.PartPrice} Количество {_partsInWarehouse[i].PartAmount}");
             }
         }        
+
+        public List<WarehouseCell> GetWarehouseParts()
+        {
+            List<WarehouseCell> warehouseParts = new List<WarehouseCell>();
+
+            for (int i = 0; i < _partsInWarehouse.Count; i++)
+            {
+                warehouseParts.Add(_partsInWarehouse[i]);
+            }
+            return warehouseParts;
+        }
 
         private void FillWarehouse()
         {
@@ -236,25 +247,25 @@ namespace Task2
 
             foreach (var part in dataBase.GetParts())
             {
-                partsInWarhouse.Add(new WarehouseCell(part, partAmount));
+                _partsInWarehouse.Add(new WarehouseCell(part, partAmount));
             }            
         }                
     }
 
     class WarehouseCell
     {
-        public Part part { get; private set; }
-        public int partAmount { get; private set; }
+        public Part Part { get; private set; }
+        public int PartAmount { get; private set; }
 
         public WarehouseCell(Part part, int partAmount)
         {
-            this.partAmount = partAmount;
-            this.part = part;
+            PartAmount = partAmount;
+            Part = part;
         }
 
         public void ReduceAmount()
         {
-            partAmount--;
+            PartAmount--;
         }
     }
 
