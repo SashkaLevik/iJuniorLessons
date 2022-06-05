@@ -58,7 +58,7 @@ namespace TestDrive
     class Slot
     {
         public Item _item { get; private set; }
-        public int _amount;
+        public int _amount { get; private set; }
         public string itemName => _item.Name;
         
         public Slot(Item item, int amount)
@@ -140,31 +140,36 @@ namespace TestDrive
             }       
         }
 
-        private bool CompareItemName()
+        private bool CompareItemName(int itemID)
         {
-            for (int i = 0; i < _inventory.Count; i++)
+            foreach (var item in _inventory)
             {
-                for (int j = 0; j < merchant.GetShopItem().Count; i++)
+                if (item.itemName == merchant.GetShopItem()[itemID].itemName)
                 {
-                    if (_inventory[i].itemName == merchant.GetShopItem()[j].itemName)
-                    {
-                        return true;
-                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
-            return false;
+            return false;            
         }
 
         private void FillInventory()
         {
-            int itemAmount = _random.Next(1, 3);
+            int minItemsAmount = 1;
+            int maxItemsAmount = 3;
+            int itemAmount = _random.Next(minItemsAmount, maxItemsAmount);
 
             foreach (var item in _itemsInGame.GetItems())
             {
                 _inventory.Add(new Slot(item, itemAmount));
             }
-        }               
-                
+        }        
+
+        
+
         public void BuyItem(Merchant merchant)
         {
             int itemID;
@@ -176,22 +181,22 @@ namespace TestDrive
 
             if (itemID <= merchant.GetShopItem().Count)
             {
-                if (itemCount <= merchant.GetShopItem()[itemID - 1]._amount)
+                if (itemCount <= merchant.GetItem(itemID -1)._amount)
                 {
-                    if (_money - merchant.GetShopItem()[itemID -1]._item.Price * itemCount > 0)
+                    if (_money - merchant.GetItem(itemID -1)._item.Price * itemCount >= 0)
                     {
-                        _money -= merchant.GetShopItem()[itemID - 1]._item.Price * itemCount;
+                        _money -= merchant.GetItem(itemID -1)._item.Price * itemCount;
 
-                        if (CompareItemName())
+                        if (CompareItemName(itemID - 1))
                         {
-                            _inventory[itemID -1].IncreaseAmount(itemCount);
+                            _inventory[itemID - 1].IncreaseAmount(itemCount);
                         }
                         else
                         {
-                            _inventory.Add(merchant.GetShopItem()[itemID - 1]);
+                            _inventory.Add(merchant.GetItem(itemID - 1));
                         }
-                        merchant.GetShopItem()[itemID - 1].ReduceAmount(itemCount);
-                        merchant.SellItem(itemID -1);
+                        merchant.GetItem(itemID -1).ReduceAmount(itemCount);
+                        merchant.SellItem(itemID - 1);
                     }
                     else
                     {
@@ -208,6 +213,50 @@ namespace TestDrive
                 Console.WriteLine("Нет такого товара");
             }
         }
+
+        //public void BuyItem(Merchant merchant)
+        //{
+        //    int itemID;
+        //    int itemCount;
+        //    Console.WriteLine("Что вы хотите купить?");
+        //    itemID = GetNumber();
+        //    Console.WriteLine("Сколько вы хотите купить?");
+        //    itemCount = GetNumber();
+
+        //    if (itemID <= merchant.GetShopItem().Count)
+        //    {
+        //        if (itemCount <= merchant.GetShopItem()[itemID - 1]._amount)
+        //        {
+        //            if (_money - merchant.GetShopItem()[itemID - 1]._item.Price * itemCount >= 0)
+        //            {
+        //                _money -= merchant.GetShopItem()[itemID - 1]._item.Price * itemCount;
+
+        //                if (CompareItemName(itemID - 1))
+        //                {
+        //                    _inventory[itemID - 1].IncreaseAmount(itemCount);
+        //                }
+        //                else
+        //                {
+        //                    _inventory.Add(merchant.GetShopItem()[itemID - 1]);
+        //                }
+        //                merchant.GetShopItem()[itemID - 1].ReduceAmount(itemCount);
+        //                merchant.SellItem(itemID - 1);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("У вас не хватает денег");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Console.WriteLine("Нет такого количества");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Console.WriteLine("Нет такого товара");
+        //    }
+        //}
 
         private int GetNumber()
         {
@@ -238,16 +287,22 @@ namespace TestDrive
             FillShop();
         }
 
+        public Slot GetItem(int itemID)
+        {
+            Slot item = GetShopItem()[itemID];
+            return item;
+        }
+
         public List<Slot> GetShopItem()
         {
             List<Slot> shopItems = new List<Slot>();
 
-            for (int i = 0; i < _shop.Count; i++)
+            foreach (var item1 in _shop)
             {
-                shopItems.Add(_shop[i]);
-            }
+                shopItems.Add(item1);
+            }            
             return shopItems;
-        }
+        }        
 
         public void SellItem(int itemID)
         {
@@ -266,7 +321,9 @@ namespace TestDrive
 
         private void FillShop()
         {
-            int itemAmount = _random.Next(2, 3);
+            int minItemsAmount = 1;
+            int maxItemsAmount = 3;
+            int itemAmount = _random.Next(minItemsAmount, maxItemsAmount);
 
             foreach (var item in _itemsInGame.GetItems())
             {
