@@ -3,273 +3,275 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
-namespace Task2
+namespace TestDrive
 {
-    class Program
+    class Pacman
     {
         static void Main(string[] args)
         {
-            Warehouse warehouse = new Warehouse();
-            ServiceStation serviceStation = new ServiceStation();
-            warehouse.ShowInfo();
-            serviceStation.CreateQueue();
-            serviceStation.GetToWork();            
-        }
-    }
-    
-    class ServiceStation
-    {
-        private int ShopAccount = 1000;
-        private Random _random = new Random();
-        private Queue<Client> _clients = new Queue<Client>();
-        private Warehouse _warehouse = new Warehouse();
+            bool isOpen = true;
+            string userInput;
+            Player player = new Player();
+            Merchant merchant = new Merchant();
+            Console.WriteLine("Добро пожаловать в лавку");
+            Console.WriteLine("1.Показать инвентарь. 2.Показать товары. 3.Купить. 4.Выйти из лавки");
 
-        public ServiceStation()
-        {
-        }
-        
-        public void GetToWork()
-        {
-            bool isWork = true;
-
-            while (isWork && _clients.Count > 0)
+            while (isOpen)
             {
-                Console.WriteLine($"\nНа балансе автосервиса {ShopAccount}");
-                Console.WriteLine($"В очереди на обслуживание {_clients.Count} машин\n1.Начать техосмотр\n2.Завершить работу");
-                string userInput = Console.ReadLine();
+                userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
-                        ServeClient();
+                        player.ShowInventory();
                         break;
                     case "2":
-                        isWork = false;
+                        merchant.ShowGoods();
+                        break;
+                    case "3":
+                        player.BuyItem(merchant);
+                        break;                    
+                    case "4":
+                        isOpen = false;
                         break;
                 }
             }
         }
+    }
 
-        public void CreateQueue()
+    class Item
+    {
+        public string Name { get; private set; }
+        public string Stats { get; private set; }
+        public int Price { get; private set; }
+
+        public Item(string name, string stats, int price)
         {
-            int minNumberClient = 6;
-            int maxNumberClient = 10;
-            int clientsCount = _random.Next(minNumberClient, maxNumberClient);
-
-            for (int i = 0; i < clientsCount; i++)
-            {
-                _clients.Enqueue(new Client());
-            }
+            Name = name;
+            Stats = stats;
+            Price = price;
+        }        
+    }
+  
+    class Slot
+    {
+        public Item _item { get; private set; }
+        public int _amount;
+        public string itemName => _item.Name;
+        
+        public Slot(Item item, int amount)
+        {
+            _item = item;
+            _amount = amount;
         }
 
-        public bool TryRepairCar(Client client)
+        public void ShowItem(int itemID)
         {
-            Console.WriteLine("Введите номер детали для замены");
-            bool isNumber = int.TryParse(Console.ReadLine(), out int partID);
-
-            if (isNumber == false)
+            Console.WriteLine($"{itemID + 1}.{_item.Name}, Параметры: {_item.Stats}, Цена: {_item.Price}, кол: {_amount}");
+        }
+        
+        public void ReduceAmount(int count)
+        {
+            if (_amount > 0)
             {
-                Console.WriteLine("Введите число!");
-                return false;
+                _amount -= count;
+            }            
+        }
+        
+        public void IncreaseAmount(int count)
+        {
+            _amount += count;
+        }
+    }
+
+    class ItemsInGame
+    {
+        private static Random _random = new Random();
+        private List<Item> _items = new List<Item>();
+
+        public ItemsInGame()
+        {
+            _items.Add(new Item("Шипованый гульфик", "Атака +3", 30));
+            _items.Add(new Item("Зелье идиотской храбрости", "Атака +2", 20));
+            _items.Add(new Item("Шлем отваги", "Атака +1", 30));
+            _items.Add(new Item("Фляга клея", "Инициатива +2", 40));
+            _items.Add(new Item("Утка обречённости", "Уровень -2", 60));
+            _items.Add(new Item("Хотельное кольцо", "Проклятье -1", 50));
+            _items.Add(new Item("Трёхручный меч", "Атака +3", 30));
+        }
+
+        public List<Item> GetItems()
+        {
+            List<Item> items = new List<Item>();
+            int minItemsCount = 2;
+            int maxItemsCount = 7;
+            int itemsCount = _random.Next(minItemsCount, maxItemsCount);
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                items.Add(_items[i]);
             }
-            else if (partID > 0 && partID - 1 <= _warehouse._partsInWarehouse.Count && client.BrokenPart == _warehouse._partsInWarehouse[partID - 1].part)
-            {
-                int partToChange = partID - 1;
+            return items;
+        }
+    }
 
-                for (int i = 0; i < _warehouse._partsInWarehouse.Count; i++)
+    class Player
+    {
+        private Merchant merchant = new Merchant();
+        private ItemsInGame _itemsInGame = new ItemsInGame();
+        private List<Slot> _inventory = new List<Slot>();
+        private static Random _random = new Random();
+        private int _money = 100;
+
+        public Player()
+        {
+            FillInventory();
+        }        
+
+        public void ShowInventory()
+        {
+            Console.WriteLine($"Ваши вещи    Ваши деньги {_money}");
+
+            for (int i = 0; i < _inventory.Count; i++)
+            {
+                _inventory[i].ShowItem(i);
+            }       
+        }
+
+        private bool CompareItemName()
+        {
+            for (int i = 0; i < _inventory.Count; i++)
+            {
+                for (int j = 0; j < merchant.GetShopItem().Count; i++)
                 {
-                    if (_warehouse._partsInWarehouse[i].partAmount > 0)
+                    if (_inventory[i].itemName == merchant.GetShopItem()[j].itemName)
                     {
-                        _warehouse._partsInWarehouse[partID - 1].partAmount--;
-                    }
-                    else
-                    {
-                        _warehouse._partsInWarehouse.RemoveAt(partToChange);
+                        return true;
                     }
                 }
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Такой детали нет на складе");
             }
             return false;
         }
 
-        public void ShowClient()
+        private void FillInventory()
         {
-            foreach (var client in _clients)
+            int itemAmount = _random.Next(1, 3);
+
+            foreach (var item in _itemsInGame.GetItems())
             {
-                Console.WriteLine($"Требуется замена {client.BrokenPart.PartName}");
+                _inventory.Add(new Slot(item, itemAmount));
             }
-        }
-
-        private int GetRepairPrice(Client client)
+        }               
+                
+        public void BuyItem(Merchant merchant)
         {
-            int repairPrice = 0;
-            int workPayment = 200;
+            int itemID;
+            int itemCount;
+            Console.WriteLine("Что вы хотите купить?");
+            itemID = GetNumber();
+            Console.WriteLine("Сколько вы хотите купить?");
+            itemCount = GetNumber();
 
-            for (int i = 0; i < _warehouse._partsInWarehouse.Count; i++)
+            if (itemID <= merchant.GetShopItem().Count)
             {
-                if (client.BrokenPart == _warehouse._partsInWarehouse[i].part)
+                if (itemCount <= merchant.GetShopItem()[itemID - 1]._amount)
                 {
-                    repairPrice += _warehouse._partsInWarehouse[i].part.PartPrice * workPayment;
-                    break;
+                    if (_money - merchant.GetShopItem()[itemID -1]._item.Price * itemCount > 0)
+                    {
+                        _money -= merchant.GetShopItem()[itemID - 1]._item.Price * itemCount;
+
+                        if (CompareItemName())
+                        {
+                            _inventory[itemID -1].IncreaseAmount(itemCount);
+                        }
+                        else
+                        {
+                            _inventory.Add(merchant.GetShopItem()[itemID - 1]);
+                        }
+                        merchant.GetShopItem()[itemID - 1].ReduceAmount(itemCount);
+                        merchant.SellItem(itemID -1);
+                    }
+                    else
+                    {
+                        Console.WriteLine("У вас не хватает денег");
+                    }
                 }
-            }            
-
-            return repairPrice;
-        }                
-
-        private void ShowBreackdown(Client client)
-        {
-            Console.WriteLine($"Требуется замена {client.BrokenPart.PartName}");
-        }        
-
-        private void ServeClient()
-        {
-            var client = _clients.Dequeue();
-            ShowBreackdown(client);
-            Console.WriteLine("\nВыберите дальнейшие действия\n1.Устранить поломку\n2.Отказать в обслуживании");
-            string userInput = Console.ReadLine();
-
-            switch (userInput)
-            {
-                case "1":
-                    RepairCar(client);
-                    break;
-                case "2":
-                    RefuseService();
-                    break;
+                else
+                {
+                    Console.WriteLine("Нет такого количества");
+                }
             }
-        }
-        
-        private void RepairCar(Client client)
-        {
-            if (TryRepairCar(client))
+            else
             {
-                Console.WriteLine($"Автомобиль отремонтирован, сервис заработал {GetRepairPrice(client)}");
-                ShopAccount += GetRepairPrice(client);
+                Console.WriteLine("Нет такого товара");
             }
         }
 
-        private void RefuseService()
+        private int GetNumber()
         {
-            int penalty = 200;
-            Console.WriteLine($"Сервиз не смог устранить неисправность - штраф {penalty}");
-            ShopAccount -= penalty;
+            bool isNumber = int.TryParse(Console.ReadLine(), out int number);
+
+            if (isNumber == false)
+            {
+                Console.WriteLine("Введите число");
+                number = 0;
+                return number;
+            }
+            else
+            {
+                return number;
+            }
         }
     }
 
-
-    class Client
-    {
-        private SparePartsDataBase _spareParts = new SparePartsDataBase();
-        private static Random _random = new Random();        
-        public Part BrokenPart { get; private set; }
-
-        public Client()
-        {
-            IdentifyBreackdown();
-        }
-
-        private void IdentifyBreackdown()
-        {
-            BrokenPart = _spareParts.GetPart();
-        }
-        
-    }
-
-    class SparePartsDataBase
+    class Merchant
     {
         private static Random _random = new Random();
-        private List<Part> _parts = new List<Part>();
+        private ItemsInGame _itemsInGame = new ItemsInGame();
+        private List<Slot> _shop = new List<Slot>();
+        private int _shopAccount = 200;
 
-        public SparePartsDataBase()
+        public Merchant()
         {
-            _parts.Add(new Part("Колодки", 250));
-            _parts.Add(new Part("Свеча", 50));
-            _parts.Add(new Part("Масло", 500));
-            _parts.Add(new Part("Лампа ДС", 150));
-            _parts.Add(new Part("Фильтр масляный", 200));
-            _parts.Add(new Part("Фильтр воздушный", 100));
-            _parts.Add(new Part("Тосол", 150));
+            FillShop();
         }
 
-        public List<Part> GetParts()
+        public List<Slot> GetShopItem()
         {
-            List<Part> warehouseParts = new List<Part>();
+            List<Slot> shopItems = new List<Slot>();
 
-            for (int i = 0; i < _parts.Count; i++)
+            for (int i = 0; i < _shop.Count; i++)
             {
-                warehouseParts.Add(_parts[i]);
+                shopItems.Add(_shop[i]);
             }
-            return warehouseParts;
+            return shopItems;
         }
 
-        public Part GetPart()
+        public void SellItem(int itemID)
         {
-            Part brokenPart;
-            int part;
-            part = _random.Next(0, _parts.Count);
-            brokenPart = _parts[part];
-            return brokenPart;
-        }
-    }
-  
-    class Warehouse
-    {
-        private static Random _random = new Random();
-        public List<WarehouseCell> _partsInWarehouse = new List<WarehouseCell>();
-        SparePartsDataBase dataBase = new SparePartsDataBase();
-        
-        public Warehouse()
-        {
-            FillWarehouse(2);
+            _shopAccount += _shop[itemID]._item.Price * _shop[itemID]._amount;
         }
 
-        public void ShowInfo()
+        public void ShowGoods()
         {
-            Console.WriteLine("Запчасти на складе:");
-            for (int i = 0; i < _partsInWarehouse.Count; i++)
+            Console.WriteLine($"Товары в магазине.   Деньги торговца {_shopAccount}");
+
+            for (int i = 0; i < _shop.Count; i++)
             {
-                Console.WriteLine($"Деталь: {i + 1}.{_partsInWarehouse[i].part.PartName} Цена {_partsInWarehouse[i].part.PartPrice} Количество {_partsInWarehouse[i].partAmount}");
+                _shop[i].ShowItem(i);
             }
         }
 
-        private void FillWarehouse(int sparePart)
+        private void FillShop()
         {
-            int partAmount = _random.Next(3, 6);
+            int itemAmount = _random.Next(2, 3);
 
-            foreach (var part in dataBase.GetParts())
+            foreach (var item in _itemsInGame.GetItems())
             {
-                _partsInWarehouse.Add(new WarehouseCell(part, partAmount));
-            }            
-        }                
-    }
-
-    class WarehouseCell
-    {
-        public Part part;
-        public int partAmount;
-
-        public WarehouseCell(Part part, int partAmount)
-        {
-            this.partAmount = partAmount;
-            this.part = part;
+                _shop.Add(new Slot(item, itemAmount));
+            }
         }
-    }
-
-    class Part
-    {
-        public string PartName { get; private set; }
-        public int PartPrice { get; private set; }
-
-        public Part(string partName, int partPrice)
-        {
-            PartName = partName;
-            PartPrice = partPrice;
-        }        
     }
 }
