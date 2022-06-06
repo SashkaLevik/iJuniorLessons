@@ -1,0 +1,70 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TempTask
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            CriminalsDataBase dataBase = new CriminalsDataBase();
+            Console.WriteLine("Заключённые до амнистии");
+            dataBase.ShowAllPrisoners();
+            Console.WriteLine("Заключённые после амнистии");
+            dataBase.ShowNotAmnestied();
+            Console.ReadLine();
+        }
+    }
+
+    class CriminalsDataBase
+    {
+        private List<Criminal> _criminals = new List<Criminal>();
+
+        public CriminalsDataBase()
+        {
+            _criminals.Add(new Criminal("Петров Петр петрович", "Воровство"));
+            _criminals.Add(new Criminal("Иванов Иван Иванович", "Убийство"));
+            _criminals.Add(new Criminal("Кузин Степан Степаныч", "Антиправительственное"));
+            _criminals.Add(new Criminal("Алабаев Муслим Ахмедович", "Антиправительственное"));
+            _criminals.Add(new Criminal("Сидоров Виктор Викторович", "Взятничество"));
+        }
+
+        public void ShowAllPrisoners()
+        {
+            foreach (var prisoner in _criminals)
+            {
+                prisoner.ShowInfo();
+            }            
+        }
+
+        public void ShowNotAmnestied()
+        {
+            _criminals = _criminals.Where(prisoner => prisoner.Crime != "Антиправительственное").ToList();
+
+            foreach (var prisoner in _criminals)
+            {
+                prisoner.ShowInfo();
+            }
+        }       
+    }
+
+    class Criminal
+    {
+        public string FullName { get; private set; }
+        public string Crime { get; private set; }
+
+        public Criminal(string fullName, string crime)
+        {
+            FullName = fullName;
+            Crime = crime;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"ФИО преступника {FullName}, за что осужден {Crime}");
+        }
+    }
+}
