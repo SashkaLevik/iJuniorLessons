@@ -289,17 +289,25 @@ namespace TestDrive
 
         public Slot GetItem(int itemID)
         {
-            Slot item = GetShopItem()[itemID];
-            return item;
+            Slot slot = GetShopItem()[itemID];
+
+            return slot;
+            //Slot item;
+            //for (int i = 0; i < _shop.Count; i++)
+            //{
+            //    item = _shop[i];
+            //    return item;
+            //}
+            //return null;
         }
 
         public List<Slot> GetShopItem()
         {
             List<Slot> shopItems = new List<Slot>();
 
-            foreach (var item1 in _shop)
+            foreach (var item in _shop)
             {
-                shopItems.Add(item1);
+                shopItems.Add(item);
             }            
             return shopItems;
         }        
