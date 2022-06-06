@@ -1,0 +1,105 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TempTask
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            CriminalsDataBase dataBase = new CriminalsDataBase();
+            dataBase.ShowFreeCriminals();
+            Console.ReadLine();
+        }
+    }
+
+    class CriminalsDataBase
+    {
+        private List<Criminal> _criminals = new List<Criminal>();
+
+        public CriminalsDataBase()
+        {
+            _criminals.Add(new Criminal("Петров Петр петрович", "Русский", 85, 190, true));
+            _criminals.Add(new Criminal("Иванов Иван Иванович", "Фин", 80, 190, false));
+            _criminals.Add(new Criminal("Кузин Степан Степаныч", "Русский", 90, 190, true));
+            _criminals.Add(new Criminal("Алабаев Муслим Ахмедович", "Узбек", 90, 180, false));
+            _criminals.Add(new Criminal("Сидоров Виктор Викторович", "Русский", 85, 190, true));
+            _criminals.Add(new Criminal("Андреев Андрей Андреевич", "Русский", 85, 190, false));
+        }
+
+        public void ShowFreeCriminals()
+        {
+            int growth;
+            int weight;
+            string nationality;
+            Console.WriteLine("Программа поиска подозреваемых");
+            Console.WriteLine("Введите вес");
+            weight = GetInputNumber();
+            Console.WriteLine("Введите рост");
+            growth = GetInputNumber();
+            Console.WriteLine("Введите национальность");
+            nationality = Console.ReadLine();
+
+            if (growth == 0 && weight == 0 && nationality == null)
+            {
+                Console.WriteLine("Введите корректные данные");
+            }
+            else
+            {
+                var serchCriminal = from criminal in _criminals
+                                    where criminal.Growth <= growth
+                                    && criminal.Weight <= weight
+                                    && criminal.Nationality.ToUpper() == nationality.ToUpper()
+                                    && criminal.IsPrisoner == false
+                                    select criminal;
+
+                foreach (var criminal in serchCriminal)
+                {
+                    criminal.ShowInfo();
+                }
+            }
+        }
+
+        private int GetInputNumber()
+        {
+            bool isNumber = int.TryParse(Console.ReadLine(), out int userInput);
+
+            if (isNumber == true)
+            {
+                return userInput;
+            }
+            else
+            {
+                Console.WriteLine("Введены не корректные данные");
+                userInput = 0;
+                return userInput;
+            }
+        }
+    }
+
+    class Criminal
+    {
+        public string FullName { get; private set; }
+        public string Nationality { get; private set; }
+        public int Weight { get; private set; }
+        public int Growth { get; private set; }
+        public bool IsPrisoner { get; private set; }
+
+        public Criminal(string fullName, string nationality, int weight, int growth, bool isPrisoner)
+        {
+            IsPrisoner = isPrisoner;
+            FullName = fullName;
+            Nationality = nationality;
+            Weight = weight;
+            Growth = growth;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"ФИО преступника {FullName}, Национальность {Nationality}, Вес {Weight}, Рост {Growth}");
+        }
+    }
+}
