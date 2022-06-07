@@ -1,0 +1,112 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TempTask
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Hospital hospital = new Hospital();
+            hospital.StartAppointment();
+        }
+    }
+
+    class Hospital
+    {
+        private List<Patient> _patients = new List<Patient>();
+
+        public Hospital()
+        {
+            _patients.Add(new Patient("Петров Петр Петрович", 29, "Ангина"));
+            _patients.Add(new Patient("Козаков Яков Игоревич", 32, "Перелом"));
+            _patients.Add(new Patient("Козлов Андрей Петрович", 45, "Грипп"));
+            _patients.Add(new Patient("Смирнов Эдуард Василич", 25, "Ветрянка"));
+            _patients.Add(new Patient("Лобанов Семён Андреич", 33, "Ожёг"));
+            _patients.Add(new Patient("Гаврилов Артём Артёмыч", 50, "Диорея"));
+            _patients.Add(new Patient("Астахов Михаил Михалыч", 55, "Грипп"));
+            _patients.Add(new Patient("Улукбеков Вартан Семёныч", 38, "Перелом"));
+            _patients.Add(new Patient("Иванов Иван Иваныч", 23, "Язва"));
+            _patients.Add(new Patient("Носков Илья Ильич", 60, "Давление"));
+        }
+
+        public void StartAppointment()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("Выберите пункт из меню\n1.Сортировать пациентов по ФИО" +
+                    "\n2.Сортировать пациентов по возрасту" +
+                    "\n3.Найти пациентов с болезнью.\n4.Законьчить приём");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        SortByName();
+                        break;
+                    case "2":
+                        SortByAge();
+                        break;
+                    case "3":
+                        SortByDisease();
+                        break;
+                    case "4":
+                        isWork = false;
+                        break;
+                }
+            }
+        }
+        private void SortByName()
+        {
+            _patients = _patients.OrderBy(patient => patient.FullName).ToList();
+            ShowPatients(_patients);
+        }   
+        
+        private void SortByAge()
+        {
+            _patients = _patients.OrderBy(patient => patient.Age).ToList();
+            ShowPatients(_patients);
+        }
+
+        private void SortByDisease()
+        {
+            Console.WriteLine("Введите название болезни");
+            string disease = Console.ReadLine();
+            _patients = _patients.Where(patient => patient.Disease.ToLower() == disease.ToLower()).ToList();
+            ShowPatients(_patients);
+        }
+
+        private void ShowPatients(List<Patient> patients)
+        {
+            for (int i = 0; i < patients.Count; i++)
+            {
+                Console.Write($"{i + 1}.");
+                patients[i].ShowInfo();
+            }
+        }
+    }
+
+    class Patient
+    {
+        public string FullName { get; private set; }
+        public int Age { get; private set; }
+        public string Disease { get; private set; }
+
+        public Patient(string fullName, int age, string disease)
+        {
+            FullName = fullName;
+            Age = age;
+            Disease = disease;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"ФИО пациента {FullName}, возраст {Age}, заболевание {Disease}");
+        }
+    }
+}
