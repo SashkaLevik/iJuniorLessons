@@ -1,0 +1,103 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            DataBase dataBase = new DataBase();
+            dataBase.QueryDataBase();
+            Console.ReadLine();
+        }
+    }
+
+    class DataBase
+    {
+        private List<Player> _players = new List<Player>();
+        private int _topPlayers;
+
+        public DataBase()
+        {
+            _topPlayers = 3;
+            _players.Add(new Player("MadDuck", 2, 10));
+            _players.Add(new Player("NoobPlayer", 99, 999));
+            _players.Add(new Player("Tapochek", 20, 65));
+            _players.Add(new Player("xxx", 8, 15));
+            _players.Add(new Player("StopGame", 15, 25));
+            _players.Add(new Player("EvilEye", 32, 50));
+            _players.Add(new Player("Vasya98", 65, 40));
+            _players.Add(new Player("KittyCat", 28, 60));
+            _players.Add(new Player("Pryanik", 66, 110));
+            _players.Add(new Player("Gazebo", 47, 75));
+        }
+
+        public void QueryDataBase()
+        {
+            bool isWork = true;
+
+            while (isWork)
+            {
+                Console.WriteLine("1.Запросить топ 3 игроков по уровню\n2.Запросить топ 3 игроков по силе\n3.Выход");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        SeekPlayrsByLevel();
+                        break;
+                    case "2":
+                        SeekPlayerByPower();
+                        break;
+                    case "3":
+                        isWork = false;
+                        break;
+                }
+            }
+        }
+
+        private void SeekPlayrsByLevel()
+        {
+            var seekByLevel = _players.OrderByDescending(player => player.Level).Take(_topPlayers).ToList();            
+            ShowPlayers(seekByLevel);
+        }
+
+        private void SeekPlayerByPower()
+        {
+            var seekByPower = _players.OrderByDescending(player => player.Power).Take(_topPlayers).ToList();
+            ShowPlayers(seekByPower);
+        }
+
+        private void ShowPlayers(List<Player> players)
+        {
+            for (int i = 0; i < players.Count; i++)
+            {
+                Console.Write($"{i + 1}.");
+                players[i].ShowInfo();
+            }
+        }
+    }
+
+    class Player
+    {
+        public string NickName { get; private set; }
+        public int Level { get; private set; }
+        public int Power { get; private set; }
+
+        public Player(string nickname, int level, int power)
+        {
+            NickName = nickname;
+            Level = level;
+            Power = power;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"{NickName}. Уровень{Level}, Сила{Power}");
+        }
+    }
+}
