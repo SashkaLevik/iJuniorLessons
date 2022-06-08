@@ -1,0 +1,76 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Task2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Warehouse warehouse = new Warehouse();
+            warehouse.StartRevision();
+            Console.ReadLine();
+        }
+    }
+
+    class Warehouse
+    {
+        private List<Stewe> _stewedMeat = new List<Stewe>();
+        private int _currentYear;
+
+        public Warehouse()
+        {
+            _currentYear = 2022;
+            _stewedMeat.Add(new Stewe("Мясное Мясо", 2012, 10));
+            _stewedMeat.Add(new Stewe("Пятачок", 2018, 5));
+            _stewedMeat.Add(new Stewe("Что-то с Мясом", 2015, 3));
+            _stewedMeat.Add(new Stewe("Одно Мясо", 2016, 4));
+            _stewedMeat.Add(new Stewe("Советская", 1983, 40));
+            _stewedMeat.Add(new Stewe("Солдатская", 1945, 100));
+            _stewedMeat.Add(new Stewe("Русская", 2020, 1));            
+        }
+
+        public void StartRevision()
+        {
+            Console.WriteLine("Выявлена следующая просрочка:");
+            ShowExpiredStewe();
+        }
+
+        private void ShowExpiredStewe()
+        {
+            _stewedMeat = _stewedMeat.Where(stewe => stewe.IssueDate + stewe.ShelfLife < _currentYear).ToList();
+            ShowStewe(_stewedMeat);
+        }
+
+        private void ShowStewe(List<Stewe> steweds)
+        {
+            for (int i = 0; i < steweds.Count; i++)
+            {
+                Console.Write($"{i + 1}.");
+                steweds[i].ShowInfo();
+            }
+        }
+    }
+
+    class Stewe
+    {
+        public string Name { get; private set; }
+        public int IssueDate { get; private set; }
+        public int ShelfLife { get; private set; }
+
+        public Stewe(string name, int issueDate, int shelfLife)
+        {
+            Name = name;
+            IssueDate = issueDate;
+            ShelfLife = shelfLife;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"{Name}. Дата выпуска {IssueDate}, Срок годности {ShelfLife}");
+        }
+    }
+}
