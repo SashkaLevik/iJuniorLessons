@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TempTask
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Legion legion = new Legion();
+            legion.ShowNewCentury();
+            Console.ReadLine();
+        }
+    }
+
+    class Legion
+    {
+        private List<Soldier> _firstCentury = new List<Soldier>();
+        private List<Soldier> _secondCentury = new List<Soldier>();
+        public Legion()
+        {
+            _firstCentury.Add(new Soldier("Прокл", "Легионер", "Гаста"));
+            _firstCentury.Add(new Soldier("Кассиан", "Центурион", "Гладиус"));
+            _secondCentury.Add(new Soldier("Авитус", "Трибун", "Ланцея"));
+            _firstCentury.Add(new Soldier("Аргус", "Легионер", "Гаста"));
+            _firstCentury.Add(new Soldier("Ремус", "Декан", "Пилум"));
+            _secondCentury.Add(new Soldier("Максимус", "Центурион", "Гладиус"));
+            _firstCentury.Add(new Soldier("Август", "Легионер", "Гаста"));
+            _secondCentury.Add(new Soldier("Ромул", "Декан", "Пилум"));
+            _firstCentury.Add(new Soldier("Атилиус", "Легионер", "Гаста"));
+        }
+
+        public void ShowNewCentury()
+        {
+            Console.WriteLine("Первая центурия");
+            ShowUnitedSoldiers(_firstCentury);
+            Console.WriteLine("Вторая центурия");
+            ShowUnitedSoldiers(_secondCentury);
+            MoveSoldiers();
+            Console.WriteLine("Объединённая центурия");
+            ShowUnitedSoldiers(_secondCentury);
+            Console.WriteLine("Остатки первой центурии");
+            ShowUnitedSoldiers(_firstCentury);
+        }
+
+        private void MoveSoldiers()
+        {
+            var soldiers = _firstCentury.Where(soldier => soldier.Name.StartsWith("А"));
+            _secondCentury = _secondCentury.Union(soldiers).ToList();
+            _firstCentury = _firstCentury.Except(soldiers).ToList();
+        }
+                
+        private void ShowUnitedSoldiers(List<Soldier> soldiers)
+        {
+            foreach (var soldier in soldiers)
+            {
+                soldier.ShowInfo();
+            }
+        }
+    }
+
+    class Soldier
+    {
+        public string Name { get; private set; }
+        public string Rank { get; private set; }
+        public string Weapon { get; private set; }
+
+        public Soldier(string name, string rank, string weapon)
+        {
+            Name = name;
+            Rank = rank;
+            Weapon = weapon;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Имя легионера {Name}, Звание {Rank}, Оружие {Weapon}");
+        }
+    }
+}
