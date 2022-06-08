@@ -1,0 +1,80 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TempTask
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Legion legion = new Legion();
+            legion.ShowLegion();
+            Console.ReadLine();
+        }
+    }
+
+    class Legion
+    {
+        private List<Soldier> _soldiers = new List<Soldier>();
+
+        public Legion()
+        {
+            _soldiers.Add(new Soldier("Август", "Легионер", "Гаста", 10));
+            _soldiers.Add(new Soldier("Кассиан", "Центурион", "Гладиус", 3));
+            _soldiers.Add(new Soldier("Прокл", "Трибун", "Ланцея", 6));
+            _soldiers.Add(new Soldier("Ремус", "Декан", "Пилум", 15));
+            _soldiers.Add(new Soldier("Максимус", "Легат", "Гладиус", 8));            
+        }
+
+        public void ShowLegion()
+        {
+            var sortedSoldier = from Soldier soldier in _soldiers
+                                select new
+                                {
+                                    name = soldier.Name,
+                                    rank = soldier.Rank
+                                };
+
+            foreach (var soldier in sortedSoldier)
+            {
+                Console.WriteLine($"Имя {soldier.name}, Звание {soldier.rank}");
+            }
+        }
+
+        
+        
+
+        private void ShowPatients(List<Soldier> patients)
+        {
+            for (int i = 0; i < patients.Count; i++)
+            {
+                Console.Write($"{i + 1}.");
+                patients[i].ShowInfo();
+            }
+        }
+    }
+
+    class Soldier
+    {
+        public string Name { get; private set; }
+        public string Rank { get; private set; }
+        public string Weapon { get; private set; }
+        public int ServiceLife { get; private set; }
+
+        public Soldier(string name, string rank, string weapon, int serviceLife)
+        {
+            Name = name;
+            Rank = rank;
+            Weapon = weapon;
+            ServiceLife = serviceLife;
+        }
+
+        public void ShowInfo()
+        {
+            Console.WriteLine($"Имя легионера {Name}, Звание {Rank}, Оружие {Weapon}, Срок службы{ServiceLife}");
+        }
+    }
+}
