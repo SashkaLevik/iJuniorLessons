@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
-namespace TestDrive
+namespace Task1
 {
-    class Pacman
+    class Program
     {
         static void Main(string[] args)
         {
@@ -32,7 +31,7 @@ namespace TestDrive
                         break;
                     case "3":
                         player.BuyItem(merchant);
-                        break;                    
+                        break;
                     case "4":
                         isOpen = false;
                         break;
@@ -52,15 +51,15 @@ namespace TestDrive
             Name = name;
             Stats = stats;
             Price = price;
-        }        
+        }
     }
-  
+
     class Slot
     {
         public Item _item { get; private set; }
         public int _amount { get; private set; }
         public string itemName => _item.Name;
-        
+
         public Slot(Item item, int amount)
         {
             _item = item;
@@ -71,15 +70,15 @@ namespace TestDrive
         {
             Console.WriteLine($"{itemID + 1}.{_item.Name}, Параметры: {_item.Stats}, Цена: {_item.Price}, кол: {_amount}");
         }
-        
+
         public void ReduceAmount(int count)
         {
             if (_amount > 0)
             {
                 _amount -= count;
-            }            
+            }
         }
-        
+
         public void IncreaseAmount(int count)
         {
             _amount += count;
@@ -123,12 +122,12 @@ namespace TestDrive
         private ItemsInGame _itemsInGame = new ItemsInGame();
         private List<Slot> _inventory = new List<Slot>();
         private static Random _random = new Random();
-        private int _money = 100;
+        private int _money = 200;
 
         public Player()
         {
             FillInventory();
-        }        
+        }
 
         public void ShowInventory()
         {
@@ -137,7 +136,7 @@ namespace TestDrive
             for (int i = 0; i < _inventory.Count; i++)
             {
                 _inventory[i].ShowItem(i);
-            }       
+            }
         }
 
         private bool CompareItemName(int itemID)
@@ -153,7 +152,7 @@ namespace TestDrive
                     return false;
                 }
             }
-            return false;            
+            return false;
         }
 
         private void FillInventory()
@@ -166,9 +165,7 @@ namespace TestDrive
             {
                 _inventory.Add(new Slot(item, itemAmount));
             }
-        }        
-
-        
+        }
 
         public void BuyItem(Merchant merchant)
         {
@@ -181,11 +178,11 @@ namespace TestDrive
 
             if (itemID <= merchant.GetShopItem().Count)
             {
-                if (itemCount <= merchant.GetItem(itemID -1)._amount)
+                if (itemCount <= merchant.GetShopItem()[itemID - 1]._amount)
                 {
-                    if (_money - merchant.GetItem(itemID -1)._item.Price * itemCount >= 0)
+                    if (_money - merchant.GetShopItem()[itemID - 1]._item.Price * itemCount >= 0)
                     {
-                        _money -= merchant.GetItem(itemID -1)._item.Price * itemCount;
+                        _money -= merchant.GetShopItem()[itemID - 1]._item.Price * itemCount;
 
                         if (CompareItemName(itemID - 1))
                         {
@@ -193,10 +190,10 @@ namespace TestDrive
                         }
                         else
                         {
-                            _inventory.Add(merchant.GetItem(itemID - 1));
+                            _inventory.Add(merchant.GetShopItem()[itemID - 1]);
                         }
-                        merchant.GetItem(itemID -1).ReduceAmount(itemCount);
-                        merchant.SellItem(itemID - 1);
+                        merchant.GetShopItem()[itemID - 1].ReduceAmount(itemCount);
+                        merchant.SellItem(itemID - 1, itemCount);
                     }
                     else
                     {
@@ -213,50 +210,6 @@ namespace TestDrive
                 Console.WriteLine("Нет такого товара");
             }
         }
-
-        //public void BuyItem(Merchant merchant)
-        //{
-        //    int itemID;
-        //    int itemCount;
-        //    Console.WriteLine("Что вы хотите купить?");
-        //    itemID = GetNumber();
-        //    Console.WriteLine("Сколько вы хотите купить?");
-        //    itemCount = GetNumber();
-
-        //    if (itemID <= merchant.GetShopItem().Count)
-        //    {
-        //        if (itemCount <= merchant.GetShopItem()[itemID - 1]._amount)
-        //        {
-        //            if (_money - merchant.GetShopItem()[itemID - 1]._item.Price * itemCount >= 0)
-        //            {
-        //                _money -= merchant.GetShopItem()[itemID - 1]._item.Price * itemCount;
-
-        //                if (CompareItemName(itemID - 1))
-        //                {
-        //                    _inventory[itemID - 1].IncreaseAmount(itemCount);
-        //                }
-        //                else
-        //                {
-        //                    _inventory.Add(merchant.GetShopItem()[itemID - 1]);
-        //                }
-        //                merchant.GetShopItem()[itemID - 1].ReduceAmount(itemCount);
-        //                merchant.SellItem(itemID - 1);
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("У вас не хватает денег");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("Нет такого количества");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("Нет такого товара");
-        //    }
-        //}
 
         private int GetNumber()
         {
@@ -285,21 +238,7 @@ namespace TestDrive
         public Merchant()
         {
             FillShop();
-        }
-
-        public Slot GetItem(int itemID)
-        {
-            Slot slot = GetShopItem()[itemID];
-
-            return slot;
-            //Slot item;
-            //for (int i = 0; i < _shop.Count; i++)
-            //{
-            //    item = _shop[i];
-            //    return item;
-            //}
-            //return null;
-        }
+        }        
 
         public List<Slot> GetShopItem()
         {
@@ -308,13 +247,13 @@ namespace TestDrive
             foreach (var item in _shop)
             {
                 shopItems.Add(item);
-            }            
+            }
             return shopItems;
-        }        
+        }
 
-        public void SellItem(int itemID)
-        {
-            _shopAccount += _shop[itemID]._item.Price * _shop[itemID]._amount;
+        public void SellItem(int itemID, int itemCount)
+        {            
+            _shopAccount += _shop[itemID]._item.Price * itemCount;
         }
 
         public void ShowGoods()
@@ -330,7 +269,7 @@ namespace TestDrive
         private void FillShop()
         {
             int minItemsAmount = 1;
-            int maxItemsAmount = 3;
+            int maxItemsAmount = 4;
             int itemAmount = _random.Next(minItemsAmount, maxItemsAmount);
 
             foreach (var item in _itemsInGame.GetItems())
@@ -340,3 +279,5 @@ namespace TestDrive
         }
     }
 }
+    
+
