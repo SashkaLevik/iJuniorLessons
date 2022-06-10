@@ -59,58 +59,57 @@ namespace Task1
 
     class Trader
     {
-        protected List<Product> _purchasedProducts = new List<Product>();
-        protected int _money = 2000;
-        protected List<Product> _products = new List<Product>();
-
-        public Trader()
-        {
-            _products.Add(new Product("Брюки", 950));
-            _products.Add(new Product("Ботинки", 650));
-            _products.Add(new Product("Рубашка", 200));
-            _products.Add(new Product("Пиджак", 1000));
-            _products.Add(new Product("Галстук", 100));
-        }
+        protected int Money = 2000;
+        protected List<Product> Products = new List<Product>();        
 
         public virtual void ShowProducts()
         {
-            Console.WriteLine($"Касса магазина {_money}");
+            Console.WriteLine($"Касса магазина {Money}");
 
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < Products.Count; i++)
             {
-                _products[i].ProductInfo(i);
+                Products[i].ProductInfo(i);
             }
         }        
     }
 
     class Shop: Trader
     {
+        public Shop()
+        {
+            Products.Add(new Product("Брюки", 950));
+            Products.Add(new Product("Ботинки", 650));
+            Products.Add(new Product("Рубашка", 200));
+            Products.Add(new Product("Пиджак", 1000));
+            Products.Add(new Product("Галстук", 100));
+        }
+
         public List<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
 
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < Products.Count; i++)
             {
-                products.Add(_products[i]);
+                products.Add(Products[i]);
             }
             return products;
         }
 
         public void SellItem(int itemID)
         {
-            _money += _products[itemID].Price;
+            Money += Products[itemID].Price;
         }               
     }
    
     class Buyer: Trader
-    {
+    {        
         public override void ShowProducts()
         {
-            Console.WriteLine($"Ваши деньги {_money}");
+            Console.WriteLine($"Ваши деньги {Money}");
 
-            for (int i = 0; i < _purchasedProducts.Count; i++)
+            for (int i = 0; i < Products.Count; i++)
             {
-                Console.WriteLine($"В вашей сумке {_purchasedProducts[i].Name}");
+                Console.WriteLine($"В вашей сумке {Products[i].Name}");
             }
         }
 
@@ -124,8 +123,8 @@ namespace Task1
             {
                 if (PurchasingAbility(shop, itemID - 1))
                 {
-                    _money -= shop.GetProducts()[itemID - 1].Price;
-                    _purchasedProducts.Add(shop.GetProducts()[itemID - 1]);
+                    Money -= shop.GetProducts()[itemID - 1].Price;
+                    Products.Add(shop.GetProducts()[itemID - 1]);
                     shop.SellItem(itemID - 1);
                 }
                 else
@@ -141,7 +140,7 @@ namespace Task1
 
         private bool PurchasingAbility(Shop shop, int itemID)
         {
-            if (_money - shop.GetProducts()[itemID].Price >= 0)
+            if (Money - shop.GetProducts()[itemID].Price >= 0)
             {
                 return true;
             }
