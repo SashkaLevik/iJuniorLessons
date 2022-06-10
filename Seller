@@ -57,13 +57,13 @@ namespace Task1
         }
     }
 
-    class Shop
+    class Trader
     {
         protected List<Product> _purchasedProducts = new List<Product>();
         protected int _money = 2000;
-        private List<Product> _products = new List<Product>();
+        protected List<Product> _products = new List<Product>();
 
-        public Shop()
+        public Trader()
         {
             _products.Add(new Product("Брюки", 950));
             _products.Add(new Product("Ботинки", 650));
@@ -72,6 +72,19 @@ namespace Task1
             _products.Add(new Product("Галстук", 100));
         }
 
+        public virtual void ShowProducts()
+        {
+            Console.WriteLine($"Касса магазина {_money}");
+
+            for (int i = 0; i < _products.Count; i++)
+            {
+                _products[i].ProductInfo(i);
+            }
+        }        
+    }
+
+    class Shop: Trader
+    {
         public List<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
@@ -85,22 +98,12 @@ namespace Task1
 
         public void SellItem(int itemID)
         {
-            _money += GetProducts()[itemID].Price;
-        }
-
-        public virtual void ShowProducts()
-        {
-            Console.WriteLine($"Касса магазина {_money}");
-
-            for (int i = 0; i < _products.Count; i++)
-            {
-                _products[i].ProductInfo(i);
-            }
-        }
+            _money += _products[itemID].Price;
+        }               
     }
-
-    class Buyer: Shop
-    {        
+   
+    class Buyer: Trader
+    {
         public override void ShowProducts()
         {
             Console.WriteLine($"Ваши деньги {_money}");
