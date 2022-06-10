@@ -14,7 +14,7 @@ namespace TestDrive
             bool isOpen = true;
             string userInput;
             Buyer buyer = new Buyer();
-            Seller merchant = new Seller();
+            Seller seller = new Seller();
             Console.WriteLine("Добро пожаловать в магазин");
             Console.WriteLine("1.Показать покупки. 2.Показать товары. 3.Купить. 4.Выйти из магазина");
 
@@ -28,10 +28,10 @@ namespace TestDrive
                         buyer.ShowPurchases();
                         break;
                     case "2":
-                        merchant.ShowGoods();
+                        seller.ShowGoods();
                         break;
                     case "3":
-                        buyer.BuyItem(merchant);
+                        buyer.BuyItem(seller);
                         break;                    
                     case "4":
                         isOpen = false;
@@ -60,7 +60,7 @@ namespace TestDrive
 
     class Buyer
     {        
-        private Seller seller = new Seller();
+        private Seller _seller = new Seller();
         private List<Buyer> _products = new List<Buyer>();
         private int _money = 2000;
         private string _productName;
@@ -87,7 +87,7 @@ namespace TestDrive
             Console.WriteLine("Что вы хотите купить?");
             itemID = GetNumber();
 
-            if (itemID <= this.seller.GetProducts().Count)
+            if (itemID <= _seller.GetProducts().Count)
             {
                 if (PurchasingAbility(seller, itemID - 1))
                 {
