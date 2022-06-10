@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
-namespace TestDrive
+namespace Task1
 {
-    class Pacman
+    class Program
     {
         static void Main(string[] args)
         {
             bool isOpen = true;
             string userInput;
             Buyer buyer = new Buyer();
-            Seller seller = new Seller();
+            Shop shop = new Shop();
             Console.WriteLine("Добро пожаловать в магазин");
             Console.WriteLine("1.Показать покупки. 2.Показать товары. 3.Купить. 4.Выйти из магазина");
 
@@ -25,14 +24,14 @@ namespace TestDrive
                 switch (userInput)
                 {
                     case "1":
-                        buyer.ShowPurchases();
+                        buyer.ShowProducts();
                         break;
                     case "2":
-                        seller.ShowGoods();
+                        shop.ShowProducts();
                         break;
                     case "3":
-                        buyer.BuyItem(seller);
-                        break;                    
+                        buyer.BuyItem(shop);
+                        break;
                     case "4":
                         isOpen = false;
                         break;
@@ -50,18 +49,59 @@ namespace TestDrive
         {
             Name = name;
             Price = price;
-        } 
-        
-        public void ShowProduct(int productID)
+        }
+
+        public void ProductInfo(int productID)
         {
             Console.WriteLine($"{productID + 1}.{Name}, Цена {Price}");
         }
-    }          
+    }
 
-    class Buyer
-    {        
-        private Seller _seller = new Seller();
-        private List<Buyer> _products = new List<Buyer>();
+    class Shop
+    {
+        private int _shopAccount = 2000;
+        private List<Product> _products = new List<Product>();
+
+        public Shop()
+        {
+            _products.Add(new Product("Брюки", 950));
+            _products.Add(new Product("Ботинки", 650));
+            _products.Add(new Product("Рубашка", 200));
+            _products.Add(new Product("Пиджак", 1000));
+            _products.Add(new Product("Галстук", 100));
+        }
+
+        public List<Product> GetProducts()
+        {
+            List<Product> products = new List<Product>();
+
+            for (int i = 0; i < _products.Count; i++)
+            {
+                products.Add(_products[i]);
+            }
+            return products;
+        }
+
+        public void SellItem(int itemID)
+        {
+            _shopAccount += GetProducts()[itemID].Price;
+        }
+
+        public virtual void ShowProducts()
+        {
+            Console.WriteLine($"Касса магазина {_shopAccount}");
+
+            for (int i = 0; i < _products.Count; i++)
+            {
+                _products[i].ProductInfo(i);
+            }
+        }
+    }
+
+    class Buyer: Shop
+    {
+        private Shop _shop = new Shop();
+        private List<Buyer> _purchasedProducts = new List<Buyer>();
         private int _money = 2000;
         private string _productName;
 
@@ -71,44 +111,44 @@ namespace TestDrive
         }
         public Buyer() { }
 
-        public void ShowPurchases()
+        public override void ShowProducts()
         {
             Console.WriteLine($"Ваши деньги {_money}");
 
-            for (int i = 0; i < _products.Count; i++)
+            for (int i = 0; i < _purchasedProducts.Count; i++)
             {
-                Console.WriteLine($"В вашей сумке {_products[i]._productName}");
-            }       
-        }        
-                        
-        public void BuyItem(Seller seller)
+                Console.WriteLine($"В вашей сумке {_purchasedProducts[i]._productName}");
+            }
+        }
+
+        public void BuyItem(Shop shop)
         {
             int itemID;
             Console.WriteLine("Что вы хотите купить?");
             itemID = GetNumber();
 
-            if (itemID <= _seller.GetProducts().Count)
+            if (itemID <= _shop.GetProducts().Count)
             {
-                if (PurchasingAbility(seller, itemID - 1))
+                if (PurchasingAbility(shop, itemID - 1))
                 {
-                    _money -= seller.GetProducts()[itemID - 1].Price;
-                    _products.Add(new Buyer(seller.GetProducts()[itemID - 1].Name));
-                    seller.SellItem(itemID - 1);                    
+                    _money -= shop.GetProducts()[itemID - 1].Price;
+                    _purchasedProducts.Add(new Buyer(shop.GetProducts()[itemID - 1].Name));
+                    shop.SellItem(itemID - 1);
                 }
                 else
                 {
                     Console.WriteLine("У вас не хватает денег");
-                }                
+                }
             }
             else
             {
                 Console.WriteLine("Нет такого товара");
             }
         }
-        
-        private bool PurchasingAbility(Seller seller, int itemID)
+
+        private bool PurchasingAbility(Shop shop, int itemID)
         {
-            if (_money - seller.GetProducts()[itemID].Price >= 0)
+            if (_money - shop.GetProducts()[itemID].Price >= 0)
             {
                 return true;
             }
@@ -133,46 +173,8 @@ namespace TestDrive
                 return number;
             }
         }
-    }
+    }    
+}   
 
-    class Seller
-    {
-        private List<Product> _products = new List<Product>();
-        private int _shopAccount = 200;
+    
 
-        public Seller()
-        {
-            _products.Add(new Product("Брюки", 950));
-            _products.Add(new Product("Ботинки", 650));
-            _products.Add(new Product("Рубашка", 200));
-            _products.Add(new Product("Пиджак", 1000));
-            _products.Add(new Product("Галстук", 100));
-        }
-
-        public List<Product> GetProducts()
-        {
-            List<Product> products = new List<Product>();
-
-            for (int i = 0; i < _products.Count; i++)
-            {
-                products.Add(_products[i]);
-            }
-            return products;
-        }
-
-        public void SellItem(int itemID)
-        {
-            _shopAccount += _products[itemID].Price;
-        }
-
-        public void ShowGoods()
-        {
-            Console.WriteLine($"Товары в магазине.   Деньги торговца {_shopAccount}");
-
-            for (int i = 0; i < _products.Count; i++)
-            {
-                _products[i].ShowProduct(i);
-            }
-        }        
-    }
-}
