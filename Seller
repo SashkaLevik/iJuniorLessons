@@ -59,7 +59,8 @@ namespace Task1
 
     class Shop
     {
-        private int _shopAccount = 2000;
+        protected List<Product> _purchasedProducts = new List<Product>();
+        protected int _money = 2000;
         private List<Product> _products = new List<Product>();
 
         public Shop()
@@ -84,12 +85,12 @@ namespace Task1
 
         public void SellItem(int itemID)
         {
-            _shopAccount += GetProducts()[itemID].Price;
+            _money += GetProducts()[itemID].Price;
         }
 
         public virtual void ShowProducts()
         {
-            Console.WriteLine($"Касса магазина {_shopAccount}");
+            Console.WriteLine($"Касса магазина {_money}");
 
             for (int i = 0; i < _products.Count; i++)
             {
@@ -99,11 +100,7 @@ namespace Task1
     }
 
     class Buyer: Shop
-    {
-        private Shop _shop = new Shop();
-        private List<Product> _purchasedProducts = new List<Product>();
-        private int _money = 2000;        
-
+    {        
         public override void ShowProducts()
         {
             Console.WriteLine($"Ваши деньги {_money}");
@@ -120,7 +117,7 @@ namespace Task1
             Console.WriteLine("Что вы хотите купить?");
             itemID = GetNumber();
 
-            if (itemID <= _shop.GetProducts().Count)
+            if (itemID <= shop.GetProducts().Count)
             {
                 if (PurchasingAbility(shop, itemID - 1))
                 {
