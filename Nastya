@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Nastya
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string nastyaName = "Настя";
+            string userInput;
+
+            Console.WriteLine("Кого любит Алёшка");
+            //Просто бесконечный цикл из которого брекаем после правильного ввода
+            while (true)
+            {
+                userInput = Console.ReadLine();
+
+                if (userInput != nastyaName)
+                {
+                    Console.WriteLine("Неверно");
+                }
+                else
+                {
+                    Console.WriteLine("Вы чертовски правы");
+                    break;
+                }
+            }
+
+            Console.ReadLine();
+        }
+    }
+}
