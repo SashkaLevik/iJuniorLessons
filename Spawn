@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SpawnCards : ObjectPool
+{
+    [SerializeField] private Card[] _cards;
+    [SerializeField] private Transform[] _spawnPoints;
+
+    private int _randomPosition;
+    private int _spawnPointsCount = 3;
+
+    private void Start()
+    {
+        Initialize(_cards);
+        StartCoroutine(Spawn());
+    }
+
+    private IEnumerator Spawn()
+    {
+        while (_spawnPointsCount > 0)
+        {
+            if (TryGetObject(out Card card))
+            {                
+                _randomPosition = Random.Range(0, _spawnPoints.Length);
+                SetCard(card, _spawnPoints[_randomPosition].position);
+                _spawnPointsCount--;
+                yield return null;
+            }
+        }
+    }
+
+    private void SetCard(Card card, Vector3 spawnPoint)
+    {
+        card.gameObject.SetActive(true);
+        card.transform.position = spawnPoint;
+    }        
+}
