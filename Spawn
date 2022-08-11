@@ -1,18 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class SpawnCards : ObjectPool
 {
     [SerializeField] private Card[] _cards;
     [SerializeField] private Transform[] _spawnPoints;
+    [SerializeField] private Button _drawCardsButton;
 
+    //private List<Card> _spawnedCards;
     private int _randomPosition;
     private int _spawnPointsCount = 3;
 
     private void Start()
     {
         Initialize(_cards);
+    }
+
+    private void OnEnable()
+    {
+        _drawCardsButton.onClick.AddListener(OnButtonClick);
+    }
+
+    private void OnDisable()
+    {
+        _drawCardsButton.onClick.RemoveListener(OnButtonClick);
+    }
+
+    public void OnButtonClick()
+    {
         StartCoroutine(Spawn());
     }
 
@@ -23,6 +41,7 @@ public class SpawnCards : ObjectPool
             if (TryGetObject(out Card card))
             {                
                 _randomPosition = Random.Range(0, _spawnPoints.Length);
+                
                 SetCard(card, _spawnPoints[_randomPosition].position);
                 _spawnPointsCount--;
                 yield return null;
@@ -31,8 +50,8 @@ public class SpawnCards : ObjectPool
     }
 
     private void SetCard(Card card, Vector3 spawnPoint)
-    {
+    {        
         card.gameObject.SetActive(true);
         card.transform.position = spawnPoint;
-    }        
+    }            
 }
