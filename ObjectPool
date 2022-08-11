@@ -1,0 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ObjectPool : MonoBehaviour
+{
+    [SerializeField] private GameObject _container;
+    [SerializeField] private int _conteinerCapacity;
+    [SerializeField] private GameObject _cardsArea;
+
+    private List<Card> _pool = new List<Card>();
+
+    protected void Initialize(Card[] cards)
+    {
+        for (int i = 0; i < _conteinerCapacity; i++)
+        {
+            Card spawned = Instantiate(cards[Random.Range(0, cards.Length)], _container.transform);
+            spawned.transform.SetParent(_cardsArea.transform, false);
+            spawned.gameObject.SetActive(false);
+            _pool.Add(spawned);
+        }
+    }
+
+    protected bool TryGetObject(out Card result)
+    {
+        result = _pool[Random.Range(0, _pool.Count)];
+        return result.gameObject.activeSelf == false;
+    }
+}
